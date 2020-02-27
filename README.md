@@ -2,7 +2,7 @@
 
 * This repository is for personal study.
 
-## [Huffman Code](huffman.cpp)
+## [Huffman Code](Huffman.cpp)
 
 * 빈도 종속 인코딩 알고리즘을 사용한 코드
 * 개발자인 데이비드 허프만 이름을 따서 허프만 코드라고 한다.
