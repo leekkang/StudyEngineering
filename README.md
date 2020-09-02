@@ -23,10 +23,19 @@
 
 ## Codility
 
-### [Iterations](https://app.codility.com/programmers/lessons/1-iterations/)
+### [Time Complexity](https://app.codility.com/programmers/lessons/3-time_complexity/)
 
-* 
+* 개략적으로 프로그램의 러닝타임을 표기하는 방법 (정확한 시간 측정은 노동-집약적(labour-intensive)이다.)
+* [Big-O notation]을 사용한다.
+	* 점근 표기법(Asymptotic notation), 함수의 증가 양상을 다른 함수와의 비교로 사용하는 방법.
+* 컴퓨팅 파워와 프로그램 실행 시간, 반복 횟수로 대략적인 복잡도를 유추할 수 있다.
+	* 파워 / 시간 이 클 수록, 반복 횟수가 높을 수록 복잡도가 낮다.
+* `공간 복잡도(Space complexity)` 또한 시간 복잡도와 표기법이 같다.
+	* 전역 변수, 지역 변수 및 동적 포인터 자료구조와 재귀 함수의 스택 내용, 입력 데이터까지 전부 포함해야 하기 때문에 계산이 좀 더 까다롭다.
+	
+
 
 [탐욕 알고리즘(greedy algorithm)]: https://ko.wikipedia.org/wiki/%ED%83%90%EC%9A%95_%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98
 [LZW 참조1]: https://www2.cs.duke.edu/csed/curious/compression/lzw.html
 [LZW 참조2:위키피디아]: https://ko.wikipedia.org/wiki/LZW
+[Big-O notation]: https://en.wikipedia.org/wiki/Big_O_notation
