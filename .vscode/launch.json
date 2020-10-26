@@ -1,0 +1,18 @@
+{
+    // 자세한 내용을 보려면 https://go.microsoft.com/fwlink/?linkid=830387 을(를) 방문하세요.
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "cl.exe 디버그",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${fileDirname}\\${fileBasenameNoExtension}.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            //"preLaunchTask": "C/C++: cl.exe build active file"
+        }
+    ]
+}
