@@ -1,0 +1,8 @@
+// path : %APPDATA%\\Code\\User\\keybindings.json
+// 키 바인딩을 이 파일에 넣어서 기본값 재정의auto[]
+[
+    {
+        "key": "ctrl+shift+g",
+        "command": "shellLauncher.launch"
+    }
+]

@@ -1,0 +1,40 @@
+// path : %APPDATA%\\Code\\User\\settings.json
+{
+    "editor.suggestSelection": "first",
+    "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+    "C_Cpp.updateChannel": "Insiders",
+    "files.autoSave": "off",
+    "terminal.integrated.shell.windows": "C:\\WINDOWS\\System32\\cmd.exe",
+    "projectManager.any.ignoredFolders": [
+        "node_modules",
+        "out",
+        "typings",
+        "test",
+        "img"
+    ],
+    "explorer.confirmDragAndDrop": false,
+    "terminal.external.windowsExec": "C:\\Users\\Kanghyuk\\AppData\\Local\\Microsoft\\WindowsApps\\wt.exe", // 안타깝게도 인자를 못쓴다.
+    "terminal.explorerKind": "external",
+    "shellLauncher.shells.windows": [
+        {
+            "shell": "C:\\Users\\Kanghyuk\\AppData\\Local\\Microsoft\\WindowsApps\\wt.exe",
+            "args": ["-p",  "Command Prompt", "-d", "."],
+            "label": "Command Prompt"
+        },
+        {
+            "shell": "C:\\Users\\Kanghyuk\\AppData\\Local\\Microsoft\\WindowsApps\\wt.exe",
+            "args": ["-p",  "Windows PowerShell", "-d", "."],
+            "label": "Power Shell"
+        },
+        {
+            "shell": "C:\\Users\\Kanghyuk\\AppData\\Local\\Microsoft\\WindowsApps\\wt.exe",
+            "args": ["-p",  "Git Bash", "-d", "."],
+            "label": "Git bash"
+        },
+        {
+            "shell": "C:\\Users\\Kanghyuk\\AppData\\Local\\Microsoft\\WindowsApps\\wt.exe",
+            "args": ["-p",  "Linux (Ubuntu)", "-d", "."],
+            "label": "WSL"
+        }
+    ]
+}

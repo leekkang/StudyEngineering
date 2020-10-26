@@ -9,9 +9,9 @@
             "program": "${fileDirname}\\${fileBasenameNoExtension}.exe",
             "args": [],
             "stopAtEntry": false,
-            "cwd": "${workspaceFolder}",
+            "cwd": "${fileDirname}",//"${workspaceFolder}",
             "environment": [],
-            "externalConsole": false,
+            "externalConsole": true,
             //"preLaunchTask": "C/C++: cl.exe build active file"
         }
     ]

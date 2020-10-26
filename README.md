@@ -2,16 +2,49 @@
 
 * This repository is for personal study.
 
+## VSCode Setting
+
+* [VS code shortcut](https://code.visualstudio.com/docs/editor/codebasics)
+* 쓸 것 같은 단축키
+  * `ctrl + shift + l` : 현재 커서의 단어를 모두 선택 (`ctrl + f2`와 비슷함)
+  * `ctrl + shift + k` : 현재 줄 삭제
+  * `ctrl + shift + b` : `task.json`의 설정으로 빌드
+  * `ctrl + shift + t` : 방금 종료한 파일 다시 열기
+  * `ctrl + shift + d` : 왼쪽 `실행 탭` 열기
+  * `ctrl + shift + e` : 왼쪽 `탐색기 탭` 열기
+  * `ctrl + shift + x` : 왼쪽 `마켓 플레이스 탭` 열기
+  * `ctrl + shift + y` : 디버그 콘솔 열기
+  * `ctrl + shift + g` : `Shell launcher` 실행
+  * `ctrl + shift + c` : 외부 콘솔 프로그램 열기(`WT powershell`로 되어있음)
+  * `ctrl + k  v` : 우측에 미리보기 창 출력
+  * `alt + shift + up or down` : 위/아래에 현재 줄 복사
+  * `ctrl + alt + up or down` : 위/아래의 동일한 위치에 커서 복사
+  * `ctrl + page up or page down` : 편집기 탭 이동
+  * `ctrl + w` : 현재 편집기 닫기
+
+* `MSVC compiler`를 사용하기 위해서는 `task.json`과 `launcher.json`을 잘 수정해야 한다.
+
+* 현재 `VS Code`에서 사용하는 확장 프로그램 목록 (MS에서 나온 것 제외)
+  * `Markdown All in One`
+  * `PlantUML`
+  * `Project Manager`
+  * `ShaderlabVSCode`
+  * `Shell launcher`
+
+* `VS Code` 전역 세팅 백업
+  * [settings.json](backup/settings.json)
+  * [keybindings.json](backup/keybindings.json)
+
 ## Encoding Algorithm
 
-### [Huffman Code](Huffman.cpp)
+### [Huffman Code](Huffman/Huffman.cpp)
 
 * 빈도 종속 인코딩 알고리즘을 사용한 코드
 * 개발자인 데이비드 허프만 이름을 따서 허프만 코드라고 한다.
   * 빈도 종속 인코딩 : 비트 패턴의 길이를 해당 항목이 사용되는 빈도의 역과 관련시켜 결정하는 무손실 데이터 압축방법
 * [탐욕 알고리즘(greedy algorithm)] 이다.
 
-### [Lempel-Ziv-Welch algorithm](LZWAlgorithm.cpp)
+### [Lempel-Ziv-Welch algorithm](LZW/LZWAlgorithm.cpp)
 
 * 적응형 사전 인코딩(adaptive dictionary encoding) 알고리즘을 사용한 코드
   * 적응형 사전 인코딩 : 메시지 항목들의 집합을 사전으로, 메시지는 사전의 참조 표시로 인코딩. 인코딩 과정중에 사전의 항목이 변화한다.
