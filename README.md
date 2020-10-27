@@ -31,6 +31,8 @@
   * `ShaderlabVSCode`
   * `Shell launcher`
 
+* [Clang-Format Style Documentation](https://clang.llvm.org/docs/ClangFormatStyleOptions.html)
+
 * `VS Code` 전역 세팅 백업
   * [settings.json](backup/settings.json)
   * [keybindings.json](backup/keybindings.json)

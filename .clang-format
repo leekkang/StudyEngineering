@@ -1,0 +1,46 @@
+---
+
+# yaml format
+# refer : https://stackoverflow.com/questions/45823734/visual-studio-code-formatting-for
+
+# 기본 스타일 설정
+BasedOnStyle: Google
+
+# 들여쓰기 단위
+IndentWidth: 4
+TabWidth: 4
+
+# 탭을 사용할 것인가의 여부 -> 들여쓰기, 함수 인자를 새 줄에 작성 시 탭을 사용
+UseTab: ForContinuationAndIndentation
+
+# 모디파이어 위치 설정 (e.g. public:)
+AccessModifierOffset: -2
+
+# 파라미터를 괄호 시작지점까지 들여쓰기 한다.
+AlignAfterOpenBracket: Align
+
+# 한 줄에 쓰여지는 최대 글자 수 (0은 제한없음)
+ColumnLimit: 0
+
+# 각종 상태문에서 한줄 표현을 허용
+AllowShortBlocksOnASingleLine: Always           # 모든 블록 한줄 표현이 가능함
+AllowShortCaseLabelsOnASingleLine: true         # case 라벨을 한줄로 표현 가능
+AllowShortFunctionsOnASingleLine: Inline        # 클래스 내부 함수, 빈 함수를 한줄로 표현 가능, 생성자 멤버 초기화 리스트가 자동 줄바꿈 된다.
+AllowShortLambdasOnASingleLine: Inline          # 인자로 사용된 람다 함수만 한줄로 표현 가능
+AllowShortLoopsOnASingleLine: true              # 중괄호 없는 한줄 반복문을 한줄로 표현 가능
+#AllowShortIfStatementsOnASingleLine: Always     # 중괄호 없는 if 상태문을 한줄로 표현 가능  옵션이 안먹힘, Never == WithoutElse, Always = WithoutElse 로 동작함
+
+# 네임스페이스 내부 코드 들여쓰기 여부
+NamespaceIndentation: All
+
+# 줄 끝의 주석 시작 위치 설정
+SpacesBeforeTrailingComments: 3
+
+# 함수 내 최대 허용가능한 빈 줄
+MaxEmptyLinesToKeep: 1
+
+# include 지시문들을 정렬할지 선택
+SortIncludes: false
+
+# 이항연산자 표현 시 연산자가 피연산자 앞에 오도록 설정 (None/NonAssignment/All)
+BreakBeforeBinaryOperators: All

@@ -10,11 +10,11 @@ using namespace std;
 #define DEBUG_LOG 1
 #define DICTIONARY_CAPACITY 4096
 
-template<typename Out>
+template <typename Out>
 void split(const string &s, char delim, Out result) {
 	stringstream ss(s);
 	string item;
-	
+
 	while (getline(ss, item, delim))
 		*(result++) = item;
 }
@@ -26,9 +26,9 @@ vector<string> split(const string &s, const char delim) {
 }
 
 class LZWAlgorithm {
-	vector<string> mDic;	// 최초 인코딩된 문자 정보
+	vector<string> mDic;   // 최초 인코딩된 문자 정보
 
-public:
+  public:
 	///<summary> 최초로 사용될 사전을 생성한다. </summary>
 	void SetInitDic(string str) {
 		string tmp;
@@ -43,7 +43,7 @@ public:
 				mDic.push_back(tmp);
 			} else {
 #if DEBUG_LOG
-			cout << "이미 존재하는 문자 : " << tmp << endl;
+				cout << "이미 존재하는 문자 : " << tmp << endl;
 #endif
 			}
 		}
@@ -55,13 +55,13 @@ public:
 
 	/// <summary> 받은 문자열을 인코딩한다. </summary>
 	/// <param name="str"> 인코딩 대상 문자열 </param>
-    /// <returns> 인코딩 완료된 문자열을 반환한다. </returns>
+	/// <returns> 인코딩 완료된 문자열을 반환한다. </returns>
 	string Encode(string str) {
 		string result = "";
 		string tmp = "";
 		int index = 0;
 
-		unordered_map <string, int> map;
+		unordered_map<string, int> map;
 		for (string s : mDic)
 			map[s] = index++;
 
@@ -95,7 +95,7 @@ public:
 			// 마지막 문자 처리
 			if (i + 1 == length) {
 				if (map.find(tmp) == map.end()) {
-					cout <<"[" + tmp << "]단어가 사전에 없습니다. 일어날 수 없는일?" << endl;
+					cout << "[" + tmp << "]단어가 사전에 없습니다. 일어날 수 없는일?" << endl;
 					exit(0);
 				}
 				result += result.size() != 0 ? ("," + to_string(map[tmp])) : to_string(map[tmp]);
@@ -115,7 +115,7 @@ public:
 
 	/// <summary> 받은 문자열을 디코딩한다. </summary>
 	/// <param name="str"> 디코딩 대상 문자열 </param>
-    /// <returns> 디코딩 완료된 문자열을 반환한다. </returns>
+	/// <returns> 디코딩 완료된 문자열을 반환한다. </returns>
 	string Decode(string str) {
 		string result = "";
 		int index = 0;

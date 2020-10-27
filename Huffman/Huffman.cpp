@@ -14,28 +14,30 @@ using namespace std;
 class HuffmanTree {
 	/// <summary> 허프만 트리 노드 </summary>
 	struct Node {
-		char mChar;			// 저장된 문자
-		int mFrequency;		// 빈도수
-		Node* mLeftNode;	// 왼쪽 노드
-		Node* mRightNode;	// 오른쪽 노드
+		char mChar;         // 저장된 문자
+		int mFrequency;     // 빈도수
+		Node* mLeftNode;    // 왼쪽 노드
+		Node* mRightNode;   // 오른쪽 노드
 
-		Node(char c, int freq) : mChar(c), mFrequency(freq) {
+		Node(char c, int freq)
+			: mChar(c), mFrequency(freq) {
 			mLeftNode = mRightNode = nullptr;
 		}
 
-		Node(char c, int freq, Node* left, Node* right) : mChar(c), mFrequency(freq), mLeftNode(left), mRightNode(right) {
+		Node(char c, int freq, Node* left, Node* right)
+			: mChar(c), mFrequency(freq), mLeftNode(left), mRightNode(right) {
 		}
 
-		void SetChild(Node* left, Node* right){
+		void SetChild(Node* left, Node* right) {
 			mLeftNode = left;
 			mRightNode = right;
 		}
 	};
 
-	Node* mRoot = nullptr;					// 허프만 트리 루트
-	unordered_map <char, string> mTable;	// 인코딩된 문자 정보
+	Node* mRoot = nullptr;                // 허프만 트리 루트
+	unordered_map<char, string> mTable;   // 인코딩된 문자 정보
 
-public :
+  public:
 	HuffmanTree() {
 		mRoot = nullptr;
 	}
@@ -60,7 +62,7 @@ public :
 	void SetHuffmanTree(string str) {
 		if (str.length() == 0) return;
 
-		unordered_map<char, int> map;	// 문자, 빈도수 저장
+		unordered_map<char, int> map;   // 문자, 빈도수 저장
 		for (string::iterator i = str.begin(); i != str.end(); ++i) {
 			if (map.find(*i) != map.end()) {
 				map[*i]++;
@@ -86,10 +88,9 @@ public :
 		for (unordered_map<char, int>::iterator i = map.begin(); i != map.end(); ++i) {
 			container.emplace_back(new Node(i->first, i->second));
 		}
-		sort(container.begin(), container.end(), [](Node* a, auto b)-> bool {
+		sort(container.begin(), container.end(), [](Node* a, auto b) -> bool {
 			return a->mFrequency < b->mFrequency;
 		});
-
 
 		// 트리 작성 예외처리
 		if (container.size() == 1) {
@@ -106,7 +107,7 @@ public :
 		vector<Node*>::iterator it = container.begin();
 		int index = 0;
 		while (true) {
-			Node* tmp = new Node(' ', container[index]->mFrequency + container[index+1]->mFrequency, container[index], container[index+1]);// = GetParent(it);
+			Node* tmp = new Node(' ', container[index]->mFrequency + container[index + 1]->mFrequency, container[index], container[index + 1]);   // = GetParent(it);
 			if ((index + 2) >= container.size()) {
 				mRoot = tmp;
 				break;
@@ -116,12 +117,15 @@ public :
 			for (; i != container.size(); ++i) {
 				if (container[i]->mFrequency <= tmp->mFrequency)
 					continue;
-				else break;
+				else
+					break;
 			}
-			if (i == container.size()) container.emplace_back(tmp);
-			else container.insert(container.begin() + i, tmp);
+			if (i == container.size())
+				container.emplace_back(tmp);
+			else
+				container.insert(container.begin() + i, tmp);
 #if DEBUG_LOG
-			cout << "삽입 확인 : " << tmp->mFrequency << " 는 " << container[i-1]->mFrequency << "뒤에 위치한다." << endl;
+			cout << "삽입 확인 : " << tmp->mFrequency << " 는 " << container[i - 1]->mFrequency << "뒤에 위치한다." << endl;
 #endif
 			index += 2;
 		}
@@ -135,7 +139,7 @@ public :
 	}
 
 	/// <summary> 받은 문자열을 인코딩한다. </summary>
-    /// <param name="str"> 인코딩 대상 문자열 </param>
+	/// <param name="str"> 인코딩 대상 문자열 </param>
 	string Encode(string str) {
 		string result = "";
 		for (string::iterator i = str.begin(); i != str.end(); ++i) {
@@ -157,9 +161,8 @@ public :
 		string result = "";
 
 		// 문자 테이블에서 해당 하는 문자를 가져옴
-		function<char (unordered_map<char, string>, string)> GetDecodeChar = 
-			[](unordered_map<char, string> table, string encoded)-> char {
-
+		function<char(unordered_map<char, string>, string)> GetDecodeChar =
+			[](unordered_map<char, string> table, string encoded) -> char {
 			for (unordered_map<char, string>::iterator i = table.begin(); i != table.end(); ++i) {
 				if ((*i).second == encoded)
 					return (*i).first;
@@ -179,8 +182,10 @@ public :
 			}
 			word += *i;
 
-			if (*i == '0') target = target->mLeftNode;
-			else target = target->mRightNode;
+			if (*i == '0')
+				target = target->mLeftNode;
+			else
+				target = target->mRightNode;
 		}
 		result += GetDecodeChar(mTable, word);
 
@@ -204,23 +209,22 @@ int main() {
 	cout << "허프만 코드 디코딩 결과 : " << result << endl;
 }
 
-
-//#include <iostream> 
-//#include <unordered_map> 
+//#include <iostream>
+//#include <unordered_map>
 //using namespace std;
 //
 //unordered_map<char, string> umap;
 //int main() {
-//	// Declaring umap to be of <string, int> type 
-//	// key will be of string type and mapped value will 
-//	// be of double type 
+//	// Declaring umap to be of <string, int> type
+//	// key will be of string type and mapped value will
+//	// be of double type
 //
-//	// inserting values by using [] operator 
+//	// inserting values by using [] operator
 //	umap['a'] = "10";
 //	umap['b'] = "20";
 //	umap['c'] = "30";
 //
-//	// Traversing an unordered map 
+//	// Traversing an unordered map
 //	for (auto x : umap) {
 //		string str(x.first + " ");
 //		std::cout << x.first << endl;

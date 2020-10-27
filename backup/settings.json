@@ -3,7 +3,9 @@
     "editor.suggestSelection": "first",
     "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
     "C_Cpp.updateChannel": "Insiders",
-    "files.autoSave": "off",
+    
+    "editor.formatOnType": true,
+    "editor.formatOnSave": false,
     "terminal.integrated.shell.windows": "C:\\WINDOWS\\System32\\cmd.exe",
     "projectManager.any.ignoredFolders": [
         "node_modules",
@@ -36,5 +38,8 @@
             "args": ["-p",  "Linux (Ubuntu)", "-d", "."],
             "label": "WSL"
         }
-    ]
+    ],
+    "C_Cpp.clang_format_fallbackStyle": "Google",//"Visual Studio",
+    "C_Cpp.clang_format_style": "file",
+    //"C_Cpp.clang_format_path": "", // 이 옵션은 LLVM의 clang-format.exe 파일이 필요하다.
 }
