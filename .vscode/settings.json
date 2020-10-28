@@ -1,6 +1,24 @@
 {
     "files.associations": {
-        "vector": "cpp"
+        "vector": "cpp",
+        "functional": "cpp",
+        "list": "cpp",
+        "system_error": "cpp",
+        "type_traits": "cpp",
+        "xhash": "cpp",
+        "xlocale": "cpp",
+        "xstring": "cpp",
+        "xutility": "cpp",
+        "memory": "cpp",
+        "sstream": "cpp",
+        "xiosbase": "cpp",
+        "xmemory": "cpp",
+        "ostream": "cpp",
+        "string": "cpp",
+        "exception": "cpp",
+        "tuple": "cpp",
+        "unordered_map": "cpp",
+        "utility": "cpp"
     },
     "projectManager.git.baseFolders": [
         "C:\\Users\\Kanghyuk\\Desktop\\github_repository"

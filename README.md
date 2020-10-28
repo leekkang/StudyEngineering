@@ -37,6 +37,19 @@
   * [settings.json](backup/settings.json)
   * [keybindings.json](backup/keybindings.json)
 
+## Codility
+
+### [Time Complexity](https://app.codility.com/programmers/lessons/3-time_complexity/)
+
+* 개략적으로 프로그램의 러닝타임을 표기하는 방법 (정확한 시간 측정은 노동-집약적(labour-intensive)이다.)
+* [Big-O notation]을 사용한다.
+	* 점근 표기법(Asymptotic notation), 함수의 증가 양상을 다른 함수와의 비교로 사용하는 방법.
+* 컴퓨팅 파워와 프로그램 실행 시간, 반복 횟수로 대략적인 복잡도를 유추할 수 있다.
+	* 파워 / 시간 이 클 수록, 반복 횟수가 높을 수록 복잡도가 낮다.
+* `공간 복잡도(Space complexity)` 또한 시간 복잡도와 표기법이 같다.
+	* 전역 변수, 지역 변수 및 동적 포인터 자료구조와 재귀 함수의 스택 내용, 입력 데이터까지 전부 포함해야 하기 때문에 계산이 좀 더 까다롭다.
+
+
 ## Encoding Algorithm
 
 ### [Huffman Code](Huffman/Huffman.cpp)
@@ -55,18 +68,6 @@
 * 사전은 무한히 수정되지 않고 최대 항목 수를 지정한다. 결국 자주 발생하는 하위 문자열이 사전에 들어가게 된다.
 * 데이터의 제한된 분석만 수행하기 때문에 최적으로 동작하지는 않는다.
 * [LZW 참조1], [LZW 참조2:위키피디아]
-
-## Codility
-
-### [Time Complexity](https://app.codility.com/programmers/lessons/3-time_complexity/)
-
-* 개략적으로 프로그램의 러닝타임을 표기하는 방법 (정확한 시간 측정은 노동-집약적(labour-intensive)이다.)
-* [Big-O notation]을 사용한다.
-	* 점근 표기법(Asymptotic notation), 함수의 증가 양상을 다른 함수와의 비교로 사용하는 방법.
-* 컴퓨팅 파워와 프로그램 실행 시간, 반복 횟수로 대략적인 복잡도를 유추할 수 있다.
-	* 파워 / 시간 이 클 수록, 반복 횟수가 높을 수록 복잡도가 낮다.
-* `공간 복잡도(Space complexity)` 또한 시간 복잡도와 표기법이 같다.
-	* 전역 변수, 지역 변수 및 동적 포인터 자료구조와 재귀 함수의 스택 내용, 입력 데이터까지 전부 포함해야 하기 때문에 계산이 좀 더 까다롭다.
 	
 
 
