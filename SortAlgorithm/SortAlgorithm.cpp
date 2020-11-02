@@ -14,15 +14,82 @@ void Swap(T& left, T& right) {
 }
 
 template <typename T>
-uint64_t SortBubble(T&& arr, size_t length) {
+uint64_t SortBubble(T* arr, size_t length) {	// T& 를 어떻게 쓰지..?
+	uint64_t count = 0;
+
+	for (int i = 0; i < length; ++i) {	// 반복문은 웬만하면 signed 자료형을 사용하자. unsigned는 버그가 발생할 가능성이 높다.
+		for (int j = 1; j < length - i; ++j) {
+			if (arr[j - 1] > arr[j]) {
+				Swap(arr[j - 1], arr[j]);
+			}
+			++count;	// 전위연산자는 l-value, 후위연산자는 r-value를 리턴한다.
+		}
+	}
+
+	return count;
+}
+
+template <typename T>
+uint64_t SortSelection(T* arr, size_t length) {
 	uint64_t count = 0;
 
 	for (int i = 0; i < length; ++i) {
-		for (int j = 0; j < (length - 1) - i; ++j) {
-			if (arr[j] > arr[j + 1]) {
-				Swap(arr[j], arr[j + 1]);
-				count++;
+		uint64_t index = i;
+		for (int j = i + 1; j < length; ++j) {
+			if (arr[index] > arr[j]) {
+				index = j;
 			}
+			++count;
+		}
+
+		if (i != index) {
+			Swap(arr[i], arr[index]);
+		}
+	}
+
+	return count;
+}
+
+template <typename T>
+uint64_t SortInsertion(T* arr, size_t length) {
+	uint64_t count = 0;
+
+	for (int i = 1; i < length; ++i) {
+		T temp = arr[i];
+		int j = i - 1;
+		for (; j >= 0 && arr[j] > temp; --j) {
+			arr[j + 1] = arr[j];
+			++count;
+		}
+		arr[j + 1] = temp;
+		++count;
+	}
+
+	return count;
+}
+
+template <typename T>
+uint64_t SortShell(T* arr, size_t length) {
+	uint64_t count = 0;
+
+	auto insertionSort = [&arr, &count](const int& first, const int& last, const int& gap) {
+		for (int i = first + gap; i < last; i += gap) {
+			T temp = arr[i];
+			int j = i - gap;
+			for (; j >= first && arr[j] > temp; j -= gap) {
+				arr[j + gap] = arr[j];
+				++count;
+			}
+			arr[j + gap] = temp;
+			++count;
+		}
+	};
+
+	for (int gap = static_cast<int>(length / 2); gap > 0; gap /= 2) {
+		if (gap % 2 == 0) ++gap;	// 간격이 홀수이면 더 빠르다.
+
+		for (int i = 0; i < gap; ++i) {
+			insertionSort(i, length, gap);
 		}
 	}
 
@@ -34,10 +101,10 @@ void PrintComplexity(const uint64_t count, const uint64_t n) {
 	std::cout << "Loop Count : " << count << ", Sorting Complexity (approximately) : ";
 	if (count < n) {
 		std::cout << "1 ~ N (1 ~ " << n << ")\n";
-	} else if (count < n * log(n)) {
-		std::cout << "N ~ NlogN (" << n << " ~ " << n * log(n) << ")\n";
+	} else if (count < n * log2(n)) {
+		std::cout << "N ~ Nlog2_N (" << n << " ~ " << n * log2(n) << ")\n";
 	} else if (count < n * n) {
-		std::cout << "NlogN ~ N^2 (" << n * log(n) << " ~ " << n * n << ")\n";
+		std::cout << "Nlog2_N ~ N^2 (" << n * log2(n) << " ~ " << n * n << ")\n";
 	} else if (count < pow(2, n)) {
 		std::cout << "N^2 ~ 2^N (" << n * n << " ~ " << pow(2, n) << ")\n";
 	} else {
@@ -59,9 +126,9 @@ int main() {
 	std::random_device device;          // 시드값 생성기 (속도 느림)
 	std::mt19937 generator(device());   // 메르센 트위스터 엔진 (64비트용 : std::mt19937_64)
 
-	std::uniform_int_distribution<int> distribution(1, 100);   // 난수 분포(균등 분포)와 범위
+	std::uniform_int_distribution<int> distribution(1, 99);   // 난수 분포(균등 분포)와 범위
 
-	size_t length = 10;
+	size_t length = 20;
 	std::vector<int> unsortedArray(length);	// resize. not reserve
 	
 	std::cout << "Unsorted Array\n";
@@ -75,16 +142,65 @@ int main() {
 	steady_clock::time_point start;
 	std::vector<int> sortedArray;
 
-	std::cout << "\nBubble Sort Start\n";
+
+	std::cout << "\n Bubble Sort Start\n";
 
 	sortedArray = unsortedArray; // deep copy
 	start = steady_clock::now();
-	loopCount = SortBubble<int*>(sortedArray.data(), length);
+	loopCount = SortBubble<int>(sortedArray.data(), length);
 	PrintComplexity(loopCount, length);
 	std::cout << "Sorting Time : " << duration_cast<microseconds>(steady_clock::now() - start).count() << " us\n";
 	std::cout << "Sorted Array\n";
 	for (auto& e : sortedArray) {
 		std::cout << std::setw(3) << e;
 	}
-	std::cout << "\nBubble Sort End\n" << std::endl;
+	std::cout << "\n Bubble Sort End\n" << std::endl;
+
+	
+	std::cout << "\n Selection Sort Start\n";
+
+	sortedArray = unsortedArray; // deep copy
+	start = steady_clock::now();
+	loopCount = SortSelection<int>(sortedArray.data(), length);
+	PrintComplexity(loopCount, length);
+	std::cout << "Sorting Time : " << duration_cast<microseconds>(steady_clock::now() - start).count() << " us\n";
+	// std::cout << "Sorted Array\n";
+	// for (auto& e : sortedArray) {
+	// 	std::cout << std::setw(3) << e;
+	// }
+	std::cout << "\n Selection Sort End\n" << std::endl;
+
+	
+	std::cout << "\n Insertion Sort Start\n";
+
+	sortedArray = unsortedArray; // deep copy
+	start = steady_clock::now();
+	loopCount = SortInsertion<int>(sortedArray.data(), length);
+	PrintComplexity(loopCount, length);
+	std::cout << "Sorting Time : " << duration_cast<microseconds>(steady_clock::now() - start).count() << " us\n";
+	// std::cout << "Sorted Array\n";
+	// for (auto& e : sortedArray) {
+	// 	std::cout << std::setw(3) << e;
+	// }
+	std::cout << "\n Insertion Sort End\n" << std::endl;
+
+	
+	std::cout << "\n Shell Sort Start\n";
+	sortedArray = unsortedArray; // deep copy
+
+	std::cout << "Unsorted Array\n";
+	for (auto& e : unsortedArray) {
+		std::cout << std::setw(3) << e;
+	}
+	std::cout << std::endl;
+
+	start = steady_clock::now();
+	loopCount = SortShell<int>(sortedArray.data(), length);
+	PrintComplexity(loopCount, length);
+	std::cout << "Sorting Time : " << duration_cast<microseconds>(steady_clock::now() - start).count() << " us\n";
+	std::cout << "Sorted Array\n";
+	for (auto& e : sortedArray) {
+		std::cout << std::setw(3) << e;
+	}
+	std::cout << "\n Shell Sort End\n" << std::endl;
 }

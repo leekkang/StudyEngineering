@@ -11,12 +11,12 @@
   * `ctrl + shift + b` : `task.json`의 설정으로 빌드
   * `ctrl + shift + t` : 방금 종료한 파일 다시 열기
   * `ctrl + shift + d` : 왼쪽 `실행 탭` 열기
-  * `ctrl + shift + e` : 왼쪽 `탐색기 탭` 열기
   * `ctrl + shift + x` : 왼쪽 `마켓 플레이스 탭` 열기
   * `ctrl + shift + y` : 디버그 콘솔 열기
   * `ctrl + shift + g` : `Shell launcher` 실행
   * `ctrl + shift + c` : 외부 콘솔 프로그램 열기(`WT powershell`로 되어있음)
   * `ctrl + k  v` : 우측에 미리보기 창 출력
+  * `ctrl + k ctrl + s` : 키 바인딩 창 출력
   * `alt + shift + up or down` : 위/아래에 현재 줄 복사
   * `ctrl + alt + up or down` : 위/아래의 동일한 위치에 커서 복사
   * `ctrl + page up or page down` : 편집기 탭 이동
@@ -44,6 +44,7 @@
 * 개략적으로 프로그램의 러닝타임을 표기하는 방법 (정확한 시간 측정은 노동-집약적(labour-intensive)이다.)
 * [Big-O notation]을 사용한다.
 	* 점근 표기법(Asymptotic notation), 함수의 증가 양상을 다른 함수와의 비교로 사용하는 방법.
+	* `\left | f(x) \right | = O(g(x)) \quad as \; x  \rightarrow \infty`
 * 컴퓨팅 파워와 프로그램 실행 시간, 반복 횟수로 대략적인 복잡도를 유추할 수 있다.
 	* 파워 / 시간 이 클 수록, 반복 횟수가 높을 수록 복잡도가 낮다.
 * `공간 복잡도(Space complexity)` 또한 시간 복잡도와 표기법이 같다.
@@ -68,7 +69,45 @@
 * 사전은 무한히 수정되지 않고 최대 항목 수를 지정한다. 결국 자주 발생하는 하위 문자열이 사전에 들어가게 된다.
 * 데이터의 제한된 분석만 수행하기 때문에 최적으로 동작하지는 않는다.
 * [LZW 참조1], [LZW 참조2:위키피디아]
-	
+
+## Sorting Algorithm
+
+### Bubble Sort
+
+* 간단해서 비효율적인 알고리즘 (쓰이지 않는다)
+* `n`번째와 `n+1`번째를 비교하여 큰 값을 뒤쪽으로 스왑한다. 배열의 뒤쪽부터 정렬되는 형태
+* `Time Complexity` : `O(N^2)`
+* `Space Complexity` : `O(N)`
+
+### Selection Sort
+
+* 간단해서 비효율적인 알고리즘2 (쓰이지 않는다)
+* `n`번째와 크기 비교를 했을 때 더 작으면 해당 `index`를 저장, 바깥쪽 루프가 끝났을 때 값을 앞쪽으로 스왑한다. 배열의 앞쪽부터 정렬되는 형태
+* `Time Complexity` : `O(N^2)`
+* `Space Complexity` : `O(N)`
+
+
+### Insertion Sort
+
+* 정렬이 된 앞부분과 비교해서 적절한 위치에 `n`번째 값을 삽입한다. 배열의 앞쪽부터 정렬되는 형태
+* `Time Complexity`
+  * `Best Case` : `O(N)` (이미 정렬된 배열)
+  * `Average Case` : `O(N^2)`
+  * `Worst Case` : `O(N^2)` (간격이 잘못 설정된 경우)
+* `Space Complexity` : `O(N)`
+
+
+### Shell Sort
+
+* `Insertion Sort`의 `Worst Case`를 개선하기 위해 나온 알고리즘. 삽입 정렬보다 빠르다.
+* 일정 `간격`으로 `부분 리스트`를 만들어 `삽입 정렬`을 시행, `간격`이 1이 될때까지 반복한다.(간격이 1이면 부분 리스트 == 전체 리스트)
+  * `부분 리스트`의 길이는 `리스트 / 간격` 과 같다. ex) 배열길이 10인 리스트의 간격이 5일 경우, 부분 리스트의 길이는 2가 된다.
+  * `간격`이 짝수일 때 보다 홀수일 때가 더 빠르다.
+* `Time Complexity`
+  * `Best Case` : `O(N)` (이미 정렬된 배열)
+  * `Average Case` : `O(N^1.5)`
+  * `Worst Case` : `O(N^2)` (역순으로 정렬된 배열)
+* `Space Complexity` : `O(N)`
 
 
 [탐욕 알고리즘(greedy algorithm)]: https://ko.wikipedia.org/wiki/%ED%83%90%EC%9A%95_%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98
