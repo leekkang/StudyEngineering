@@ -72,19 +72,34 @@
 
 ## Sorting Algorithm
 
+* `Stable Sort (안정 정렬)`
+  * 중복된 키의 순서가 변경되지 않게 정렬하는 알고리즘
+  * `Insertion`, `Merge`, `Bubble`, `Counting` 이 대표적인 `Stable Sort`이다.
+  * `Selection`, `Heap`, `Shell`, `Quick` 이 대표적인 `Unstable Sort`이다.
+* `In-place Algorithm (제자리 정렬)`
+  * 추가 메모리 사용량이 정렬 항목 외에 `O(1)`개, 최대 `O(log(N))`개를 넘지 않는 정렬 알고리즘
+  * `Insertion`, `Selection`, `Bubble`, `Shell`, `Heap`, `Quick` 이 대표적인 `In-place Sort` 이다.
+    * `Quick`은 `O(log(N))`개의 메모리를 사용하기 때문에 엄격한 정의로는 `Not In-place Sort` 이지만, 일반적으로는 `In-place Sort`로 분류한다.
+  * `Merge`, `Counting`, `Radix`, `Bucket` 이 대표적인 `Not In-place Sort` 이다.
+* `Comparison Sort (비교 정렬)`
+  * 비교 동작을 통해 목록 요소들을 읽어내는 정렬 알고리즘
+  * `O(NlogN)` 보다 더 나은 성능을 낼 수 없다.
+  * `Quick`, `Heap`, `Merge`, `Shell`, `Insertion` 등 대다수의 정렬 알고리즘이 여기에 속한다.
+  * `Bucket`, `Counting`, `Radix` 등이 `Non-Comparison Sort` 이다.
+
 ### Bubble Sort
 
 * 간단해서 비효율적인 알고리즘 (쓰이지 않는다)
 * `n`번째와 `n+1`번째를 비교하여 큰 값을 뒤쪽으로 스왑한다. 배열의 뒤쪽부터 정렬되는 형태
 * `Time Complexity` : `O(N^2)`
-* `Space Complexity` : `O(N)`
+* `Space Complexity` : `O(1)`
 
 ### Selection Sort
 
 * 간단해서 비효율적인 알고리즘2 (쓰이지 않는다)
 * `n`번째와 크기 비교를 했을 때 더 작으면 해당 `index`를 저장, 바깥쪽 루프가 끝났을 때 값을 앞쪽으로 스왑한다. 배열의 앞쪽부터 정렬되는 형태
 * `Time Complexity` : `O(N^2)`
-* `Space Complexity` : `O(N)`
+* `Space Complexity` : `O(1)`
 
 
 ### Insertion Sort
@@ -94,7 +109,7 @@
   * `Best Case` : `O(N)` (이미 정렬된 배열)
   * `Average Case` : `O(N^2)`
   * `Worst Case` : `O(N^2)` (간격이 잘못 설정된 경우)
-* `Space Complexity` : `O(N)`
+* `Space Complexity` : `O(1)`
 
 
 ### Shell Sort
@@ -110,7 +125,23 @@
 * `Space Complexity` : `O(N)`
 
 
+### Merge Sort
+
+* [분할 정복 알고리즘 (Divide and Conquer Algorithm)] 이다.
+* 리스트의 길이가 0 또는 1이 될 때까지 리스트를 분할한 다음, 각각을 정렬하면서 합친다.
+* 병합 과정에서 추가적으로 배열 길이만큼의 메모리가 필요하다.
+* `Top-Down`과 `Bottom-Up` 두 가지 방식이 있다.
+  * `Top-Down`은 이진 트리 `Preorder Traversal`과 동일한 순서로 결합을 한다. 재귀를 사용하는 코드가 여기에 속한다.
+  * `Bottom-Up`은 쪼갠 리스트들의 길이가 짧은 순서로 결합을 한다. 재귀를 사용하지 않는 코드가 여기에 속한다.
+* 재귀 함수 호출 시 원본 리스트와 임시 리스트의 인자 전달 순서를 바꿔서 불필요하게 임시 리스트로 복사를 수행하는 오버헤드를 줄이는 방법이 있다.
+  * [참고](https://m.blog.naver.com/osw5144/120207767212)
+  * [SortAlgorithm.cpp](SortAlgorithm/SortAlgorithm.cpp) 에 구현된 함수는 인자를 넘기지 않기 때문에 사용하지 못한다.
+* `Time Complexity` : `O(NlogN)`
+* `Space Complexity` : `O(N)`
+
+
 [탐욕 알고리즘(greedy algorithm)]: https://ko.wikipedia.org/wiki/%ED%83%90%EC%9A%95_%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98
 [LZW 참조1]: https://www2.cs.duke.edu/csed/curious/compression/lzw.html
 [LZW 참조2:위키피디아]: https://ko.wikipedia.org/wiki/LZW
 [Big-O notation]: https://en.wikipedia.org/wiki/Big_O_notation
+[분할 정복 알고리즘 (Divide and Conquer Algorithm)]: https://ko.wikipedia.org/wiki/%EB%B6%84%ED%95%A0_%EC%A0%95%EB%B3%B5_%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98
