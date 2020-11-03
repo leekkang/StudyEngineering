@@ -3,9 +3,9 @@
 #include <vector>
 #include <random>
 #include <chrono>
-#include <cmath>		// log, log10
-#include <iomanip>		// input output manipulation (std::setw,...)
-#include <functional> 	// std::function
+#include <cmath>        // log, log10
+#include <iomanip>      // input output manipulation (std::setw,...)
+#include <functional>   // std::function
 
 template <typename T>   // template<class T> 와 동일
 void Swap(T& left, T& right) {
@@ -15,20 +15,20 @@ void Swap(T& left, T& right) {
 }
 
 template <typename T>
-uint32_t SortBubble(T* arr, const size_t length) {	// T& 를 어떻게 쓰지..?
+uint32_t SortBubble(T* arr, const size_t length) {   // T& 를 어떻게 쓰지..?
 	uint32_t count = 0;
 
-	for (int i = 0; i < length; ++i) {	// 반복문은 웬만하면 signed 자료형을 사용하자. unsigned는 버그가 발생할 가능성이 높다.
+	for (int i = 0; i < length; ++i) {   // 반복문은 웬만하면 signed 자료형을 사용하자. unsigned는 버그가 발생할 가능성이 높다.
 		for (int j = 1; j < length - i; ++j) {
 			if (arr[j - 1] > arr[j]) {
 				std::swap<T>(arr[j - 1], arr[j]);
 				//Swap(arr[j - 1], arr[j]);
 			}
-			++count;	// 전위연산자는 l-value, 후위연산자는 r-value를 리턴한다.
+			++count;   // 전위연산자는 l-value, 후위연산자는 r-value를 리턴한다.
 		}
 	}
 
-	return count;	// 자잘한 연산은 제외하고 주가되는 비교, 대입만 측정한다.
+	return count;   // 자잘한 연산은 제외하고 주가되는 비교, 대입만 측정한다.
 }
 
 template <typename T>
@@ -90,7 +90,7 @@ uint32_t SortShell(T* arr, const size_t length) {
 	};
 
 	for (int gap = static_cast<int>(length / 2); gap > 0; gap /= 2) {
-		if (gap % 2 == 0) ++gap;	// 간격이 홀수이면 더 빠르다.
+		if (gap % 2 == 0) ++gap;   // 간격이 홀수이면 더 빠르다.
 
 		for (int i = 0; i < gap; ++i) {
 			insertionSort(i, length, gap);
@@ -100,12 +100,10 @@ uint32_t SortShell(T* arr, const size_t length) {
 	return count;
 }
 
-//using mergeFuncPoint = void (*const)(const int&, const int&, const int&);	// == typedef void(*const mergeFuncPoint)(const int&, const int&, const int&)
-
 template <typename T>
 uint32_t SortMergeTopDown(T* arr, const size_t length) {
 	uint32_t count = 0;
-	std::vector<T> temp(length);	// resize. not reserve
+	std::vector<T> temp(length);   // resize. not reserve
 
 	// 하향식 2-way merge sort
 	// 재귀함수로 사용하기 때문에 auto 타입으로 정의하지 못한다. -> inline이 아니다.
@@ -114,7 +112,7 @@ uint32_t SortMergeTopDown(T* arr, const size_t length) {
 		++count;
 		if (end - begin < 2)
 			return;
-			
+
 		// begin + end 가 홀수면 왼쪽 리스트의 길이가 오른쪽 리스트의 길이보다 짧다.
 		// divide
 		int middle = (begin + end) / 2;
@@ -131,7 +129,7 @@ uint32_t SortMergeTopDown(T* arr, const size_t length) {
 				temp[i] = arr[left++];
 			else
 				temp[i] = arr[right++];
-			
+
 			++count;
 		}
 
@@ -141,6 +139,40 @@ uint32_t SortMergeTopDown(T* arr, const size_t length) {
 	};
 
 	merge(0, length);
+
+	return count;
+}
+
+template <typename T>
+uint32_t SortMergeBottomUp(T* arr, const size_t length) {
+	uint32_t count = 0;
+	std::vector<T> temp(length);   // resize. not reserve
+
+	int left, right, middle, end;
+	// divide
+	for (int width = 1; width < length; width *= 2) {
+		// conquer
+		for (int begin = 0; begin < length; begin += width * 2) {
+			end = std::min(begin + width * 2, static_cast<int>(length));
+			// combine
+			left = begin;
+			right = std::min(begin + width, static_cast<int>(length));
+			middle = right;
+			for (int i = begin; i < end; ++i) {
+				// 왼쪽 리스트가 끝나지 않은 상황에서, 오른쪽 리스트가 끝났거나 왼쪽의 값이 오른쪽 값보다 작을 경우
+				if (left < middle && (right >= end || arr[left] <= arr[right]))
+					temp[i] = arr[left++];
+				else
+					temp[i] = arr[right++];
+
+				++count;
+			}
+		}
+		
+		// copy
+		for (int i = 0; i < length; ++i)
+			arr[i] = temp[i];
+	}
 
 	return count;
 }
@@ -177,9 +209,9 @@ int main() {
 
 	std::uniform_int_distribution<int> distribution(1, 99);   // 난수 분포(균등 분포)와 범위
 
-	size_t length{20};	// Uniform Initialization (up to C++11)
-	std::vector<int> unsortedArray(length);	// resize. not reserve
-	
+	size_t length{20};                        // Uniform Initialization (up to C++11)
+	std::vector<int> unsortedArray(length);   // resize. not reserve
+
 	std::cout << "Unsorted Array\n";
 	for (auto& e : unsortedArray) {
 		e = distribution(generator);
@@ -192,15 +224,19 @@ int main() {
 	std::vector<int> sortedArray;
 
 	std::vector<std::string> name{
-		"Bubble", "Selection", "Insertion", "Shell", "Merge",
+		"Bubble",
+		"Selection",
+		"Insertion",
+		"Shell",
+		"Merge",
 	};
-	using funcPoint = uint32_t (*)(int*, const size_t);
+	using funcPoint = uint32_t (*)(int*, const size_t);   // == typedef uint32_t(*funcPoint)(int*, const size_t)
 	funcPoint function[]{
 		SortBubble<int>,
 		SortSelection<int>,
 		SortInsertion<int>,
 		SortShell<int>,
-		SortMergeTopDown<int>,
+		SortMergeBottomUp<int>,
 	};
 	// std::vector<funcPoint> function{
 	// 	SortBubble<int>,
@@ -228,6 +264,7 @@ int main() {
 			}
 		}
 
-		std::cout << "\n " << name[i] << " Sort End\n"<< std::endl;
+		std::cout << "\n " << name[i] << " Sort End\n"
+				  << std::endl;
 	}
 }
