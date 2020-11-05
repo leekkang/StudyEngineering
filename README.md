@@ -140,6 +140,11 @@
 * `Space Complexity` : `O(N)`
 
 
+### Quick Sort
+
+* [분할 정복 알고리즘 (Divide and Conquer Algorithm)] 이다.
+
+
 [탐욕 알고리즘(greedy algorithm)]: https://ko.wikipedia.org/wiki/%ED%83%90%EC%9A%95_%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98
 [LZW 참조1]: https://www2.cs.duke.edu/csed/curious/compression/lzw.html
 [LZW 참조2:위키피디아]: https://ko.wikipedia.org/wiki/LZW
