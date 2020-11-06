@@ -177,6 +177,43 @@ uint32_t SortMergeBottomUp(T* arr, const size_t length) {
 	return count;
 }
 
+template <typename T>
+uint32_t SortQuick(T* arr, const size_t length) {
+	uint32_t count = 0;
+
+	// 재귀함수로 사용하기 때문에 auto 타입으로 정의하지 못한다. -> inline이 아니다.
+	std::function<void(const int&, const int&)> quick = [&](const int& begin, const int& end) {
+		// end 도 인덱스에 포함된다. -> arr[end] : o, arr[end-1] : o
+		if (begin >= end)
+			return;
+
+		// divide
+		int left = begin - 1;
+		int pivot = end;	// pivot 을 오른쪽 끝으로 잡는다.
+		for (int i = begin; i < end; ++i) {
+			// 리스트 끝까지 순회하면서 피벗보다 작은 값들을 앞으로 옮긴다.
+			if (arr[i] < arr[pivot]) {
+				++left;
+				if (left != i)	// 둘이 같은 값이면 굳이 바꿀 필요가 없다.
+					Swap(arr[left], arr[i]);
+					//std::swap<T>(arr[left], arr[i]);
+				++count;
+			}
+		}
+		Swap(arr[++left], arr[pivot]);
+		//std::swap<T>(arr[++left], arr[pivot]);
+		++count;
+
+		// conquer
+		quick(begin, left - 1);
+		quick(left + 1, end);
+	};
+
+	quick(0, length - 1);
+
+	return count;
+}
+
 /// <summary> 대략적인 시간복잡도를 출력하는 함수 </summary>
 void PrintComplexity(const uint32_t count, const uint32_t n) {
 	std::cout << "Loop Count : " << count << ", Sorting Complexity (approximately) : ";
@@ -223,37 +260,41 @@ int main() {
 	steady_clock::time_point start;
 	std::vector<int> sortedArray;
 
-	std::vector<std::string> name{
-		"Bubble",
-		"Selection",
-		"Insertion",
-		"Shell",
-		"Merge",
-	};
+	// std::vector<std::string> name{
+	// 	"Bubble",
+	// 	"Selection",
+	// 	"Insertion",
+	// 	"Shell",
+	// 	"Merge",
+	// 	"Quick",
+	// };
 	using funcPoint = uint32_t (*)(int*, const size_t);   // == typedef uint32_t(*funcPoint)(int*, const size_t)
-	funcPoint function[]{
-		SortBubble<int>,
-		SortSelection<int>,
-		SortInsertion<int>,
-		SortShell<int>,
-		SortMergeBottomUp<int>,
-	};
-	// std::vector<funcPoint> function{
+	// funcPoint function[]{
 	// 	SortBubble<int>,
 	// 	SortSelection<int>,
 	// 	SortInsertion<int>,
 	// 	SortShell<int>,
-	// 	SortMergeTopDown<int>,
+	// 	SortMergeBottomUp<int>,
+	// 	SortQuick<int>,
 	// };
 
+	std::vector<std::pair<std::string, funcPoint>> sortPair{
+		{"Bubble", SortBubble<int>},
+		{"Selection", SortSelection<int>},
+		{"Insertion", SortInsertion<int>},
+		{"Shell", SortShell<int>},
+		{"Merge", SortMergeBottomUp<int>},
+		{"Quick", SortQuick<int>},
+	};
+	
 	bool bPrintArray = true;
-	for (int i = 0; i < name.size(); ++i) {
-		std::cout << "\n " << name[i] << " Sort Start\n";
+	for (const auto& pair : sortPair) {
+		std::cout << "\n " << pair.first << " Sort Start\n";
 
 		sortedArray = unsortedArray;   // deep copy
 
 		start = steady_clock::now();
-		loopCount = function[i](sortedArray.data(), length);
+		loopCount = pair.second(sortedArray.data(), length);
 		PrintComplexity(loopCount, length);
 		std::cout << "Sorting Time : " << duration_cast<microseconds>(steady_clock::now() - start).count() << " us\n";
 
@@ -264,7 +305,7 @@ int main() {
 			}
 		}
 
-		std::cout << "\n " << name[i] << " Sort End\n"
+		std::cout << "\n " << pair.first << " Sort End\n"
 				  << std::endl;
 	}
 }

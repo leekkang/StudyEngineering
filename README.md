@@ -142,8 +142,16 @@
 
 ### Quick Sort
 
+* 보편적으로 가장 많이 사용되는 정렬 알고리즘이다.
 * [분할 정복 알고리즘 (Divide and Conquer Algorithm)] 이다.
-
+* 배열을 일정한 기준(`Pivot`)에 따라 큰 값과 작은 값으로 분할한 다음, 각각을 정렬하면서 합친다.
+  * `Merge Sort`와 달리 배열을 임의로 나누지 않기 때문에 효율적이지만, 피벗값이 잘못 선택되면 `O(N^2)`가 될 수 있다.
+  * [SortAlgorithm.cpp](SortAlgorithm/SortAlgorithm.cpp) 에 구현된 함수는 리스트의 마지막 값을 피벗으로 한다.
+* `Time Complexity`
+  * `Best Case` : `O(NlogN)`
+  * `Average Case` : `O(NlogN)`
+  * `Worst Case` : `O(N^2)` (이미 정렬된 배열)
+* `Space Complexity` : `O(1)`
 
 [탐욕 알고리즘(greedy algorithm)]: https://ko.wikipedia.org/wiki/%ED%83%90%EC%9A%95_%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98
 [LZW 참조1]: https://www2.cs.duke.edu/csed/curious/compression/lzw.html
