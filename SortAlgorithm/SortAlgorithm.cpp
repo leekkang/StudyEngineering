@@ -254,6 +254,12 @@ int main() {
 		e = distribution(generator);
 		std::cout << std::setw(3) << e;
 	}
+	//// Sorted array test code
+	// int num = 1;
+	// for (auto& e : unsortedArray) {
+	// 	e = num++;
+	// 	std::cout << std::setw(3) << e;
+	// }
 	std::cout << std::endl;
 
 	uint32_t loopCount;
