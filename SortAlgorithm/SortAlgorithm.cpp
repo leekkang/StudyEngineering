@@ -261,6 +261,100 @@ uint32_t SortHeap(T* arr, const size_t length) {
 	return count;
 }
 
+template <typename T>
+uint32_t SortCounting(T* arr, const size_t length) {
+	uint32_t count = 0;
+
+	// 최대값 찾기
+	int max = 0;
+	for (int i = 0; i < length; ++i) {
+		++count;
+		if (arr[i] > max) max = arr[i];
+	}
+
+	// 카운팅 배열 작성
+	std::vector<T> countArr(max + 1, 0);
+	for (int i = 0; i < length; ++i) {
+		++count;
+		++countArr[arr[i]];
+	}
+	// 누적 합 계산
+	for (int i = 1; i < max + 1; ++i) {
+		++count;
+		countArr[i] += countArr[i - 1];
+	}
+
+	// 카피 배열 작성
+	std::vector<T> temp(length);
+	for (int i = 0; i < length; ++i) {
+		++count;
+		--countArr[arr[i]];
+		temp[countArr[arr[i]]] = arr[i];
+	}
+
+	// 카피 배열 원본에 복사 (소팅 알고리즘에 포함되는 부분은 아님)
+	for (int i = 0; i < length; ++i) {
+		++count;
+		arr[i] = temp[i];
+	}
+
+	return count;
+}
+
+template <typename T>
+uint32_t SortRadix(T* arr, const size_t length) {
+	uint32_t count = 0;
+	int radix = 10;
+
+	// 최대 자리수 찾기
+	int maxRadix = 0;
+	for (int i = 0; i < length; ++i) {
+		++count;
+		if (arr[i] > maxRadix) maxRadix = arr[i];
+	}
+	maxRadix = static_cast<int>(log10(static_cast<double>(maxRadix)) + 1);	// radix에 따라가도록 변경해야함.
+
+	// 카운팅 배열
+	std::vector<T> countArr(radix);
+
+	int index, pval, i;
+	for (int n = 0; n < maxRadix; ++n) {
+		pval = static_cast<int>(pow(radix, n));
+
+		// initialize
+		countArr.assign(radix, 0);
+		//for (int i = 0; i < radix; ++i) countArr[i] = 0;
+
+		// counting sort 를 사용한다.
+		for (i = 0; i < length; ++i) {
+			++count;
+			++countArr[static_cast<int>(arr[i] / pval) % radix];
+		}
+		// 누적 합 계산
+		for (i = 1; i < radix; ++i) {
+			++count;
+			countArr[i] += countArr[i - 1];
+		}
+
+		// 카피 배열 작성
+		std::vector<T> temp(length);
+		for (i = length - 1; i >= 0; --i) {
+			++count;
+			index = static_cast<int>(arr[i] / pval) % radix;
+			--countArr[index];
+			temp[countArr[index]] = arr[i];
+		}
+
+		// 카피 배열 원본에 복사 (소팅 알고리즘에 포함되는 부분은 아님)
+		for (i = 0; i < length; ++i) {
+			++count;
+			arr[i] = temp[i];
+		}
+	}
+
+	return count;
+}
+
 /// <summary> 대략적인 시간복잡도를 출력하는 함수 </summary>
 void PrintComplexity(const uint32_t count, const uint32_t n) {
 	std::cout << "Loop Count : " << count << ", Sorting Complexity (approximately) : ";
@@ -291,21 +385,21 @@ int main() {
 	std::random_device device;          // 시드값 생성기 (속도 느림)
 	std::mt19937 generator(device());   // 메르센 트위스터 엔진 (64비트용 : std::mt19937_64)
 
-	std::uniform_int_distribution<int> distribution(1, 99);   // 난수 분포(균등 분포)와 범위
+	std::uniform_int_distribution<int> distribution(1, 999);   // 난수 분포(균등 분포)와 범위
 
-	size_t length{20};                        // Uniform Initialization (up to C++11)
+	size_t length{100};                       // Uniform Initialization (up to C++11)
 	std::vector<int> unsortedArray(length);   // resize. not reserve
 
 	std::cout << "Unsorted Array\n";
 	for (auto& e : unsortedArray) {
 		e = distribution(generator);
-		std::cout << std::setw(3) << e;
+		std::cout << std::setw(4) << e;
 	}
 	//// Sorted array test code
 	// int num = 1;
 	// for (auto& e : unsortedArray) {
 	// 	e = num++;
-	// 	std::cout << std::setw(3) << e;
+	// 	std::cout << std::setw(4) << e;
 	// }
 	std::cout << std::endl;
 
@@ -339,6 +433,8 @@ int main() {
 		{"Merge", SortMergeBottomUp<int>},
 		{"Quick", SortQuick<int>},
 		{"Heap", SortHeap<int>},
+		{"Counting", SortCounting<int>},
+		{"Radix", SortRadix<int>},
 	};
 	
 	bool bPrintArray = true;
@@ -355,7 +451,7 @@ int main() {
 		if (bPrintArray) {
 			std::cout << "Sorted Array\n";
 			for (const auto& e : sortedArray) {
-				std::cout << std::setw(3) << e;
+				std::cout << std::setw(4) << e;
 			}
 		}
 

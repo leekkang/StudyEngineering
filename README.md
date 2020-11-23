@@ -155,15 +155,46 @@
 
 ### Heap Sort
 
-* 자료구조 `힙(heap)`을 사용하는 정렬
+* 자료구조 `힙(heap)`을 사용하는 정렬 알고리즘
   * `힙(heap)`은 `완전 이진트리(Complete Binary Tree)`의 일종으로 `우선순위 큐`를 위하여 만들어진 자료구조
-  * 최댓값이나 최솟값을 빠르게 찾아내도록 만들어졌다.
+  * 최대값이나 최소값을 빠르게 찾아내도록 만들어졌다.
   * `이진 탐색 트리(Binary Search Tree)`와 다르게 중복된 값을 허용한다.
 * 오름차순 정렬일 때 최대 힙을, 내림차순 정렬일 때 최소 힙을 사용한다. (루트 값을 맨 뒤로 보내는 정렬이기 때문)
 * `완전 이진트리`를 구현하고, Root값을 제외하도록 index를 변경하면서 나머지 트리를 계속해서 정렬한다.
   * 0번 인덱스는 사용하지 않는다.
 * `Time Complexity` : `O(NlogN)`
 * `Space Complexity` : `O(1)`
+
+### Counting Sort
+
+* `비교를 하지 않는 정렬(Non-Comparison)` 알고리즘 이다.
+* 정수 정렬 알고리즘이다.
+* 값을 키로 갖는 배열을 선언하여 해당 값의 개수를 배열안에 넣는다. 그 후 개수에 대한 산술을 사용하여 각 키 값의 위치를 결정한다.
+* 실행 시간이 `최대값 + 값의 개수` 이기 때문에 값 차이가 많이 나지 않는 상황에서만 사용하는게 적합하다.
+* 더 큰 키를 효율적으로 처리할 수 있는 `기수 정렬(Radix Sort)`에서 서브 루틴으로 자주 사용된다.
+* `Time Complexity` : `O(N + K)`, `K = 최대값`
+* `Space Complexity` : `O(K)`
+
+### Radix Sort
+
+* `비교를 하지 않는 정렬(Non-Comparison)` 알고리즘 이다.
+* 정수 정렬 알고리즘이다.
+* 각 자리수에 따라 값들을 해당 버킷에 집어 넣고 순서대로 빼내서 정렬한다. 이 알고리즘을 최대 자리수 만큼 반복한다.
+  * `버킷 소트(Bucket Sort)`의 일종으로 보기도 한다.
+* 크기가 유한하고 사전순으로 정렬이 가능해야 한다.
+* 기수 정렬은 `최상위 유효숫자(Most Significant Digit, MSD)`나 `최하위 유효숫자(Least Significant Digit, LSD)` 에서 시작하도록 구현할 수 있다.
+  * 정렬 순서가 달라진다. [참고](https://ko.wikipedia.org/wiki/%EA%B8%B0%EC%88%98_%EC%A0%95%EB%A0%AC)
+  * [SortAlgorithm.cpp](SortAlgorithm/SortAlgorithm.cpp) 에 구현된 함수는 최하위 유효숫자에서 시작한다.
+* `Time Complexity` : `O(NW)`, `W = 최대 자리수`
+* `Space Complexity` : `O(N + W)`
+
+### Bucket Sort
+
+* 비교 정렬, 비교를 하지 않는 정렬 모두 구현이 가능한 알고리즘이다.
+* `분산 정렬(Distribution)` 이다.
+  * 데이터가 여러 중간 자료구조로 분산된 다음 다시 수집되어 출력되는 정렬 알고리즘을 의미한다.
+* [분할 정복 알고리즘 (Divide and Conquer Algorithm)] 이다.
+* 배열의 원소를 여러 버킷으로 분산하여 작동한다.
 
 [탐욕 알고리즘(greedy algorithm)]: https://ko.wikipedia.org/wiki/%ED%83%90%EC%9A%95_%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98
 [LZW 참조1]: https://www2.cs.duke.edu/csed/curious/compression/lzw.html
