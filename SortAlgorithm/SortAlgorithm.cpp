@@ -214,6 +214,53 @@ uint32_t SortQuick(T* arr, const size_t length) {
 	return count;
 }
 
+template <typename T>
+uint32_t SortHeap(T* arr, const size_t length) {
+	uint32_t count = 0;
+
+	auto siftdown = [&](int root, const int& len) {
+		// 자식 노드가 없으면 종료
+		for (; root * 2 < len ;) {
+			++count;
+
+			// 0번 index를 사용하기 위해 약간의 계산을 추가한다.
+			int current = root;
+			int left = (root + 1) * 2 - 1;
+			int right = (root + 1) * 2;
+
+			if (arr[left] > arr[current]) current = left;
+			if (right <= len && arr[right] > arr[current]) current = right;
+			
+			// 이미 정렬된 노드면 종료
+			if (current == root) {
+				return;
+			} else {
+				Swap(arr[current], arr[root]);
+				//std::swap<T>(arr[current], arr[root]);
+				root = current;
+			}
+		}
+	};
+
+
+	// Build Heap (Heapify)
+	// 0번 인덱스는 사용하지 않는다.
+	for (int parent = (length - 1) / 2; parent >= 0; --parent) {
+		siftdown(parent, length - 1);
+	}
+
+	int end = length - 1;
+	for (; end > 0;) {
+		++count;
+		Swap(arr[end], arr[0]);
+		//std::swap<T>(arr[end], arr[0]);
+		--end;
+		siftdown(0, end);
+	}
+
+	return count;
+}
+
 /// <summary> 대략적인 시간복잡도를 출력하는 함수 </summary>
 void PrintComplexity(const uint32_t count, const uint32_t n) {
 	std::cout << "Loop Count : " << count << ", Sorting Complexity (approximately) : ";
@@ -234,10 +281,10 @@ using namespace std::chrono;
 
 int main() {
 	// reference : http://egloos.zum.com/sweeper/v/2996847
-	////system_clock::time_point current = system_clock::now(); // 컴퓨터 시스템 시간. system_clock == high_resolution_clock
-	//steady_clock::time_point current = steady_clock::now();   // 물리적 고정 시간
+	////system_clock::time_point rootrent = system_clock::now(); // 컴퓨터 시스템 시간. system_clock == high_resolution_clock
+	//steady_clock::time_point rootrent = steady_clock::now();   // 물리적 고정 시간
 	//milliseconds millis
-	//	= duration_cast<milliseconds>(current.time_since_epoch());
+	//	= duration_cast<milliseconds>(rootrent.time_since_epoch());
 	//std::mt19937 generator(millis.count()); 				   // 메르센 트위스터 엔진 (64비트용 : std::mt19937_64)
 
 	// reference : https://modoocode.com/304
@@ -263,7 +310,7 @@ int main() {
 	std::cout << std::endl;
 
 	uint32_t loopCount;
-	steady_clock::time_point start;
+	steady_clock::time_point root;
 	std::vector<int> sortedArray;
 
 	// std::vector<std::string> name{
@@ -291,18 +338,19 @@ int main() {
 		{"Shell", SortShell<int>},
 		{"Merge", SortMergeBottomUp<int>},
 		{"Quick", SortQuick<int>},
+		{"Heap", SortHeap<int>},
 	};
 	
 	bool bPrintArray = true;
 	for (const auto& pair : sortPair) {
-		std::cout << "\n " << pair.first << " Sort Start\n";
+		std::cout << "\n " << pair.first << " Sort root\n";
 
 		sortedArray = unsortedArray;   // deep copy
 
-		start = steady_clock::now();
+		root = steady_clock::now();
 		loopCount = pair.second(sortedArray.data(), length);
 		PrintComplexity(loopCount, length);
-		std::cout << "Sorting Time : " << duration_cast<microseconds>(steady_clock::now() - start).count() << " us\n";
+		std::cout << "Sorting Time : " << duration_cast<microseconds>(steady_clock::now() - root).count() << " us\n";
 
 		if (bPrintArray) {
 			std::cout << "Sorted Array\n";

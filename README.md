@@ -155,7 +155,15 @@
 
 ### Heap Sort
 
-*
+* 자료구조 `힙(heap)`을 사용하는 정렬
+  * `힙(heap)`은 `완전 이진트리(Complete Binary Tree)`의 일종으로 `우선순위 큐`를 위하여 만들어진 자료구조
+  * 최댓값이나 최솟값을 빠르게 찾아내도록 만들어졌다.
+  * `이진 탐색 트리(Binary Search Tree)`와 다르게 중복된 값을 허용한다.
+* 오름차순 정렬일 때 최대 힙을, 내림차순 정렬일 때 최소 힙을 사용한다. (루트 값을 맨 뒤로 보내는 정렬이기 때문)
+* `완전 이진트리`를 구현하고, Root값을 제외하도록 index를 변경하면서 나머지 트리를 계속해서 정렬한다.
+  * 0번 인덱스는 사용하지 않는다.
+* `Time Complexity` : `O(NlogN)`
+* `Space Complexity` : `O(1)`
 
 [탐욕 알고리즘(greedy algorithm)]: https://ko.wikipedia.org/wiki/%ED%83%90%EC%9A%95_%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98
 [LZW 참조1]: https://www2.cs.duke.edu/csed/curious/compression/lzw.html
