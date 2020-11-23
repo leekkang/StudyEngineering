@@ -21,8 +21,8 @@ uint32_t SortBubble(T* arr, const size_t length) {   // T& 를 어떻게 쓰지.
 	for (int i = 0; i < length; ++i) {   // 반복문은 웬만하면 signed 자료형을 사용하자. unsigned는 버그가 발생할 가능성이 높다.
 		for (int j = 1; j < length - i; ++j) {
 			if (arr[j - 1] > arr[j]) {
-				std::swap<T>(arr[j - 1], arr[j]);
-				//Swap(arr[j - 1], arr[j]);
+				Swap(arr[j - 1], arr[j]);
+				//std::swap<T>(arr[j - 1], arr[j]);
 			}
 			++count;   // 전위연산자는 l-value, 후위연산자는 r-value를 리턴한다.
 		}
@@ -45,8 +45,8 @@ uint32_t SortSelection(T* arr, const size_t length) {
 		}
 
 		if (i != index) {
-			std::swap<T>(arr[i], arr[index]);
-			//Swap(arr[i], arr[index]);
+			Swap(arr[i], arr[index]);
+			//std::swap<T>(arr[i], arr[index]);
 		}
 		++count;
 	}
@@ -355,6 +355,57 @@ uint32_t SortRadix(T* arr, const size_t length) {
 	return count;
 }
 
+template <typename T>
+uint32_t SortBucket(T* arr, const size_t length) {
+	uint32_t count = 0;
+	int bucketNumber = 10;	// 생성되는 버킷의 개수
+
+	// 최대값 찾기
+	int max = 0;
+	for (int i = 0; i < length; ++i) {
+		++count;
+		if (arr[i] > max) max = arr[i];
+	}
+
+	// 버킷 생성
+	std::vector<std::vector<T>> buckets(bucketNumber);
+	int value;
+	for (int i = 0; i < length; ++i) {
+		++count;
+		// 소수점의 경우 std::floor를 추가로 사용한다.
+		value = static_cast<int>(bucketNumber * arr[i] / max);
+		buckets[(value < 0) ? 0 : (value < bucketNumber - 1) ? value : bucketNumber - 1].push_back(arr[i]);	// == std::clamp (#include<algorithm>)
+	}
+	
+	// 삽입 정렬
+	auto insertion = [&](T* bucket, const int& len) {
+		for (int i = 1; i < len; ++i) {
+			T temp = bucket[i];
+			int j = i - 1;
+			for (; j >= 0 && bucket[j] > temp; --j) {
+				bucket[j + 1] = bucket[j];
+				++count;
+			}
+			bucket[j + 1] = temp;
+			++count;
+		}
+	};
+
+	// 버킷 별 정렬 + 합치기
+	int index = 0;
+	for (int i = 0; i < bucketNumber; ++i) {
+		size_t bucketLen = buckets[i].size();
+		insertion(buckets[i].data(), bucketLen);
+
+		for (int j = 0; j < bucketLen; ++j) {
+			++count;
+			arr[index++] = buckets[i][j];
+		}
+	}
+
+	return count;
+}
+
 /// <summary> 대략적인 시간복잡도를 출력하는 함수 </summary>
 void PrintComplexity(const uint32_t count, const uint32_t n) {
 	std::cout << "Loop Count : " << count << ", Sorting Complexity (approximately) : ";
@@ -435,6 +486,7 @@ int main() {
 		{"Heap", SortHeap<int>},
 		{"Counting", SortCounting<int>},
 		{"Radix", SortRadix<int>},
+		{"Bucket", SortBucket<int>},
 	};
 	
 	bool bPrintArray = true;

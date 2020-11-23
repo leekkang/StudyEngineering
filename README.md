@@ -1,3 +1,23 @@
+- [StudyEngineering](#studyengineering)
+  - [VSCode Setting](#vscode-setting)
+  - [Codility](#codility)
+    - [Time Complexity](#time-complexity)
+  - [Encoding Algorithm](#encoding-algorithm)
+    - [Huffman Code](#huffman-code)
+    - [Lempel-Ziv-Welch algorithm](#lempel-ziv-welch-algorithm)
+  - [Sorting Algorithm](#sorting-algorithm)
+    - [Bubble Sort](#bubble-sort)
+    - [Selection Sort](#selection-sort)
+    - [Insertion Sort](#insertion-sort)
+    - [Shell Sort](#shell-sort)
+    - [Merge Sort](#merge-sort)
+    - [Quick Sort](#quick-sort)
+    - [Heap Sort](#heap-sort)
+    - [Counting Sort](#counting-sort)
+    - [Radix Sort](#radix-sort)
+    - [Bucket Sort](#bucket-sort)
+    - [Library Sort](#library-sort)
+
 # StudyEngineering
 
 * This repository is for personal study.
@@ -185,7 +205,7 @@
 * 기수 정렬은 `최상위 유효숫자(Most Significant Digit, MSD)`나 `최하위 유효숫자(Least Significant Digit, LSD)` 에서 시작하도록 구현할 수 있다.
   * 정렬 순서가 달라진다. [참고](https://ko.wikipedia.org/wiki/%EA%B8%B0%EC%88%98_%EC%A0%95%EB%A0%AC)
   * [SortAlgorithm.cpp](SortAlgorithm/SortAlgorithm.cpp) 에 구현된 함수는 최하위 유효숫자에서 시작한다.
-* `Time Complexity` : `O(NW)`, `W = 최대 자리수`
+* `Time Complexity` : `O(N * W)`, `W = 최대 자리수`
 * `Space Complexity` : `O(N + W)`
 
 ### Bucket Sort
@@ -194,7 +214,17 @@
 * `분산 정렬(Distribution)` 이다.
   * 데이터가 여러 중간 자료구조로 분산된 다음 다시 수집되어 출력되는 정렬 알고리즘을 의미한다.
 * [분할 정복 알고리즘 (Divide and Conquer Algorithm)] 이다.
-* 배열의 원소를 여러 버킷으로 분산하여 작동한다.
+* 배열의 원소를 여러 버킷으로 분산하여 정렬한다. 보통 버킷 내부의 정렬은 [삽입 정렬](#insertion-sort)을 이용한다.
+* 버킷의 개수가 `N`개에 가까울 수록, 배열이 균등 분포에 가까울 수록 성능이 올라간다.
+* `Time Complexity`
+  * `Best Case` : `O(N)`
+  * `Average Case` : `O(N + N^2/k + k)`, `k = 버킷 수`
+  * `Worst Case` : `O(N^2)` (모든 값이 하나의 버킷으로 들어간 경우)
+* `Space Complexity` : `O(N * K)`
+
+### Library Sort
+
+*
 
 [탐욕 알고리즘(greedy algorithm)]: https://ko.wikipedia.org/wiki/%ED%83%90%EC%9A%95_%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98
 [LZW 참조1]: https://www2.cs.duke.edu/csed/curious/compression/lzw.html

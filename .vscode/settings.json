@@ -53,7 +53,8 @@
         "ctime": "cpp",
         "iomanip": "cpp",
         "xlocmon": "cpp",
-        "xloctime": "cpp"
+        "xloctime": "cpp",
+        "xtree": "cpp"
     },
     "projectManager.git.baseFolders": [
         "C:\\Users\\Kanghyuk\\Desktop\\github_repository"
