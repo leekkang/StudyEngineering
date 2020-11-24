@@ -110,7 +110,7 @@ uint32_t SortMergeTopDown(T* arr, const size_t length) {
 	// 하향식 2-way merge sort
 	// 재귀함수로 사용하기 때문에 auto 타입으로 정의하지 못한다. -> inline이 아니다.
 	std::function<void(const int&, const int&)> merge = [&](const int& begin, const int& end) {
-		// end 는 인덱스에 포함되지 않는다. -> arr[end] : x, arr[end-1] : o
+		// end 는 인덱스에 포함되지 않는다. -> arr[end] : x, arr[end-1] : o 	-> [begin, end)
 		++count;
 		if (end - begin < 2)
 			return;
@@ -486,29 +486,33 @@ uint32_t SortTim(T* arr, const size_t length) {
 			++count;
 		}
 	};
+
 	// 병합 프로세스
 	auto mergeProcess = [&](std::pair<int, int>& run, const int& start, const int& middle, const int& end) {
 		// 병합이 필요하지 않은 경우 -> 앞쪽 run의 맨 뒤 값이 뒤쪽 run의 선두 값보다 작다.
 		if (arr[middle - 1] <= arr[middle])
 			return;
 
-		int leftStart = start, rightEnd = end - 1;
 		std::vector<int> tempArr;
+		int leftStart = start, rightEnd = end;
 
 		// 병합이 필요한 연속영역 체크 -> 앞쪽 run 중 뒷쪽 run의 선두보다 적은 것, 뒷쪽 run의 뒷 요소 중 앞쪽 run의 맨 뒤 요소보다 큰 것
+		// 2의 거듭제곱을 체크해서 전체 범위 대신 좀 더 좁은 범위를 이진 탐색하도록 만든다.
 		int i = 1;
 		while (leftStart < middle && arr[leftStart] < arr[middle]) {
 			leftStart += i;
 			i *= 2;
+			++count;
 		}
 		leftStart = binarySearchRight(arr[middle], leftStart - i / 2, leftStart < middle ? leftStart : middle);
 
 		i = 1;
-		while (rightEnd >= middle && arr[rightEnd] >= arr[middle - 1]) {
+		while (rightEnd >= middle && arr[rightEnd - i] >= arr[middle - 1]) {
 			rightEnd -= i;
 			i *= 2;
+			++count;
 		}
-		rightEnd = binarySearchLeft(arr[middle - 1], rightEnd > middle ? rightEnd : middle, rightEnd + i / 2 + 1);
+		rightEnd = binarySearchLeft(arr[middle - 1], (rightEnd- i) > middle ? (rightEnd - i) : middle, rightEnd);
 
 		// TODO : Galloping Mode 구현
 		int gallopCount;
@@ -521,7 +525,7 @@ uint32_t SortTim(T* arr, const size_t length) {
 			int index = leftStart;
 			while (index < rightEnd) {
 				// 왼쪽 리스트가 끝나지 않은 상황에서, 오른쪽 리스트가 끝났거나 왼쪽의 값이 오른쪽 값보다 작을 경우
-				if (left < tempMid && (right >= rightEnd || arr[left] <= arr[right])) {
+				if (left < tempMid && (right >= rightEnd || tempArr[left] <= arr[right])) {
 					arr[index] = tempArr[left++];
 				} else {
 					arr[index] = arr[right++];
@@ -538,7 +542,7 @@ uint32_t SortTim(T* arr, const size_t length) {
 			int index = rightEnd - 1;
 			while (index >= leftStart) {
 				// 오른쪽 리스트가 끝나지 않은 상황에서, 왼쪽 리스트가 끝났거나 오른쪽의 값이 왼쪽 값보다 클 경우
-				if (right >= middle && (left < leftStart || arr[left] <= arr[right])) {
+				if (right >= 0 && (left < leftStart || arr[left] <= tempArr[right])) {
 					arr[index] = tempArr[right--];
 				} else {
 					arr[index] = arr[left--];
@@ -569,6 +573,7 @@ uint32_t SortTim(T* arr, const size_t length) {
 		startIndex = endIndex;
 		endIndex = (startIndex + minRun) > length ? length : (startIndex + minRun);
 
+		// Run을 이진 삽입 정렬로 정렬한다.
 		if (arr[startIndex + 1] >= arr[startIndex]) {
 			// ascending
 			insertionAscend(startIndex, endIndex);
@@ -583,7 +588,7 @@ uint32_t SortTim(T* arr, const size_t length) {
 				++count;
 			}
 			// 증가하는 run이 되도록 뒤집는다.
-			int left = 0, right = endIndex - 1;
+			int left = startIndex, right = endIndex - 1;
 			while(left < right) {
 				Swap(arr[left++], arr[right--]);
 				//std::swap(arr[left++], arr[right--]);
@@ -672,19 +677,25 @@ int main() {
 
 	std::uniform_int_distribution<int> distribution(1, 999);   // 난수 분포(균등 분포)와 범위
 
-	size_t length{100};                       // Uniform Initialization (up to C++11)
+	size_t length{1000};                       // Uniform Initialization (up to C++11)
 	std::vector<int> unsortedArray(length);   // resize. not reserve
+	
+	bool bPrintArray = false;
 
-	std::cout << "Unsorted Array\n";
-	for (auto& e : unsortedArray) {
-		e = distribution(generator);
-		std::cout << std::setw(4) << e;
+	if (bPrintArray) {
+		std::cout << "Unsorted Array\n";
+		for (auto& e : unsortedArray) {
+			e = distribution(generator);
+			std::cout << std::setw(4) << e;
+		}
 	}
-	//// Sorted array test code
-	// int num = 1;
-	// for (auto& e : unsortedArray) {
-	// 	e = num++;
-	// 	std::cout << std::setw(4) << e;
+	// // Sorted array test code
+	// if (bPrintArray) {
+	// 	int num = 1;
+	// 	for (auto& e : unsortedArray) {
+	// 		e = num++;
+	// 		std::cout << std::setw(4) << e;
+	// 	}
 	// }
 	std::cout << std::endl;
 
@@ -723,8 +734,7 @@ int main() {
 		{"Bucket", SortBucket<int>},
 		{"Tim", SortTim<int>},
 	};
-	
-	bool bPrintArray = true;
+
 	for (const auto& pair : sortPair) {
 		std::cout << "\n " << pair.first << " Sort root\n";
 
