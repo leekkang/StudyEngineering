@@ -16,7 +16,8 @@
     - [Counting Sort](#counting-sort)
     - [Radix Sort](#radix-sort)
     - [Bucket Sort](#bucket-sort)
-    - [Library Sort](#library-sort)
+    - [Tim Sort](#tim-sort)
+    - [Intro Sort](#intro-sort)
 
 # StudyEngineering
 
@@ -222,9 +223,22 @@
   * `Worst Case` : `O(N^2)` (모든 값이 하나의 버킷으로 들어간 경우)
 * `Space Complexity` : `O(N * K)`
 
-### Library Sort
+### Tim Sort
 
-*
+* `Merge Sort + Insertion Sort`의 하이브리드 안정화 정렬 알고리즘이다.
+* `Java`, `Python`, `Android Platform` 등 다양한 프로그램의 기본 정렬 알고리즘으로 사용된다.
+* 실생활에서는 완전 랜덤한 배열을 정렬하지 않기 때문에 어느정도 정렬이 된 배열에 대해서 최고의 성능을 내도록 고안되었다.
+* `N`의 크기가 작을 경우(`< 2^6`) 성능을 위해 `Binary Insertion Sort`를 대신 사용한다.
+* [참고](https://d2.naver.com/helloworld/0315536), [참고2](https://orchistro.tistory.com/175), [참고3](https://en.wikipedia.org/wiki/Timsort)
+* `Time Complexity`
+  * `Best Case` : `O(N)`
+  * `Average Case` : `O(NlogN)`
+  * `Worst Case` : `O(NlogN)`
+* `Space Complexity` : `O(N)` (`Merge Sort`보다 작은 값)
+
+### Intro Sort
+
+* `Quick Sort + Insertion Sort`의 하이브리드 정렬 알고리즘이다.
 
 [탐욕 알고리즘(greedy algorithm)]: https://ko.wikipedia.org/wiki/%ED%83%90%EC%9A%95_%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98
 [LZW 참조1]: https://www2.cs.duke.edu/csed/curious/compression/lzw.html
