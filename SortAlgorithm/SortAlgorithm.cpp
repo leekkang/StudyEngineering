@@ -195,9 +195,8 @@ uint32_t SortQuick(T* arr, const size_t length) {
 		for (int i = begin; i < end; ++i) {
 			// 리스트 끝까지 순회하면서 피벗보다 작은 값들을 앞으로 옮긴다.
 			if (arr[i] < arr[pivot]) {
-				++left;
-				Swap(arr[left], arr[i]);
-				//std::swap<T>(arr[left], arr[i]);
+				Swap(arr[++left], arr[i]);
+				//std::swap<T>(arr[++left], arr[i]);
 				++count;
 			}
 		}
@@ -219,9 +218,11 @@ template <typename T>
 uint32_t SortHeap(T* arr, const size_t length) {
 	uint32_t count = 0;
 
-	auto siftdown = [&](int root, const int& len) {
+	// 부분 배열을 정렬하려면 `SortIntro` 함수 내부에 정의된 힙 정렬 람다 함수를 참고한다.
+
+	auto siftdown = [&](int root, const int& end) {	// [root, end]
 		// 자식 노드가 없으면 종료
-		for (; root * 2 < len ;) {
+		for (; root * 2 < end ;) {
 			++count;
 
 			// 0번 index를 사용하기 위해 약간의 계산을 추가한다.
@@ -230,7 +231,7 @@ uint32_t SortHeap(T* arr, const size_t length) {
 			int right = (root + 1) * 2;
 
 			if (arr[left] > arr[current]) current = left;
-			if (right <= len && arr[right] > arr[current]) current = right;
+			if (right <= end && arr[right] > arr[current]) current = right;
 			
 			// 이미 정렬된 노드면 종료
 			if (current == root) {
@@ -645,6 +646,106 @@ uint32_t SortTim(T* arr, const size_t length) {
 	return count;
 }
 
+template <typename T>
+uint32_t SortIntro(T* arr, const size_t length) {
+	uint32_t count = 0;
+
+	// Heap Sort
+	auto siftdown = [&](int root, const int& end, const int& correction) {	// [root, end]
+		// 자식 노드가 없으면 종료
+		while (root * 2 < end) {
+			++count;
+
+			// 0번 index를 사용하기 위해 약간의 계산을 추가한다.
+			int current = root;
+			int left = (root + 1) * 2 - 1;
+			int right = (root + 1) * 2;
+
+			if (arr[left + correction] > arr[current + correction]) current = left;
+			if (right <= end && arr[right + correction] > arr[current + correction]) current = right;
+			
+			// 이미 정렬된 노드면 종료
+			if (current == root) {
+				return;
+			} else {
+				Swap(arr[current + correction], arr[root + correction]);
+				//std::swap<T>(arr[current + correction], arr[root + correction]);
+				root = current;
+			}
+		}
+	};
+	auto heap = [&](const int& begin, const int& len) {
+		// 부분 배열의 heap sort는 root 값을 0으로 맞추기 위해서 보정값을 사용한다.
+		int correction = begin;
+		int end = len - 1;
+
+		// Build Heap (Heapify)
+		for (int parent = end / 2; parent >= 0; --parent) {
+			siftdown(parent, end, correction);
+		}
+
+		while (end > 0) {
+			++count;
+			Swap(arr[end], arr[begin]);
+			//std::swap<T>(arr[end], arr[0]);
+			--end;
+			siftdown(0, end, correction);
+		}
+	};
+	auto insertion = [&](const int& begin, const int& end) {
+		T temp;
+		for (int i = begin + 1; i < end; ++i) {
+			temp = arr[i];
+			int j = i - 1;
+			for (; j >= 0 && arr[j] > temp; --j) {
+				++count;
+				arr[j + 1] = arr[j];
+			}
+
+			arr[j + 1] = temp;
+			++count;
+		}
+	};
+
+	// Quick Sort
+	std::function<void(const int&, const int&, const int&)> quick = [&](const int& begin, const int& end, const int& depth) {
+		// end 도 인덱스에 포함된다. -> arr[end] : o, arr[end-1] : o 	-> [begin, end]
+		++count;
+		if (end - begin + 1 < 16) {
+			insertion(begin, end + 1);
+			return;
+		} else if (depth == 0) {
+			heap(begin, end - begin + 1);	// length를 인자로 주어야 한다.
+			return;
+		}
+			
+		// divide
+		int left = begin - 1;
+		int pivot = end;
+		for (int i = begin; i < end; ++i) {
+			// 리스트 끝까지 순회하면서 피벗보다 작은 값들을 앞으로 옮긴다.
+			if (arr[i] < arr[pivot]) {
+				Swap(arr[++left], arr[i]);
+				//std::swap(arr[++left], arr[i]);
+			}
+			++count;
+		}
+		Swap(arr[++left], arr[pivot]);
+		//std::swap(arr[++left], arr[pivot]);
+		++count;
+
+		// conquer
+		quick(begin, left - 1, depth- 1);
+		quick(left + 1, end, depth- 1);
+	};
+
+	int maxDepth = 2 * log2(length);
+
+	quick(0, length - 1, maxDepth);
+
+	return count;
+}
+
 /// <summary> 대략적인 시간복잡도를 출력하는 함수 </summary>
 void PrintComplexity(const uint32_t count, const uint32_t n) {
 	std::cout << "Loop Count : " << count << ", Sorting Complexity (approximately) : ";
@@ -684,9 +785,11 @@ int main() {
 
 	if (bPrintArray) {
 		std::cout << "Unsorted Array\n";
-		for (auto& e : unsortedArray) {
-			e = distribution(generator);
-			std::cout << std::setw(4) << e;
+	}
+	for (auto& e : unsortedArray) {
+		e = distribution(generator);
+		if (bPrintArray) {
+				std::cout << std::setw(4) << e;
 		}
 	}
 	// // Sorted array test code
@@ -733,6 +836,7 @@ int main() {
 		{"Radix", SortRadix<int>},
 		{"Bucket", SortBucket<int>},
 		{"Tim", SortTim<int>},
+		{"Intro", SortIntro<int>},
 	};
 
 	for (const auto& pair : sortPair) {
@@ -745,7 +849,7 @@ int main() {
 		PrintComplexity(loopCount, length);
 		std::cout << "Sorting Time : " << duration_cast<microseconds>(steady_clock::now() - root).count() << " us\n";
 
-		if (bPrintArray) {
+		if (pair.first == "Intro") {
 			std::cout << "Sorted Array\n";
 			for (const auto& e : sortedArray) {
 				std::cout << std::setw(4) << e;

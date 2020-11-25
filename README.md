@@ -238,7 +238,15 @@
 
 ### Intro Sort
 
-* `Quick Sort + Insertion Sort`의 하이브리드 정렬 알고리즘이다.
+* `Quick Sort + Heap Sort + Insertion Sort`의 하이브리드 정렬 알고리즘이다.
+* `Quick Sort`의 `Worst Case`를 보완하기 위해 고안되었다.
+* 재귀 호출의 깊이가 `\left \lfloor 2LogN \right \rfloor`을 넘어가면 아래의 동작을 수행한다.
+  * 현재 부분 리스트의 크기가 16 이상일 경우 `Heap Sort`를 수행한다.
+  * 현재 부분 리스트의 크기가 16 미만일 경우 `Insertion Sort`를 수행한다.
+  * `ceil`은 올림 처리, `floor`는 내림 처리, `round`는 반올림 처리이다.
+* `16`의 값은 연구 결과를 통해 나온 최적의 값이다. (`Tim Sort`의 `Gallop`과 다르게 고정값이다.)
+* `Time Complexity` : `O(NlogN)`
+* `Space Complexity` : `O(1)`
 
 [탐욕 알고리즘(greedy algorithm)]: https://ko.wikipedia.org/wiki/%ED%83%90%EC%9A%95_%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98
 [LZW 참조1]: https://www2.cs.duke.edu/csed/curious/compression/lzw.html
