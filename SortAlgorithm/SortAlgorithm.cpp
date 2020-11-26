@@ -766,10 +766,10 @@ using namespace std::chrono;
 
 int main() {
 	// reference : http://egloos.zum.com/sweeper/v/2996847
-	////system_clock::time_point rootrent = system_clock::now(); // 컴퓨터 시스템 시간. system_clock == high_resolution_clock
-	//steady_clock::time_point rootrent = steady_clock::now();   // 물리적 고정 시간
+	////system_clock::time_point current = system_clock::now(); // 컴퓨터 시스템 시간. system_clock == high_resolution_clock
+	//steady_clock::time_point current = steady_clock::now();   // 물리적 고정 시간
 	//milliseconds millis
-	//	= duration_cast<milliseconds>(rootrent.time_since_epoch());
+	//	= duration_cast<milliseconds>(current.time_since_epoch());
 	//std::mt19937 generator(millis.count()); 				   // 메르센 트위스터 엔진 (64비트용 : std::mt19937_64)
 
 	// reference : https://modoocode.com/304
@@ -803,7 +803,7 @@ int main() {
 	std::cout << std::endl;
 
 	uint32_t loopCount;
-	steady_clock::time_point root;
+	steady_clock::time_point start;
 	std::vector<int> sortedArray;
 
 	// std::vector<std::string> name{
@@ -840,16 +840,16 @@ int main() {
 	};
 
 	for (const auto& pair : sortPair) {
-		std::cout << "\n " << pair.first << " Sort root\n";
+		std::cout << "\n " << pair.first << " Sort Start\n";
 
 		sortedArray = unsortedArray;   // deep copy
 
-		root = steady_clock::now();
+		start = steady_clock::now();
 		loopCount = pair.second(sortedArray.data(), length);
 		PrintComplexity(loopCount, length);
-		std::cout << "Sorting Time : " << duration_cast<microseconds>(steady_clock::now() - root).count() << " us\n";
+		std::cout << "Sorting Time : " << duration_cast<microseconds>(steady_clock::now() - start).count() << " us\n";
 
-		if (pair.first == "Intro") {
+		if (bPrintArray) {
 			std::cout << "Sorted Array\n";
 			for (const auto& e : sortedArray) {
 				std::cout << std::setw(4) << e;
