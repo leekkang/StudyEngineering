@@ -263,13 +263,23 @@
   * 하나의 그래프에서 여러 개의 `Spanning Tree`가 나올 수 있다.
   * 모든 정점들이 연결되어 있어야 하며, `사이클`을 포함해서는 안된다.
   * 통신 네트워크 구축 등에 사용된다.
-* `Minimum Spanning Tree`
+* `Minimum Spanning Tree (MST)`
   * 간선들의 가중치가 동일하지 않을 경우, 간선들의 가중치 합이 최소가 되는 `Spanning Tree`
   * `Spanning Tree`의 성질을 모두 갖고 있다.
 
 ### Kruskal's Algorithm
 
+* `Minimum Spanning Tree`를 찾는 알고리즘이다.
+* [탐욕 알고리즘(greedy algorithm)]이다.
+* 가장 가중치가 작은 간선부터 시작하여, 사이클을 만들지 않으면서 가중치가 작은 간선을 전체 트리가 만들어질 때까지 차례로 선택한다.
+* `E`를 간선의 개수, `V`를 정점의 개수라고 할 때, `Kruskal Algorithm`은 `O(ElogN)` 시간안에 동작한다.
+  * 간선의 가중치 별 정렬시간(`O(ElogE)`) + [서로소 집합(Disjoint Set)](https://ko.wikipedia.org/wiki/%EC%84%9C%EB%A1%9C%EC%86%8C_%EC%A7%91%ED%95%A9_%EC%9E%90%EB%A3%8C_%EA%B5%AC%EC%A1%B0)을 통한 사이클 찾기 동작(`O(ElogV)`)
+  * `V <= 2E`이기 때문에 `O(logV) == O(logE)`
+  * 알고리즘 최종 `Time Complexity`는 `O(ElogN)`이 된다.
+
 ### Prim's Algorithm
+
+* `Minimum Spanning Tree`를 찾는 알고리즘이다.
   
 ### Dijkstra Algorithm
 
