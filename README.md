@@ -35,7 +35,7 @@
 * [VS code shortcut](https://code.visualstudio.com/docs/editor/codebasics)
 * 쓸 것 같은 단축키
   * `ctrl + shift + l` : 현재 커서의 단어를 모두 선택 (`ctrl + f2`와 비슷함)
-  * `ctrl + shift + k` : 현재 줄 삭제
+  * `ctrl + shift + k` : 현재 줄 삭제 (`shift + delete`와 동일)
   * `ctrl + shift + b` : `task.json`의 설정으로 빌드
   * `ctrl + shift + t` : 방금 종료한 파일 다시 열기
   * `ctrl + shift + d` : 왼쪽 `실행 탭` 열기
@@ -58,12 +58,20 @@
   * `Project Manager`
   * `ShaderlabVSCode`
   * `Shell launcher`
+  * `Better Comments`
+  * `Auto Comment Blocks`
 
 * [Clang-Format Style Documentation](https://clang.llvm.org/docs/ClangFormatStyleOptions.html)
 
 * `VS Code` 전역 세팅 백업
   * [settings.json](backup/settings.json)
   * [keybindings.json](backup/keybindings.json)
+
+* `VS Code` 지역 세팅 설명
+  * [c_cpp_properties.json](.vscode/c_cpp_properties.json)
+    * `C/C++ Extention`의 설정파일
+    * 컴파일러, cpp 버전, intelliSence 모드 등을 설정할 수 있다.
+    * `C/C++:구성 편집(UI)` 에서 수정할 수 있다.
 
 ## Codility
 
