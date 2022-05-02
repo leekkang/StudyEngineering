@@ -1,8 +1,34 @@
 // path : %APPDATA%\Code\User\keybindings.json
 // 키 바인딩을 이 파일에 넣어서 기본값 재정의auto[]
+// 기본 설정: 바로 가기 키 열기 (JSON)
+// "LangId" 목록 : https://code.visualstudio.com/docs/languages/identifiers
 [
     {
         "key": "ctrl+shift+g",
         "command": "shellLauncher.launch"
+    },
+    {
+        "key": "alt+oem_period",
+        "command": "editor.action.insertSnippet",
+        "when": "editorTextFocus",
+        "args": {
+          "snippet": "->"
+        }
+    },
+    {
+        "key": "alt+m",
+        "command": "editor.action.insertSnippet",
+        "when": "editorTextFocus && editorLangId == cpp || editorLangId == c",
+        "args": {
+          "snippet": "m_"
+        }
+    },
+    {
+        "key": "alt+oem_comma",
+        "command": "editor.action.insertSnippet",
+        "when": "editorTextFocus && editorLangId == cpp || editorLangId == c",
+        "args": {
+          "snippet": "_"
+        }
     }
 ]

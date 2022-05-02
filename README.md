@@ -1,36 +1,36 @@
-- [StudyEngineering](#studyengineering)
-  - [VSCode Setting](#vscode-setting)
-  - [Codility](#codility)
-    - [Time Complexity](#time-complexity)
-  - [Encoding Algorithm](#encoding-algorithm)
-    - [Huffman Code](#huffman-code)
-    - [Lempel-Ziv-Welch algorithm](#lempel-ziv-welch-algorithm)
-  - [Sorting Algorithm](#sorting-algorithm)
-    - [Bubble Sort](#bubble-sort)
-    - [Selection Sort](#selection-sort)
-    - [Insertion Sort](#insertion-sort)
-    - [Shell Sort](#shell-sort)
-    - [Merge Sort](#merge-sort)
-    - [Quick Sort](#quick-sort)
-    - [Heap Sort](#heap-sort)
-    - [Counting Sort](#counting-sort)
-    - [Radix Sort](#radix-sort)
-    - [Bucket Sort](#bucket-sort)
-    - [Tim Sort](#tim-sort)
-    - [Intro Sort](#intro-sort)
-  - [Graph Algorithm](#graph-algorithm)
-    - [Kruskal's Algorithm](#kruskals-algorithm)
-    - [Prim's Algorithm](#prims-algorithm)
-    - [Dijkstra Algorithm](#dijkstra-algorithm)
-    - [Bellman-Ford Algorithm](#bellman-ford-algorithm)
-    - [Floyd-Warshall Algorithm](#floyd-warshall-algorithm)
-    - [A* Algorithm](#a-algorithm)
+- [VSCode Setting](#vscode-setting)
+- [Visual Studio Setting](#visual-studio-setting)
+- [Codility](#codility)
+  - [Time Complexity](#time-complexity)
+- [Encoding Algorithm](#encoding-algorithm)
+  - [Huffman Code](#huffman-code)
+  - [Lempel-Ziv-Welch algorithm](#lempel-ziv-welch-algorithm)
+- [Sorting Algorithm](#sorting-algorithm)
+  - [Bubble Sort](#bubble-sort)
+  - [Selection Sort](#selection-sort)
+  - [Insertion Sort](#insertion-sort)
+  - [Shell Sort](#shell-sort)
+  - [Merge Sort](#merge-sort)
+  - [Quick Sort](#quick-sort)
+  - [Heap Sort](#heap-sort)
+  - [Counting Sort](#counting-sort)
+  - [Radix Sort](#radix-sort)
+  - [Bucket Sort](#bucket-sort)
+  - [Tim Sort](#tim-sort)
+  - [Intro Sort](#intro-sort)
+- [Graph Algorithm](#graph-algorithm)
+  - [Kruskal's Algorithm](#kruskals-algorithm)
+  - [Prim's Algorithm](#prims-algorithm)
+  - [Dijkstra Algorithm](#dijkstra-algorithm)
+  - [Bellman-Ford Algorithm](#bellman-ford-algorithm)
+  - [Floyd-Warshall Algorithm](#floyd-warshall-algorithm)
+  - [A* Algorithm](#a-algorithm)
 
-# StudyEngineering
+## StudyEngineering
 
 * This repository is for personal study.
 
-## VSCode Setting
+# VSCode Setting
 
 * [VS code shortcut](https://code.visualstudio.com/docs/editor/codebasics)
 * 쓸 것 같은 단축키
@@ -49,6 +49,12 @@
   - `ctrl + alt + up or down` : 위/아래의 동일한 위치에 커서 복사
   - `ctrl + page up or page down` : 편집기 탭 이동
   - `ctrl + w` : 현재 편집기 닫기
+  - `ctrl + j` : 문제 출력 콘솔 열기
+  - `ctrl + enter` : 아래에 신규 행 삽입, 커서도 이동
+  - `alt + left, right` : 구문 단위로 앞,뒤로 이동. 선언 찾기 시(f12) 다시 되돌아갈 때 사용할 수 있다.
+* [참고](https://maeryo88.tistory.com/210)
+* [참고](https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=akilia&logNo=221991147511)
+
 
 * `MSVC compiler`를 사용하기 위해서는 `task.json`과 `launcher.json`을 잘 수정해야 한다.
 
@@ -60,7 +66,7 @@
   - `Shell launcher`
   - `Better Comments`
   - `Auto Comment Blocks`
-  - 
+  - `change-case`
 
 * [Clang-Format Style Documentation](https://clang.llvm.org/docs/ClangFormatStyleOptions.html)
 
@@ -74,9 +80,21 @@
     + 컴파일러, cpp 버전, intelliSence 모드 등을 설정할 수 있다.
     + `C/C++:구성 편집(UI)` 에서 수정할 수 있다.
 
-## Codility
 
-### [Time Complexity](https://app.codility.com/programmers/lessons/3-time_complexity/)
+# Visual Studio Setting
+
+* VSCode의 단축키를 불러서 적용할 수 있다.
+* `도구 -> 옵션 -> 환경 -> 키보드 -> 키보드 매핑 구성표 적용(Visual Studio Code)`
+* 덮어씌우는 것이기 때문에 기능이 없으면 기존 VS의 단축키를 사용한다.
+* 줄 복사(`alt + shift + up,downarrow`)는 바뀌지 않아서 직접 할당했다. -> `편집.중복됨`에 할당
+* 이전, 다음 탭 이동(`ctrl + pgup, down`)은 텍스트 편집기에 적용이 안되서 다시 할당했다. -> `창.이전탭, 창.다음탭`의 텍스트 편집기에 할당
+* [단축키 참고](https://docs.microsoft.com/ko-kr/visualstudio/ide/default-keyboard-shortcuts-in-visual-studio?view=vs-2019)
+* [단축키 참고](https://najsulman.tistory.com/996)
+
+
+# Codility
+
+## [Time Complexity](https://app.codility.com/programmers/lessons/3-time_complexity/)
 
 * 개략적으로 프로그램의 러닝타임을 표기하는 방법 (정확한 시간 측정은 노동-집약적(labour-intensive)이다.)
 * [Big-O notation]을 사용한다.
@@ -92,16 +110,16 @@ $$
 	- 전역 변수, 지역 변수 및 동적 포인터 자료구조와 재귀 함수의 스택 내용, 입력 데이터까지 전부 포함해야 하기 때문에 계산이 좀 더 까다롭다.
 
 
-## Encoding Algorithm
+# Encoding Algorithm
 
-### [Huffman Code](Huffman/Huffman.cpp)
+## [Huffman Code](Huffman/Huffman.cpp)
 
 * 빈도 종속 인코딩 알고리즘을 사용한 코드
 * 개발자인 데이비드 허프만 이름을 따서 허프만 코드라고 한다.
   * 빈도 종속 인코딩 : 비트 패턴의 길이를 해당 항목이 사용되는 빈도의 역과 관련시켜 결정하는 무손실 데이터 압축방법
 * [탐욕 알고리즘(greedy algorithm)] 이다.
 
-### [Lempel-Ziv-Welch algorithm](LZW/LZWAlgorithm.cpp)
+## [Lempel-Ziv-Welch algorithm](LZW/LZWAlgorithm.cpp)
 
 * 적응형 사전 인코딩(adaptive dictionary encoding) 알고리즘을 사용한 코드
   * 적응형 사전 인코딩 : 메시지 항목들의 집합을 사전으로, 메시지는 사전의 참조 표시로 인코딩. 인코딩 과정중에 사전의 항목이 변화한다.
@@ -111,7 +129,7 @@ $$
 * 데이터의 제한된 분석만 수행하기 때문에 최적으로 동작하지는 않는다.
 * [LZW 참조1], [LZW 참조2:위키피디아]
 
-## [Sorting Algorithm](SortAlgorithm/SortAlgorithm.cpp)
+# [Sorting Algorithm](SortAlgorithm/SortAlgorithm.cpp)
 
 * `Stable Sort (안정 정렬)`
   * 중복된 키의 순서가 변경되지 않게 정렬하는 알고리즘
@@ -128,14 +146,14 @@ $$
   * `Quick`, `Heap`, `Merge`, `Shell`, `Insertion` 등 대다수의 정렬 알고리즘이 여기에 속한다.
   * `Bucket`, `Counting`, `Radix` 등이 `Non-Comparison Sort` 이다.
 
-### Bubble Sort
+## Bubble Sort
 
 * 간단해서 비효율적인 알고리즘 (쓰이지 않는다)
 * `n`번째와 `n+1`번째를 비교하여 큰 값을 뒤쪽으로 스왑한다. 배열의 뒤쪽부터 정렬되는 형태
 * `Time Complexity` : $O(N^2)$
 * `Space Complexity` : $O(1)$
 
-### Selection Sort
+## Selection Sort
 
 * 간단해서 비효율적인 알고리즘2 (쓰이지 않는다)
 * `n`번째와 크기 비교를 했을 때 더 작으면 해당 `index`를 저장, 바깥쪽 루프가 끝났을 때 값을 앞쪽으로 스왑한다. 배열의 앞쪽부터 정렬되는 형태
@@ -143,7 +161,7 @@ $$
 * `Space Complexity` : $O(1)$
 
 
-### Insertion Sort
+## Insertion Sort
 
 * 정렬이 된 앞부분과 비교해서 적절한 위치에 `n`번째 값을 삽입한다. 배열의 앞쪽부터 정렬되는 형태
 * `Time Complexity`
@@ -153,7 +171,7 @@ $$
 * `Space Complexity` : $O(1)$
 
 
-### Shell Sort
+## Shell Sort
 
 * `Insertion Sort`의 `Worst Case`를 개선하기 위해 나온 알고리즘. 삽입 정렬보다 빠르다.
 * 일정 `간격`으로 `부분 리스트`를 만들어 `삽입 정렬`을 시행, `간격`이 1이 될때까지 반복한다.(간격이 1이면 부분 리스트 == 전체 리스트)
@@ -166,7 +184,7 @@ $$
 * `Space Complexity` : $O(N)$
 
 
-### Merge Sort
+## Merge Sort
 
 * [분할 정복 알고리즘 (Divide and Conquer Algorithm)] 이다.
 * 리스트의 길이가 0 또는 1이 될 때까지 리스트를 분할한 다음, 각각을 정렬하면서 합친다.
@@ -181,7 +199,7 @@ $$
 * `Space Complexity` : $O(N)$
 
 
-### Quick Sort
+## Quick Sort
 
 * 보편적으로 가장 많이 사용되는 정렬 알고리즘이다.
 * [분할 정복 알고리즘 (Divide and Conquer Algorithm)] 이다.
@@ -194,7 +212,7 @@ $$
   * `Worst Case` : $O(N^2)$ (이미 정렬된 배열)
 * `Space Complexity` : $O(1)$
 
-### Heap Sort
+## Heap Sort
 
 * 자료구조 `힙(heap)`을 사용하는 정렬 알고리즘
   * `힙(heap)`은 `완전 이진트리(Complete Binary Tree)`의 일종으로 `우선순위 큐`를 위하여 만들어진 자료구조
@@ -206,7 +224,7 @@ $$
 * `Time Complexity` : $O(NlogN)$
 * `Space Complexity` : $O(1)$
 
-### Counting Sort
+## Counting Sort
 
 * `비교를 하지 않는 정렬(Non-Comparison)` 알고리즘 이다.
 * 정수 정렬 알고리즘이다.
@@ -216,7 +234,7 @@ $$
 * `Time Complexity` : $O(N + K), K = 최대값$
 * `Space Complexity` : $O(K)$
 
-### Radix Sort
+## Radix Sort
 
 * `비교를 하지 않는 정렬(Non-Comparison)` 알고리즘 이다.
 * 정수 정렬 알고리즘이다.
@@ -229,7 +247,7 @@ $$
 * `Time Complexity` : $O(N * W), W = 최대 자리수$
 * `Space Complexity` : $O(N + W)$
 
-### Bucket Sort
+## Bucket Sort
 
 * 비교 정렬, 비교를 하지 않는 정렬 모두 구현이 가능한 알고리즘이다.
 * `분산 정렬(Distribution)` 이다.
@@ -243,7 +261,7 @@ $$
   * `Worst Case` : $O(N^2)$ (모든 값이 하나의 버킷으로 들어간 경우)
 * `Space Complexity` : $O(N * K)$
 
-### Tim Sort
+## Tim Sort
 
 * `Merge Sort + Insertion Sort`의 하이브리드 안정화 정렬 알고리즘이다.
 * `Java`, `Python`, `Android Platform` 등 다양한 프로그램의 기본 정렬 알고리즘으로 사용된다.
@@ -256,7 +274,7 @@ $$
   * `Worst Case` : $O(NlogN)$
 * `Space Complexity` : $O(N)$ (`Merge Sort`보다 작은 값)
 
-### Intro Sort
+## Intro Sort
 
 * `Quick Sort + Heap Sort + Insertion Sort`의 하이브리드 정렬 알고리즘이다.
 * `Quick Sort`의 `Worst Case`를 보완하기 위해 고안되었다.
@@ -268,7 +286,7 @@ $$
 * `Time Complexity` : $O(NlogN)$
 * `Space Complexity` : $O(1)$
 
-## [Graph Algorithm](GraphAlgorithm/GraphAlgorithm.cpp)
+# [Graph Algorithm](GraphAlgorithm/GraphAlgorithm.cpp)
 
 * `Spanning Tree`
   * 그래프 내의 모든 정점을 최소 간선의 수로 연결하는 부분 그래프
@@ -280,7 +298,7 @@ $$
   * 간선들의 가중치가 동일하지 않을 경우, 간선들의 가중치 합이 최소가 되는 `Spanning Tree`
   * `Spanning Tree`의 성질을 모두 갖고 있다.
 
-### Kruskal's Algorithm
+## Kruskal's Algorithm
 
 * `Minimum Spanning Tree`를 찾는 알고리즘이다.
 * [탐욕 알고리즘(greedy algorithm)]이다.
@@ -290,17 +308,17 @@ $$
   * $V <= 2E$이기 때문에 $O(logV) == O(logE)$
   * 알고리즘 최종 `Time Complexity`는 $O(ElogN)$이 된다.
 
-### Prim's Algorithm
+## Prim's Algorithm
 
 * `Minimum Spanning Tree`를 찾는 알고리즘이다.
   
-### Dijkstra Algorithm
+## Dijkstra Algorithm
 
-### Bellman-Ford Algorithm
+## Bellman-Ford Algorithm
 
-### Floyd-Warshall Algorithm
+## Floyd-Warshall Algorithm
 
-### A* Algorithm
+## A* Algorithm
 
 [탐욕 알고리즘(greedy algorithm)]: https://ko.wikipedia.org/wiki/%ED%83%90%EC%9A%95_%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98
 [LZW 참조1]: https://www2.cs.duke.edu/csed/curious/compression/lzw.html
