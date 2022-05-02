@@ -1,0 +1,9 @@
+﻿// path : %APPDATA%\Code\User\snippets\markdown.json
+// 기본 설정: 사용자 코드 조각 구성 -> markdown.json
+{
+	"markdown img url": { 
+		"prefix": "img", 
+		"body": ["![$1](./img/$2)"], 
+		"description": "Markdown Images Host URL" 
+	}
+}

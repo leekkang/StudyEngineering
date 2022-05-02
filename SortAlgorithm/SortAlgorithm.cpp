@@ -780,7 +780,7 @@ int main() {
 
 	size_t length{1000};                       // Uniform Initialization (up to C++11)
 	std::vector<int> unsortedArray(length);   // resize. not reserve
-	
+
 	bool bPrintArray = false;
 
 	if (bPrintArray) {

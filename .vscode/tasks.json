@@ -1,9 +1,11 @@
+// 참고 : https://whale-order.tistory.com/8
+
 {
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"type": "shell",//"cppbuild",
-			"label": "C/C++: cl.exe build active file",
+			"label": "C/C++: cl.exe build",
+			"type": "cppbuild", // "shell"
 			"command": "%BUILD%", //"cl.exe",
 			"args": [
 				"/Zi",
@@ -29,6 +31,36 @@
 				"isDefault": true
 			},
 			"detail": "compiler: cl.exe"
-		}
+		},
+		
+		{
+			"label": "C/C++: cl.exe build with header",
+			"type": "cppbuild", // "shell"
+			"command": "%BUILD%", //"cl.exe",
+			"args": [
+				"/Zi",
+				"/EHsc",
+				"/Fe:",
+				"${fileDirname}\\${fileBasenameNoExtension}.exe",
+				//"${file}",				// 현재 포커싱 되어있는 코드만 컴파일 하고 싶을 때 사용
+				"${fileDirname}\\**.cpp", 	// 포커싱 된 파일이 있는 폴더를 한꺼번에 컴파일 하고 싶을 때 사용
+				"${fileDirname}\\**.h",
+			],
+			"options": {
+				"cwd": "${workspaceFolder}",
+				"env": {
+					"PATH": "${env:PATH};C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\Common7\\Tools",
+					"BUILD": "VsDevCmd.bat && cl.exe"
+				}
+			},
+			"problemMatcher": [
+				"$msCompile"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"detail": "compiler: cl.exe"
+		},			
 	]
 }

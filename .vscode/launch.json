@@ -11,8 +11,10 @@
             "stopAtEntry": false,
             "cwd": "${fileDirname}",//"${workspaceFolder}",
             "environment": [],
-            "externalConsole": true,
-            //"preLaunchTask": "C/C++: cl.exe build active file"
+            "console": "externalTerminal",
+            //"console": "integratedTerminal",
+            // "externalConsole": true, //! deprecated
+            "preLaunchTask": "C/C++: cl.exe build" // 코드 수정없이 디버깅을 여러번 해야 할 경우 주석 처리
         }
     ]
 }
