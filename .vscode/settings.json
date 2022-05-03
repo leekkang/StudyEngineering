@@ -55,7 +55,22 @@
         "xlocmon": "cpp",
         "xloctime": "cpp",
         "xtree": "cpp",
-        "map": "cpp"
+        "map": "cpp",
+        "array": "cpp",
+        "codecvt": "cpp",
+        "condition_variable": "cpp",
+        "deque": "cpp",
+        "resumable": "cpp",
+        "fstream": "cpp",
+        "future": "cpp",
+        "locale": "cpp",
+        "mutex": "cpp",
+        "queue": "cpp",
+        "stack": "cpp",
+        "thread": "cpp",
+        "unordered_set": "cpp",
+        "xlocbuf": "cpp",
+        "xlocmes": "cpp"
     },
     "projectManager.git.baseFolders": [
         "C:\\Users\\Kanghyuk\\Desktop\\github_repository"

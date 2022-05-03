@@ -13,9 +13,16 @@
   - [헤더 파일](#헤더-파일)
 - [변수 범위, 주기, 링크](#변수-범위-주기-링크)
 - [키워드](#키워드)
+  - [sizeof 연산자](#sizeof-연산자)
+  - [this 키워드](#this-키워드)
   - [static 키워드](#static-키워드)
   - [extern 키워드](#extern-키워드)
   - [inline 키워드](#inline-키워드)
+- [연산자](#연산자)
+  - [캐스팅 연산자](#캐스팅-연산자)
+  - [범위 지정 연산자](#범위-지정-연산자)
+- [함수](#함수)
+  - [멤버 함수와 가상 함수](#멤버-함수와-가상-함수)
 
 ## CPP Study
 
@@ -46,19 +53,19 @@
 * 상수는 일반 포인터로 참조 불가능, `const pointer`를 사용해야 한다.
 
 ```cpp
-	const int constNumber = 999;
-	int	normalNumber = 1010;
-	const int* pLeftConst = &constNumber;    // 상수 참조 가능
-	pLeftConst = &normalNumber;              // 주소 변경(참조) 가능
-	//*pLeftConst = 500;                     //! 값 변경(역참조) 불가능
+const int constNumber = 999;
+int	normalNumber = 1010;
+const int* pLeftConst = &constNumber;    // 상수 참조 가능
+pLeftConst = &normalNumber;              // 주소 변경(참조) 가능
+//*pLeftConst = 500;                     //! 값 변경(역참조) 불가능
 
-	int* const pRightConst = &normalNumber;
-	//int* const pRightConst = &constNumber; //! 상수 참조 불가능
-	//pRightConst = &Number2;                //! 주소 변경 불가능
-	*pRightConst = 9090;                     // 값 변경 가능
+int* const pRightConst = &normalNumber;
+//int* const pRightConst = &constNumber; //! 상수 참조 불가능
+//pRightConst = &Number2;                //! 주소 변경 불가능
+*pRightConst = 9090;                     // 값 변경 가능
 
-	const int* const pAllConst = &Number1;
-	//pAllConst = &normalNumber;            //! 주소 변경 불가능
+const int* const pAllConst = &Number1;
+//pAllConst = &normalNumber;            //! 주소 변경 불가능
 ```
 
 
@@ -98,11 +105,11 @@ _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 ```cpp
 // 이 구조체의 크기는 24바이트이다. -> |A B       |    Number    | intNum C   | -> 8바이트가 기본단위가 되었다.
 struct Test {
-	char	A;
-	char	B;
-	double	doubleNum;
-	int		intNum;
-	char	C;
+  char	A;
+  char	B;
+  double	doubleNum;
+  int		intNum;
+  char	C;
 };
 
 // 이 구조체의 크기는 1바이트이다.
@@ -119,11 +126,12 @@ struct Test1 {
     + 컴파일러가 작성한 코드를 바이너리코드(0, 1 로 구성된 코드)로 만든 뒤 실행파일을 생성한다.
 
     + 실행파일을 더블클릭해서 실행을 하게 되면 바이너리 코드가 메모리에 올라가는데(Load) 이 때 운영체제가 맨 처음 접근하는 곳이 코드 영역이다.
+    + 읽기 전용이다.
   - **데이터** : `전역변수`, `정적(static)변수`들의 메모리가 할당되는 영역
     + `전역변수` : 함수의 외부에 선언된 변수
   
     + `rodata`, `data`, `bss` 로 영역이 나뉜다.
-      + `rodata` : 상수 키워드(const)로 선언되는 영역, 시스템에 사용된 각종 문자열들을 포함
+      + `rodata` : 상수 키워드(const)로 선언되는 영역, 시스템에 사용된 각종 문자열들을 포함. 읽기 전용이지만 데이터 영역에 존재한다.
       + `data` : 읽기, 쓰기가 가능한, 초기화된 전역변수 또는 정적변수를 포함
       + `bss(block stated symbol)` : 초기화되지 않았거나 0으로 초기화하는 전역변수 또는 정적변수를 포함
     + 프로그램이 종료될 때 메모리에서 정리가 된다.
@@ -145,7 +153,7 @@ struct Test1 {
 
       + 힙 영역과 공유 라이브러리 영역을 가운데 두고 마주보는 형태이기 때문에 메모리를 최대한 활용할 수 있다.
     + 스택 영역이 힙 영역을 침범하는 경우를 `스택 오버플로우`라고 부른다.
-* `rodata`는 읽기 전용이라 텍스트 쪽으로 들어가는듯? 좀 더 알아봐야함.
+
 
 ![32bit 운영체제 메모리 구조](img/memory.jpg)
 
@@ -211,11 +219,11 @@ int factorialTail(int number) {
 * `memset` 함수는 1바이트 단위로 값을 채워넣기 때문에 주의해서 사용해야 한다.
 
 ```cpp
-	// 1번인자 : 메모리 주소
-	// 2번인자 : 채워줄 값
-	// 3번인자 : 채워줄 메모리 크기
-	memset(NumberArray, 1, sizeof(int) * 10);
-  // -> 각 배열엔 1이 아닌 16,843,009가 들어가게 된다 (2^24 + 2^16 + 2^8 + 1)
+// 1번인자 : 메모리 주소
+// 2번인자 : 채워줄 값
+// 3번인자 : 채워줄 메모리 크기
+memset(NumberArray, 1, sizeof(int) * 10);
+// -> 각 배열엔 1이 아닌 16,843,009가 들어가게 된다 (2^24 + 2^16 + 2^8 + 1)
 ```
 
 * `memcpy` 함수와 `std::copy` 함수의 비교 시 미묘하게 `memcpy` 가 빠르지만 iterator 등을 생각했을 때 유연한 적용은 `std::copy`가 좋다.
@@ -224,7 +232,7 @@ int factorialTail(int number) {
 # 파일 입출력
 
 * 모드의 종류
-	- `w, r, a, wt, rt, at, wb, rb, ab, r+, w+, a+`
+  - `w, r, a, wt, rt, at, wb, rb, ab, r+, w+, a+`
     + w : 쓰기, 이미 있으면 덮어씀
   
     + r : 읽기, 파일이 없으면 에러가 발생. File스트림이 nullptr로 들어오게 된다.
@@ -235,30 +243,27 @@ int factorialTail(int number) {
     + a+ : 파일이 있으면 맨 끝부터 읽고 쓰기가 가능하다. 파일이 없으면 새로 만들어준다.
 
 ```cpp
-	FILE* File = nullptr;
-	fopen_s(&File, "Test.txt", "rt");
+FILE* File = nullptr;
+fopen_s(&File, "Test.txt", "rt");
 
-	if (File) {
-		char	Line[256] = {};
+if (File) {
+  char Line[256] = {};
 
-		// 문자열을 읽어온다. 한줄을 읽어오는 기능인데 개행문자까지 읽는다.
-    // 읽은 뒤 뒤에 `\0`을 넣는다. 즉 문자는 255개(n - 1개) 까지만 읽을 수 있다.
-    // `test\nstring` 이라는 문자열을 파일에 넣고 읽으면 첫번째 Line값은 `test\n`이 되고 strlen() 함수 사용 시 5가 나온다.
-		fgets(Line, 256, File);
+  // 문자열을 읽어온다. 한줄을 읽어오는 기능인데 개행문자까지 읽는다.
+  // 읽은 뒤 뒤에 `\0`을 넣는다. 즉 문자는 255개(n - 1개) 까지만 읽을 수 있다.
+  // `test\nstring` 이라는 문자열을 파일에 넣고 읽으면 첫번째 Line값은 `test\n`이 되고 strlen() 함수 사용 시 5가 나온다.
+  fgets(Line, 256, File);
 
-		std::cout << Line;
+  std::cout << Line;
+  while (true) {
+    fgets(Line, 256, File);
+    if (feof(File))
+      break;
 
-		while (true) {
-			fgets(Line, 256, File);
-
-			if (feof(File))
-				break;
-
-			std::cout << Line;
-		}
-
-		fclose(File);
-	}
+    std::cout << Line;
+  }
+  fclose(File);
+}
 ```
 
 # 클래스
@@ -337,13 +342,13 @@ auto list = {"a"s, "b"s, "c"s}; // initializer_list<std::string>
   - `no linkage` : 자기 자신만을 참조한다.
     + 지역변수 (`local variables`)
     + 블록 내 유저 정의 자료형 (`user-defined type definitions declared inside a block`)
-  - `internal linkage` : 선언된 소스파일 어디에서나 접근이 가능하다.
+  - `internal linkage` : 내부 링크, 선언된 소스파일 어디에서나 접근이 가능하다.
     + 정적전역변수 (`static global variables`)
     + 상수전역변수 (`const global variables`)
     + 정적함수 (`static function`)
     + 네임스페이스 내 유저 정의 자료형 (`user-defined type definitions declared inside an unnamed namespace`)
 
-  - `external linkage` : 선언된 소스파일 + 다른 파일에서도 접근이 가능하다.
+  - `external linkage` : 외부 링크, 선언된 소스파일 + 다른 파일에서도 접근이 가능하다.
     + 일반함수 (`normal function`)
     + 비상수 전역변수 (`non-const global variables`)
     + 외부전역변수 (`extern global variable`)
@@ -354,7 +359,29 @@ auto list = {"a"s, "b"s, "c"s}; // initializer_list<std::string>
 ![](./img/scope%2Cduration%2Clinkage.PNG)
 
 
-# 키워드
+# [키워드](https://docs.microsoft.com/en-us/cpp/cpp/keywords-cpp?view=msvc-170)
+
+* 특별한 의미를 가진 미리 정의된 예약 식별자. 식별자 이름(변수명) 으로 사용할 수 없다.
+* 두 개의 연속된 밑줄을 포함하는 식별자(ex, `__stdcall`)는 컴파일러 구현을 위해 예약된 것이다.
+  - `__cdecl` 키워드는 밑줄 없이 사용이 가능하다.
+
+## sizeof 연산자
+
+* 타입 이름 또는 단항연산 표현(`unary-expression`)을 인자로 받는 연산자.
+* `size_t` 타입의 결과를 생성한다.
+  - 인텔리센스로 연산 결과값을 바로 알 수 있다. (`4Ui64` : 64비트 운영체제 부호 없는 정수형(`unsigned integral`) 타입의 크기 4)
+* 타입 이름을 제외한 나머지 연산 시 괄호를 사용하지 않아도 된다(!)
+* 절대 0이 결과값으로 나오지 않는다. (나누기 같은 구문에서 에러를 발생시킬 수 있기 때문에 최소값을 1로 정해놓았다.)
+* 배열 식별자의 경우 배열의 총 바이트 수를 산출한다. 포인터 타입은 포인터 크기가 나온다.
+* 클래스, 구조체, 유니온의 경우 컴파일러 옵션(`/Zp`) 또는 `pack pragma`에 따라 각각의 멤버 변수 크기의 합과 다를 수 있다.
+* 컴파일 타임에 크기가 정해지지 않거나 텍스트 영역에 저장되는 함수(함수포인터는 가능)는 연산할 수 없다.
+* 참고
+  - [클래스의 크기](https://blog.naver.com/tipsware/221090063784)
+
+## this 키워드
+
+* 참고
+
 
 ## static 키워드
 
@@ -371,6 +398,8 @@ auto list = {"a"s, "b"s, "c"s}; // initializer_list<std::string>
 * `static` 멤버 변수는 모든 객체가 공유해야 하기 때문에 프로그램 전체 영역에서 메모리 유지가 되어야 한다. **반드시 전역 범위에서 정의 및 초기화를 수행해야 한다.**
   - 함수 내부에서는 선언만 하고 초기화를 cpp파일에서 하자.
   - `C++17` 에서는 `inline variables`를 통해 `inline` 키워드로 **선언과 동시에 초기화**가 가능해졌다! (헤더에서만 가능)
+* `static` 멤버 함수는 고유의 객체를 두고 연산이 이루어지는 것이 아니기 때문에 `함수 포인터` 취급을 한다.
+  - 함수 포인터에 대입을 할 때 주소연산자(&)를 붙이지 않아도 된다. (붙여도 된다.)
 
 * 참고
   - [전역변수와 정적변수](https://chfhrqnfrhc.tistory.com/entry/%EC%A0%84%EC%97%AD%EB%B3%80%EC%88%98%EC%99%80-%EC%A0%84%EC%A0%81%EB%B3%80%EC%88%98)
@@ -424,3 +453,145 @@ extern const int g_w(1);
 ## inline 키워드
 
 - 빨리 하자
+
+# 연산자
+
+## 캐스팅 연산자
+
+## 범위 지정 연산자
+
+* `::`
+
+# 함수
+
+## 멤버 함수와 가상 함수
+
+```cpp
+class CEmpty {};
+class CTest {
+public:
+  char a;
+  void foo(){}
+  void bar(){}
+};
+class CTestStatic {
+public:
+  char a;
+  static char b, c, d;
+  void foo(){}
+  static void bar(){}
+};
+class CTestVirtual {
+  public:
+  char a;
+  void foo(){}
+  virtual void bar(){}
+};
+class CTestParent {
+  public:
+  char a;
+  virtual void foo(){}
+  virtual void bar(){}
+};
+class CTestChild : public CTestParent {};
+class CTestChildOverride : public CTestParent {
+  public:
+  void bar(){}
+};
+
+int main() {
+  CEmpty empty;                 // 빈 클래스
+  CTest test;                   // 기본 클래스
+  CTestStatic stat;             // 정적변수, 함수가 포함된 클래스
+  CTestVirtual virt;            // 한 개의 가상함수를 포함하는 클래스
+  CTestParent parent, parent2;  // 두 개의 가상함수를 포함하는 클래스
+  CTestChild child;             // 상속받지만 가상함수를 재정의하지 않은 클래스
+  CTestChildOverride overrided; // 상속받은 가상함수를 재정의한 클래스
+  
+  //  크기 비교
+  // 1. empty 클래스도 스택 영역에 메모리가 올라간다.
+  // 2. static 멤버 변수는 클래스의 크기에 영향을 주지 않는다. (bss 영역에 올라감)
+  // 3. 가상함수를 포함하는 클래스는 주소 크기만큼 크기가 커진다. 주소값이 4바이트이기 때문에 8바이트의 결과가 나온다.
+  // 4. 가상함수의 개수는 크기와 상관없다. -> 가상함수 테이블은 배열? 리스트? 로 생성되며 클래스들은 테이블의 주소를 가진다.
+  std::cout << typeid(empty).name() << " size : " << sizeof empty << " byte\n";    // 1 byte
+  std::cout << typeid(test).name() << " size : " << sizeof empty << " byte\n";     // 1 byte
+  std::cout << typeid(stat).name() << " size : " << sizeof empty << " byte\n";     // 1 byte
+  std::cout << typeid(virt).name() << " size : " << sizeof empty << " byte\n";     // 8 byte
+  std::cout << typeid(parent).name() << " size : " << sizeof empty << " byte\n";   // 8 byte
+  
+  // cout에 멤버 변수의 주소를 인자로 받는 오버로딩 함수가 없기 때문에 캐스팅 없이 출력하면 가장 적합하게 처리할 수 있는 함수를 고른다.
+  // 멤버 변수는 출력하면 아무 값도 안나온다. (어떤 타입 인자를 처리하는 함수인지 모르겠음)
+  // reinterpret_cast 연산자는 임의의 포인터 타입끼리 변환을 허용하는 캐스트 연산자다.
+  // 오버로딩 함수 중 void* 형의 인자를 받는 함수가 있기 때문에 캐스팅 후 출력한다.
+  // printf를 사용하면 캐스팅을 하지 않아도 되는데, printf는 가변 인자를 통해 처리하는 방식이기 때문이다.
+  //
+  //  가상함수 테이블 주소 위치 확인
+  // 1. 가상함수 테이블의 주소는 객체 메모리의 가장 앞부분에 추가된다. (현재 환경에 영향을 받는건가?)
+  std::cout << std::hex;
+  std::cout << typeid(test).name() << " address : " << &test << '\n';        // &test == &test.a
+  std::cout << typeid(test).name() << " member address : " << reinterpret_cast<void *>(&test.a) << '\n';
+  std::cout << typeid(parent).name() << " address : " << &parent << '\n';    // &parent + 4 == &parent.a
+  std::cout << typeid(parent).name() << " member address : " << reinterpret_cast<void *>(&parent.a) << '\n';
+  //printf("%p\n", &test.a); // 캐스팅을 하지 않아도 된다.
+  //printf("%p\n", &parent.a);
+  std::cout << std::endl;
+
+  //  가상함수 테이블 주소값 비교
+  // 1. 클래스 별 가상함수 테이블의 주소값은 멤버 함수와 관계없이 전부 다르다.
+  // 2. 동일 클래스의 객체들은 가상함수 테이블을 공유한다.
+  uint32_t parentVTAddr = 0;
+  uint32_t parent2VTAddr = 0;
+  uint32_t childVTAddr = 0;
+  uint32_t overridedVTAddr = 0;
+  memcpy(&parentVTAddr, &parent, sizeof uint32_t);
+  memcpy(&parent2VTAddr, &parent2, sizeof uint32_t);
+  memcpy(&childVTAddr, &child, sizeof uint32_t);
+  memcpy(&overridedVTAddr, &overrided, sizeof uint32_t);
+  std::cout << typeid(parent).name() << " VTable address : " << parentVTAddr << '\n';       // 003F23E0
+  std::cout << typeid(parent2).name() << " VTable address : " << parent2VTAddr << '\n';     // 003F23E0
+  std::cout << typeid(child).name() << " VTable address : " << childVTAddr << '\n';         // 003F23F4
+  std::cout << typeid(overrided).name() << " VTable address : " << overridedVTAddr << '\n'; // 003F21A4
+  std::cout << std::endl;
+
+  // 객체에서 멤버 함수에 접근해 주소를 얻으려하면 오류가 발생한다.(&test.bar -> C/C++(300)오류)
+  // 함수 호출 코드에서 실제 호출할 함수를 결정하는 것을 함수 바인딩이라 하는데, 객체를 동적할당하지 않으면 컴파일 시점에 해당 객체가 호출할 함수를 결정한다. (static binding)
+  // 이 바인딩 된 객체의 함수 포인터는 호출 외에 다른 용도로 사용할 수 없기 때문에 오류가 발생하는 것이다.
+  // 멤버 함수는 변수와 다르게 텍스트 영역에 메모리가 할당되기 때문에 범위 지정 연산자(::)를 사용하여 어디 영역의 함수인지 정확히 지정해주어야 한다.
+  // 하지만 해당 문구(&CTest::foo)를 적용하여 주소를 구하려하면 캐스팅 타입이 맞지 않다고 오류가 발생한다. (C/C++(171)) (static 멤버 함수는 가능하다. 네임스페이스 때문인듯)
+  // void * 는 유저가 원하는 타입으로 형변환이 가능하지만 멤버 함수를 나타내는 함수 포인터는 변환이 불가능하다. 참고 : http://www.cplusplus.com/forum/general/38453/
+  // 그래서 참조자(&)를 사용해서 우회 접근한다. (자세한 이유는 모르겠음..)
+  // 참조자는 r-value를 허용하지 않기 때문에 멤버 함수 포인터 변수를 생성하여 출력한다.
+  // printf는 캐스팅 할 필요가 없으니 그대로 사용 가능하다.
+  //
+  //  멤버 함수 주소값 비교
+  // 1. 재정의 하지 않은 상속 관계의 클래스들의 멤버 함수는 같은 주소값을 가진다.
+  // 2. 재정의한 멤버 함수는 다른 주소값을 가진다.
+  // 3. 멤버 함수 포인터는 묵시적 형변환을 허용하지 않는다. 네임스페이스를 굉장히 중요하게 여기기 때문이다.
+  // std::cout << reinterpret_cast<void *>(CTestStatic::bar) << '\n'; // 주소연산자(&)를 붙이지 않아도 된다.
+  void (CTestParent::*pParentFoo)() = &CTestParent::foo;
+  void (CTestParent::*pParentBar)() = &CTestParent::bar;
+  void (CTestParent::*pChildFoo)() = &CTestChildOverride::foo;
+  // void (CTestParent::*pChildBar)() = &CTestChildOverride::bar;
+  void (CTestChildOverride::*pOverrideFoo)() = &CTestChildOverride::foo;
+  void (CTestChildOverride::*pOverrideBar)() = &CTestChildOverride::bar;
+  
+  std::cout << typeid(parent).name() << " foo func address : " << reinterpret_cast<void *&>(pParentFoo) << '\n';      // 00356320
+  std::cout << typeid(parent).name() << " bar func address : " << reinterpret_cast<void *&>(pParentBar) << '\n';      // 00356357
+  std::cout << typeid(overrided).name() << " foo func address : " << reinterpret_cast<void *&>(pChildFoo) << '\n';    // 00356320
+  // std::cout << typeid(overrided).name() << " bar func address : " << reinterpret_cast<void *&>(pChildBar) << '\n';
+  std::cout << typeid(overrided).name() << " foo func address : " << reinterpret_cast<void *&>(pOverrideFoo) << '\n'; // 00356320
+  std::cout << typeid(overrided).name() << " bar func address : " << reinterpret_cast<void *&>(pOverrideBar) << '\n'; // 00356352
+  // printf("%p\n", &CTestParent::foo); // 캐스팅을 하지 않아도 된다.
+  std::cout << std::endl;
+
+  std::cout << "계속하려면 아무 키나 누르십시오..." << '\n';
+  _getch();
+  //system("pause");
+
+  return 0;
+}
+```
+![result](img/vfunc.png)
+
+* 참고
+  - [함수의 주소 출력](https://bigpel66.oopy.io/library/cpp/etc/1) 
