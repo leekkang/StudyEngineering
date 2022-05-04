@@ -1,5 +1,4 @@
 - [용어 정리](#용어-정리)
-  - [선언과 정의](#선언과-정의)
 - [Enum, Enum class 차이](#enum-enum-class-차이)
 - [const pointer](#const-pointer)
 - [동적할당](#동적할당)
@@ -37,48 +36,64 @@
   - 알아야 할 것 : 프로그래밍 설계패턴 (컴포넌트 지향 프로그래밍, 데이터 지향 프로그래밍, 등등), 함수 호출 규약, 메모리 단편화, 전처리기 동작, static 변수, 함수 메모리 접근방식
   - 생성자 디폴트 매개변수는 선언, 정의부가 구분되었을 경우 선언시에 해준다. 정의할 때는 디폴트 매개변수를 적어주지 않아도 된다.
     - 생성자 제한으로 특정 객체에서만 생성가능하게 제한하는 방법?
+  - 접근제한자는 컴파일 타임에만 고려되나? 코드작성을 위해서 만들어진건가?
 
 ---
 # 용어 정리
 
-  - 이름 : 말 그대로 무언가를 지칭하는 단어. 가장 큰 개념
+  - 이름 : 무언가를 지칭하는 단어. 가장 큰 개념
 
   - ### [`identifier` (식별자)](https://docs.microsoft.com/en-us/cpp/cpp/identifiers-cpp?view=msvc-170)
-    - 
     - 이름들을 지칭하는 일련의 문자열
     - 코드에 적힌 예약되지 않은 이름들은 전부 식별자
-  - **`types` (타입)**
-    - 
-    -  식별자 중 무언가의 종류를 나타내기 위해 사용하는 단어
-  - **[`keyword` (키워드)](https://docs.microsoft.com/en-us/cpp/cpp/keywords-cpp?view=msvc-170)**
-    - 
+  - ### [`keyword` (키워드)](https://docs.microsoft.com/en-us/cpp/cpp/keywords-cpp?view=msvc-170)
     - 특별한 의미로 사용하기 위해 언어가 예약한 식별자. 식별자로 사용할 수 없다.
     - 두 개의 연속된 밑줄을 포함하는 식별자(ex, `__stdcall`)는 컴파일러 구현을 위해 예약된 것이다.
       - `__cdecl` 키워드는 밑줄 없이 사용이 가능하다.
-  - **`entity` (엔터티, 개체)**
-    - 
+  - ### `entity` (엔터티, 개체)
     - 데이터 또는 정보들의 집합을 포함하는 어떤 메모리 (또는 레지스터)
+    - 식별자로 네이밍 한다. (identifier is just a name for some entity)
     - 종류 : `values`, `objects`, `references`, `enumerators`, `types`, `functions`, `class members`, `namespaces`, `templates(specializations 포함)`, `structured bindings(C++17)`, `parameter packs`
-    - 타입으로 엔터티들을 구분하고 연산을 제한한다.
     - 전처리기인 매크로 (`macro`)는 엔터티가 아니다.
-  - **`object` (객체)**
-    -
-    - 객체다.
-  - 간단한 포함관계 : 이름 > 식별자 > 타입 > 키워드, 식별자 > 엔터티 > 객체
+  - ### [`types` (타입, 유형)](https://en.cppreference.com/w/cpp/language/type)
+    - 무언가의 종류를 나타내기 위해 사용하는 엔터티
+    - `객체, 참조, 함수 및 식`이 가지는 **속성**이며, 엔터티에 허용되는 연산을 제한하고 비트 시퀀스에 의미를 부여한다.
+  - ### [`object` (객체)](https://en.cppreference.com/w/cpp/language/object)
+    - 공식적인 정의는 **어떠한 저장 영역(`any region of storage`)** 이다.
+    - `C++` 에서 `object` 와 `instance` 는 동의어다.
+      - `instance` 는 공식적으로 정의된 용어가 아니지만 `instance of type X` 이런식으로 객체를 표현한다.
+    - `변수(variable)` 는 선언을 완료한 정적 데이터 멤버인 객체 또는 참조를 의미한다.
+      - 여기서 정적 데이터는 키워드인 `static`의 의미가 아닌 정해진(`fixed`)을 뜻한다.
+    - 아래의 속성들을 가진다.
+      - 크기 (sizeof)
+      - [정렬 필요조건 (alignment requirement)](https://en.cppreference.com/w/cpp/language/object#Alignment)
+        - 객체를 생성할 수 있는 연속된 주소들 사이의 바이트 수
+        - 메모리 최적화에 사용하는듯? 
+      - [저장 기간 (storage duration)](https://en.cppreference.com/w/cpp/language/storage_duration)
+      - [수명 (lifetime)](https://en.cppreference.com/w/cpp/language/lifetime)
+      - 타입
+      - 값
+      - 이름 (optional)
+
+  - ### [선언(declaration)과 정의(definition)](https://docs.microsoft.com/en-us/cpp/cpp/declarations-and-definitions-cpp?redirectedfrom=MSDN&view=msvc-170)
+    - 둘의 가장 큰 차이점은 **메모리를 할당하는가** 이다.
+    - 메모리를 할당하지 않고 식별자만 알려준다면 `선언`, 메모리가 할당된 식별자는 `정의`
+    - 선언(`declaration`)
+      - 엔터티의 타입과 기타 다른 특성에 대한 정보를 가지고 엔터티에 고유한 이름을 지정하는 것
+      - 정의하기 전에 사용하기 위해 선언하는 것을 `전방 선언(forward declaration)` 이라고 한다.
+    - 정의(`definition`)
+      - 엔터티가 프로그램에서 사용될 때 컴파일러가 기계어 코드를 생성하는데 필요한 모든 정보를 제공하는 것
+      - 클래스 작성은 선언과 동시에 정의를 하는 것과 같다. (멤버함수는 선언과 정의를 분리할 수 있다)
+
+  - 간단한 포함관계 
+    - 실체가 없는 것 : 이름 > 식별자 > 키워드
+    - 실체가 있는 것 : 엔터티 > 객체, 타입
   - 참고 
     - [Basic Concept of C++ Language](https://en.cppreference.com/w/cpp/language/basic_concepts) 
     - [identifier vs keyword](https://stackoverflow.com/questions/7279227/c-what-is-the-difference-between-identifier-keyword-name-and-entity)
     - [entity vs identifier](https://stackoverflow.com/questions/13542905/whats-the-difference-between-entity-and-identifier)
     - [difference between object and instance](https://stackoverflow.com/questions/22206044/difference-between-object-and-instance-c)
     - [Class and Objects](https://isocpp.org/wiki/faq/classes-and-objects#overview-object)
-
-
-## [선언과 정의](https://docs.microsoft.com/en-us/cpp/cpp/declarations-and-definitions-cpp?redirectedfrom=MSDN&view=msvc-170)
-
-  - 둘의 가장 큰 차이점은 **메모리를 할당하는가** 이다.
-  - 메모리를 할당하지 않고 식별자만 알려준다면 `선언`, 메모리가 할당된 식별자는 `정의`
-  - 선언(`declaration`)
-  - 정의(`definition`)
 
 
 ---
@@ -152,7 +167,7 @@
   - `프로젝트 속성 -> 코드 생성 -> 구조체 멤버 맞춤` 옵션이 `기본값`으로 설정되어 있을 경우 구조체 내에서 용량이 가장 큰 변수의 크기를 기본값으로 잡아서 메모리를 할당하게 된다.
     - 왜 `1byte`로 설정하지 않는가? -> 컴퓨터 입장에서는 `4의 배수` 또는 `2^n` 단위로 메모리를 할당하는 것이 더 효율적이다.
   - 멤버가 없더라도 최소바이트인 1바이트가 할당된다.
-    - 변수를 선언하게 되면 메모리에 공간이 잡혀야 하므로 최소 바이트 수인 1바이트 공간을 차지하게 하여 변수를 잡아주는 것이다.
+    - 변수를 정의하게 되면 메모리에 공간이 잡혀야 하므로 최소 바이트 수인 1바이트 공간을 차지하게 하여 변수를 잡아주는 것이다. (객체를 구분하기 위해)
   - 이제와서는 클래스와 구조체의 차이는 접근 제한자의 적용유무 밖에 없다.
     - 구조체 내에서도 함수를 선언할 수 있다.
 
@@ -177,7 +192,7 @@
 
   - cpp의 메모리 영역은 크게 4가지로 나뉜다 : 스택, 데이터, 힙, 코드
 
-  - **텍스트** : 유저가 작성한 코드가 저장되는 영역
+  - **텍스트 or 코드** : 유저가 작성한 코드가 저장되는 영역
     - 
     - 컴파일러가 작성한 코드를 바이너리코드(0, 1 로 구성된 코드)로 만든 뒤 실행파일을 생성한다.
   
@@ -338,6 +353,7 @@
   - 구조체처럼 여러 변수를 모아두고 하나로 묶어서 사용할 수 있는 기능을 제공한다.
     
   - C++에서는 객체를 만들기 위한 수단으로 클래스를 제공한다.
+  - 사용자 정의형 (`user-defined type`) 이다.
   - **캡슐화** : 여러 변수와 함수를 모아서 하나의 클래스 혹은 구조체로 만들어주는 것을 말한다.
   - **은닉화** : 클래스에서 제공하는 멤버를 외부에 공개하는 수준을 정하는 것을 말한다.
   - `friend CTestClass` : `CTestClass` 에게 접근허가를 내어준다. `CTestClass` 는 이 클래스의 `private` 데이터에 `public` 처럼 접근이 가능하다.
@@ -345,10 +361,10 @@
 
 ## [Uniform Initailizer](https://modoocode.com/286)
 
-  - `class A` 가 있고 인자를 받지 않는 생성자를 가지고 있을 때, `A a();` 라인은 객체 `a`를 만드는 것이 아닌 `A`를 리턴하고 인자를 받지 않는 함수 `a` 를 정의한 것으로 간주한다.
-    - CPP 컴파일러는 함수의 정의처럼 보이는 것들을 모두 함수의 정의로 해석한다.
+  - `class A` 가 있고 인자를 받지 않는 생성자를 가지고 있을 때, `A a();` 라인은 객체 `a`를 만드는 것이 아닌 `A`를 리턴하고 인자를 받지 않는 함수 `a` 를 선언한 것으로 간주한다.
+    - CPP 컴파일러는 함수의 선언처럼 보이는 것들을 모두 함수의 선언로 해석한다.
 
-  - ()가 함수를 정의하는 데에도 사용되고, 객체의 생성자를 호출하는 데에도 사용되기 때문에 `c++11`부터 도입되었다.
+  - ()가 함수를 선언하는 데에도 사용되고, 객체의 생성자를 호출하는 데에도 사용되기 때문에 `c++11`부터 도입되었다.
   - 생성자 호출에 () 대신 {} 를 사용하면 된다.
   - 암시적 타입 변환을 사용하지 못한다.
   - 함수 리턴 시 생성자의 객체 타입을 적지 않아도 된다. (리턴 타입을 보고 추론해준다)
@@ -380,6 +396,7 @@ auto list = {"a"s, "b"s, "c"s}; // initializer_list<std::string>
 
 ---
 # [변수 범위, 주기, 링크](https://www.learncpp.com/cpp-tutorial/scope-duration-and-linkage-summary/)
+  - 참고 : [Storage class specifiers](https://en.cppreference.com/w/cpp/language/storage_duration)
 
   - `Scope`
     - 
@@ -446,10 +463,21 @@ auto list = {"a"s, "b"s, "c"s}; // initializer_list<std::string>
   - 참고
     - [클래스의 크기](https://blog.naver.com/tipsware/221090063784)
 
-## this 키워드
+## [this 키워드](https://docs.microsoft.com/en-us/cpp/cpp/this-pointer?view=msvc-170)
 
-- 참고
+  - 클래스, 구조체, 유니온 안의 `비정적(nonstatic) 멤버 함수`에서만 접근할 수 있는 포인터
 
+  - 객체의 한 부분이 아니기 때문에 `sizeof` 연산자의 결과에 반영되지 않는다.
+    - 객체 이름이 해당 객체의 주소값이기 때문에 함수 주소와 같이 코드 영역에 포함된다.
+    - 때문에 `this` 는 **객체가 아닌 엔터티**이다.
+  - 객체를 통해 비정적 멤버 함수가 호출되었을 때, 컴파일러는 객체의 주소를 숨겨진 인자로 전달한다.
+
+```cpp
+  myDate.setMonth(3);    // 소스 코드의 형태
+  setMonth(&myDate, 3);  // 컴파일러가 해석한 형태
+```
+  - 객체의 멤버 함수에서 접근하는 멤버 변수의 앞에는 `this->` 또는 `(*this).` 구문이 생략되어 있다.
+  - 자기 자신을 참조하는 것을 방지할 때도 사용한다. (`&object != this`)
 
 ## static 키워드
 
@@ -476,6 +504,7 @@ auto list = {"a"s, "b"s, "c"s}; // initializer_list<std::string>
       - 정적 멤버 함수 포인터와 일반 멤버 함수 포인터는 타입이 다르다.
 
 ```cpp
+// using funcPointer = void(*)();
 CTest test; // static void foo() 멤버 함수를 가지고 있다.
 void (*func)() = test.foo;            // ok 
 void (*func2)() = CTest::foo;         // ok
@@ -504,8 +533,8 @@ void (*func3)() = &CTest::foo;        // ok
   - 다른 소스파일에서 선언된 외부전역변수를 사용하려면 변수 전방선언 (`variable forward declarations`)을 해야한다.
     - 전방선언이 함수 외부에서 선언되면 소스파일 전체에 적용되고, 함수 내에서 선언되면 해당 블록 내에서만 적용된다.
 
-    - **키워드를 생략할 수 없다.** 생략하면 일반 변수 선언과 동일해진다.
-    - 변수가 `static` 으로 선언된 경우에는 전방선언을 해도 적용되지 않는다.
+    - **키워드를 생략할 수 없다.** 생략하면 일반 변수 정의와 동일해진다.
+    - 변수에 `static` 키워드가 붙어 있으면 전방선언을 해도 적용되지 않는다.
     - 함수는 기본적으로 외부 링크 속성이다. `static` 키워드를 사용하면 내부 링크로 설정이 가능하다.
   - 상수전역변수(`const global variables`)는 `static` 변수로 간주한다. 외부에서 사용하면 새로운 변수를 선언하는것과 동일함.
     - 상수를 외부 전역변수로 사용하려면 해당 변수에 `extern` 키워드를 꼭 붙여야 한다.
@@ -549,6 +578,7 @@ void (*func3)() = &CTest::foo;        // ok
 ## 범위 지정 연산자
 
 - `::`
+- 질문 : 멤버변수의 주소에 `&객체.변수` 가 아닌 `&클래스::변수` 로 접근하면 어디를 참조하게 되는것인가?
 
 
 ---
@@ -556,8 +586,10 @@ void (*func3)() = &CTest::foo;        // ok
 
 ## 멤버 함수와 가상 함수 예제
 
+  - `std::addressof() (C++17)` 를 확인해보자.
+
 ```cpp
-  class CEmpty {};
+class CEmpty {};
   class CTest {
   public:
     char a;
@@ -601,13 +633,13 @@ int main() {
   //  크기 비교
   // 1. empty 클래스도 스택 영역에 메모리가 올라간다.
   // 2. static 멤버 변수는 클래스의 크기에 영향을 주지 않는다. (bss 영역에 올라감)
-  // 3. 가상함수를 포함하는 클래스는 주소 크기만큼 크기가 커진다. 주소값이 4바이트이기 때문에 8바이트의 결과가 나온다.
+  // 3. 가상함수를 포함하는 클래스는 주소 크기만큼 크기가 커진다. 주소값이 8바이트이기 때문에 16바이트(구조체 멤버 맞춤 옵션)의 결과가 나온다.
   // 4. 가상함수의 개수는 크기와 상관없다. -> 가상함수 테이블은 배열? 리스트? 로 생성되며 클래스들은 테이블의 주소를 가진다.
-  std::cout << typeid(empty).name() << " size : " << sizeof empty << " byte\n";    // 1 byte
-  std::cout << typeid(test).name() << " size : " << sizeof empty << " byte\n";     // 1 byte
-  std::cout << typeid(stat).name() << " size : " << sizeof empty << " byte\n";     // 1 byte
-  std::cout << typeid(virt).name() << " size : " << sizeof empty << " byte\n";     // 8 byte
-  std::cout << typeid(parent).name() << " size : " << sizeof empty << " byte\n";   // 8 byte
+  std::cout << typeid(empty).name() << " size : " << sizeof empty << " byte\n";   // 1 byte
+  std::cout << typeid(test).name() << " size : " << sizeof test << " byte\n";     // 1 byte
+  std::cout << typeid(stat).name() << " size : " << sizeof stat << " byte\n";     // 1 byte
+  std::cout << typeid(virt).name() << " size : " << sizeof virt << " byte\n";     // 16 byte
+  std::cout << typeid(parent).name() << " size : " << sizeof parent << " byte\n"; // 16 byte
   
   // cout에 멤버 변수의 주소를 인자로 받는 오버로딩 함수가 없기 때문에 캐스팅 없이 출력하면 가장 적합하게 처리할 수 있는 함수를 고른다.
   // 멤버 변수는 출력하면 아무 값도 안나온다. (어떤 타입 인자를 처리하는 함수인지 모르겠음)
@@ -618,10 +650,10 @@ int main() {
   //  가상함수 테이블 주소 위치 확인
   // 1. 가상함수 테이블의 주소는 객체 메모리의 가장 앞부분에 추가된다. (현재 환경에 영향을 받는건가?)
   std::cout << std::hex;
-  std::cout << typeid(test).name() << " address : " << &test << '\n';        // &test == &test.a
-  std::cout << typeid(test).name() << " member address : " << reinterpret_cast<void *>(&test.a) << '\n';
-  std::cout << typeid(parent).name() << " address : " << &parent << '\n';    // &parent + 4 == &parent.a
-  std::cout << typeid(parent).name() << " member address : " << reinterpret_cast<void *>(&parent.a) << '\n';
+  std::cout << typeid(test).name() << " address : \t\t\t" << &test << '\n';        // &test == &test.a
+  std::cout << typeid(test).name() << " member address : \t\t" << reinterpret_cast<void *>(&test.a) << '\n';
+  std::cout << typeid(parent).name() << " address : \t\t" << &parent << '\n';    // &parent + 8 == &parent.a
+  std::cout << typeid(parent).name() << " member address : \t" << reinterpret_cast<void *>(&parent.a) << '\n';
   //printf("%p\n", &test.a); // 캐스팅을 하지 않아도 된다.
   //printf("%p\n", &parent.a);
   std::cout << std::endl;
@@ -629,18 +661,18 @@ int main() {
   //  가상함수 테이블 주소값 비교
   // 1. 클래스 별 가상함수 테이블의 주소값은 멤버 함수와 관계없이 전부 다르다.
   // 2. 동일 클래스의 객체들은 가상함수 테이블을 공유한다.
-  uint32_t parentVTAddr = 0;
-  uint32_t parent2VTAddr = 0;
-  uint32_t childVTAddr = 0;
-  uint32_t overridedVTAddr = 0;
-  memcpy(&parentVTAddr, &parent, sizeof uint32_t);
-  memcpy(&parent2VTAddr, &parent2, sizeof uint32_t);
-  memcpy(&childVTAddr, &child, sizeof uint32_t);
-  memcpy(&overridedVTAddr, &overrided, sizeof uint32_t);
-  std::cout << typeid(parent).name() << " VTable address : " << parentVTAddr << '\n';       // 003F23E0
-  std::cout << typeid(parent2).name() << " VTable address : " << parent2VTAddr << '\n';     // 003F23E0
-  std::cout << typeid(child).name() << " VTable address : " << childVTAddr << '\n';         // 003F23F4
-  std::cout << typeid(overrided).name() << " VTable address : " << overridedVTAddr << '\n'; // 003F21A4
+  size_t parentVTAddr = 0;
+  size_t parent2VTAddr = 0;
+  size_t childVTAddr = 0;
+  size_t overridedVTAddr = 0;
+  memcpy(&parentVTAddr, &parent, sizeof size_t);
+  memcpy(&parent2VTAddr, &parent2, sizeof size_t);
+  memcpy(&childVTAddr, &child, sizeof size_t);
+  memcpy(&overridedVTAddr, &overrided, sizeof size_t);
+  std::cout << typeid(parent).name() << " VTable address : \t" << parentVTAddr << '\n';     // 7ff788805860  
+  std::cout << typeid(parent2).name() << " VTable address : \t" << parent2VTAddr << '\n';   // 7ff788805860  
+  std::cout << typeid(child).name() << " VTable address : \t" << childVTAddr << '\n';       // 7ff788805880  
+  std::cout << typeid(overrided).name() << " VTable address : " << overridedVTAddr << '\n'; // 7ff7888058a0
   std::cout << std::endl;
 
   // 객체에서 멤버 함수에 접근해 주소를 얻으려하면 오류가 발생한다.(&test.bar -> C/C++(300)오류)
@@ -648,7 +680,7 @@ int main() {
   // 이 바인딩 된 객체의 함수 포인터는 호출 외에 다른 용도로 사용할 수 없기 때문에 오류가 발생하는 것이다.
   // 멤버 함수 이름(&CTest::foo)을 통해 주소를 구하려고 하면 캐스팅 타입이 맞지 않다고 오류가 발생한다. (C/C++(171)) (static 멤버 함수는 전역 함수와 동일한 함수 포인터 타입이기 때문에 캐스팅을 안해도 된다.)
   // void * 는 유저가 원하는 타입으로 형변환이 가능하지만 멤버 함수를 나타내는 함수 포인터로는 변환이 불가능하다. 참고 : http://www.cplusplus.com/forum/general/38453/
-  // 그래서 참조자(&)를 사용해서 우회 접근한다. (자세한 이유는 모르겠음..)
+  // TODO : 그래서 참조자(&)를 사용해서 우회 접근한다. (자세한 이유를 알아보자)
   // 참조자는 r-value를 허용하지 않기 때문에 멤버 함수 포인터 변수를 생성하여 출력한다.
   // printf는 캐스팅 할 필요가 없으니 함수 이름을 그대로 사용 가능하다.
   //
@@ -664,12 +696,12 @@ int main() {
   void (CTestChildOverride::*pOverrideFoo)() = &CTestChildOverride::foo;
   void (CTestChildOverride::*pOverrideBar)() = &CTestChildOverride::bar;
   
-  std::cout << typeid(parent).name() << " foo func address : " << reinterpret_cast<void *&>(pParentFoo) << '\n';      // 00356320
-  std::cout << typeid(parent).name() << " bar func address : " << reinterpret_cast<void *&>(pParentBar) << '\n';      // 00356357
-  std::cout << typeid(overrided).name() << " foo func address : " << reinterpret_cast<void *&>(pChildFoo) << '\n';    // 00356320
-  // std::cout << typeid(overrided).name() << " bar func address : " << reinterpret_cast<void *&>(pChildBar) << '\n';
-  std::cout << typeid(overrided).name() << " foo func address : " << reinterpret_cast<void *&>(pOverrideFoo) << '\n'; // 00356320
-  std::cout << typeid(overrided).name() << " bar func address : " << reinterpret_cast<void *&>(pOverrideBar) << '\n'; // 00356352
+  std::cout << typeid(parent).name() << " foo func address : \t" << reinterpret_cast<void *&>(pParentFoo) << '\n';    // 00007FF788732437    
+  std::cout << typeid(parent).name() << " bar func address : \t" << reinterpret_cast<void *&>(pParentBar) << '\n';    // 00007FF788734FD9    
+  std::cout << typeid(child).name() << " foo func address : \t" << reinterpret_cast<void *&>(pChildFoo) << '\n';      // 00007FF788732437    
+  // std::cout << typeid(child).name() << " bar func address : " << reinterpret_cast<void *&>(pChildBar) << '\n';
+  std::cout << typeid(overrided).name() << " foo func address : " << reinterpret_cast<void *&>(pOverrideFoo) << '\n'; // 00007FF788732437
+  std::cout << typeid(overrided).name() << " bar func address : " << reinterpret_cast<void *&>(pOverrideBar) << '\n'; // 00007FF788735FE2
   // printf("%p\n", &CTestParent::foo); // 캐스팅을 하지 않아도 된다.
   std::cout << std::endl;
 
