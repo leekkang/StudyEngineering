@@ -1,3 +1,5 @@
+- [용어 정리](#용어-정리)
+  - [선언과 정의](#선언과-정의)
 - [Enum, Enum class 차이](#enum-enum-class-차이)
 - [const pointer](#const-pointer)
 - [동적할당](#동적할당)
@@ -22,7 +24,9 @@
   - [캐스팅 연산자](#캐스팅-연산자)
   - [범위 지정 연산자](#범위-지정-연산자)
 - [함수](#함수)
-  - [멤버 함수와 가상 함수](#멤버-함수와-가상-함수)
+  - [멤버 함수와 가상 함수 예제](#멤버-함수와-가상-함수-예제)
+  - [함수 포인터](#함수-포인터)
+  - [가상 함수](#가상-함수)
 
 ## CPP Study
 
@@ -32,6 +36,48 @@
 * 생성자 디폴트 매개변수는 선언, 정의부가 구분되었을 경우 선언시에 해준다. 정의할 때는 디폴트 매개변수를 적어주지 않아도 된다.
   - 생성자 제한으로 특정 객체에서만 생성가능하게 제한하는 방법?
 
+# 용어 정리
+
+* 이름 : 말 그대로 무언가를 지칭하는 단어. 가장 큰 개념
+* **[`identifier` (식별자)](https://docs.microsoft.com/en-us/cpp/cpp/identifiers-cpp?view=msvc-170)**
+  - 
+  - 이름들을 지칭하는 일련의 문자열
+  - 코드에 적힌 예약되지 않은 이름들은 전부 식별자
+* **`types` (타입)** :
+*  식별자 중 무언가의 종류를 나타내기 위해 사용하는 단어
+* **[`keyword` (키워드)](https://docs.microsoft.com/en-us/cpp/cpp/keywords-cpp?view=msvc-170)**
+  - 특별한 의미로 사용하기 위해 언어가 예약한 식별자. 식별자로 사용할 수 없다.
+  - 두 개의 연속된 밑줄을 포함하는 식별자(ex, `__stdcall`)는 컴파일러 구현을 위해 예약된 것이다.
+    + `__cdecl` 키워드는 밑줄 없이 사용이 가능하다.
+
+[x] 에크박스
+
+* **`entity` (엔터티, 개체)**
+  - 데이터 또는 정보들의 집합을 포함하는 어떤 메모리 (또는 레지스터)
+  - 종류 : `values`, `objects`, `references`, `enumerators`, `types`, `functions`, `class members`, `namespaces`, `templates(specializations 포함)`, `structured bindings(C++17)`, `parameter packs`
+  - 타입으로 엔터티들을 구분하고 연산을 제한한다.
+  - 전처리기인 매크로 (`macro`)는 엔터티가 아니다.
+* **`object` (객체)**
+  -
+  - 객체다.
+  - 
+
+* 간단한 포함관계 : 이름 > 식별자 > 타입 > 키워드, 식별자 > 엔터티 > 객체
+* 참고 
+  - [Basic Concept of C++ Language](https://en.cppreference.com/w/cpp/language/basic_concepts) 
+  - [identifier vs keyword](https://stackoverflow.com/questions/7279227/c-what-is-the-difference-between-identifier-keyword-name-and-entity)
+  - [entity vs identifier](https://stackoverflow.com/questions/13542905/whats-the-difference-between-entity-and-identifier)
+  - [difference between object and instance](https://stackoverflow.com/questions/22206044/difference-between-object-and-instance-c)
+  - [Class and Objects](https://isocpp.org/wiki/faq/classes-and-objects#overview-object)
+
+
+## [선언과 정의](https://docs.microsoft.com/en-us/cpp/cpp/declarations-and-definitions-cpp?redirectedfrom=MSDN&view=msvc-170)
+
+* 둘의 가장 큰 차이점은 **메모리를 할당하는가** 이다.
+
+* 메모리를 할당하지 않고 식별자만 알려준다면 `선언`, 메모리가 할당된 식별자는 `정의`
+* 선언(`declaration`)
+* 정의(`definition`)
 
 # Enum, Enum class 차이
 
@@ -50,6 +96,7 @@
   - `type* const` : 값 변경 가능, 주소 변경 불가능, 상수 참조 불가능
   - `const type* const` : 값 변경 불가능, 주소 변경 불가능
 * `const type&` 를 생각하면 쉬움 (함수 파라미터로 자주 사용 -> 왜? -> 읽기 전용으로 쓰기 때문)
+
 * 상수는 일반 포인터로 참조 불가능, `const pointer`를 사용해야 한다.
 
 ```cpp
@@ -165,6 +212,7 @@ struct Test1 {
 ## 프로그램 실행 순서
 
 ![](img/execution.png)
+
 
 
 # 재귀함수
@@ -354,20 +402,15 @@ auto list = {"a"s, "b"s, "c"s}; // initializer_list<std::string>
     + 외부전역변수 (`extern global variable`)
     + 인라인 상수전역변수 (`inline const global variables`), (`C++17`)
 
-* 식별자(identifier) : 변수(variable), 함수(function), 클래스(class)를 지칭할 때 사용되는 이름
-
 ![](./img/scope%2Cduration%2Clinkage.PNG)
 
 
 # [키워드](https://docs.microsoft.com/en-us/cpp/cpp/keywords-cpp?view=msvc-170)
 
-* 특별한 의미를 가진 미리 정의된 예약 식별자. 식별자 이름(변수명) 으로 사용할 수 없다.
-* 두 개의 연속된 밑줄을 포함하는 식별자(ex, `__stdcall`)는 컴파일러 구현을 위해 예약된 것이다.
-  - `__cdecl` 키워드는 밑줄 없이 사용이 가능하다.
-
 ## sizeof 연산자
 
 * 타입 이름 또는 단항연산 표현(`unary-expression`)을 인자로 받는 연산자.
+
 * `size_t` 타입의 결과를 생성한다.
   - 인텔리센스로 연산 결과값을 바로 알 수 있다. (`4Ui64` : 64비트 운영체제 부호 없는 정수형(`unsigned integral`) 타입의 크기 4)
 * 타입 이름을 제외한 나머지 연산 시 괄호를 사용하지 않아도 된다(!)
@@ -393,13 +436,28 @@ auto list = {"a"s, "b"s, "c"s}; // initializer_list<std::string>
 
   - `static` 객체는 초기화와 상관없이 `bss` 영역에 올라간다. 생성자를 통한 초기화는 해당 구문이 처음 수행되는 시점에 이루어진다.
     + `bss` 영역은 `dynamic initializer`를 진행하는 곳이다. (컴파일 시 값을 알 수 없는 경우 나중에 초기화를 해주는 것)
+
     + 이를 함수화하여 호출을하면 생성자의 호출 시점을 조정하는게 가능해진다.
     + `singleton` 클래스를 생성할 때 주의해야 한다.
 * `static` 멤버 변수는 모든 객체가 공유해야 하기 때문에 프로그램 전체 영역에서 메모리 유지가 되어야 한다. **반드시 전역 범위에서 정의 및 초기화를 수행해야 한다.**
   - 함수 내부에서는 선언만 하고 초기화를 cpp파일에서 하자.
+
   - `C++17` 에서는 `inline variables`를 통해 `inline` 키워드로 **선언과 동시에 초기화**가 가능해졌다! (헤더에서만 가능)
 * `static` 멤버 함수는 고유의 객체를 두고 연산이 이루어지는 것이 아니기 때문에 `함수 포인터` 취급을 한다.
   - 함수 포인터에 대입을 할 때 주소연산자(&)를 붙이지 않아도 된다. (붙여도 된다.)
+
+  - 함수 포인터 타입에 네임스페이스를 명시하지 않아야 된다.
+    + 함수 포인터는 네임스페이스에 엄격하다.
+    + 정적 멤버 함수 포인터와 일반 멤버 함수 포인터는 타입이 다르다.
+
+```cpp
+CTest test; // static void foo() 멤버 함수를 가지고 있다.
+void (*func)() = test.foo;            // ok 
+void (*func2)() = CTest::foo;         // ok
+void (*func3)() = &CTest::foo;        // ok 
+// void (*)()" 형식의 값을 사용하여 "void (CTest::*)()" 형식의 엔터티를 초기화할 수 없습니다.C/C++(144)
+// void (CTest::*func4)() = &CTest::foo; // 오류
+```
 
 * 참고
   - [전역변수와 정적변수](https://chfhrqnfrhc.tistory.com/entry/%EC%A0%84%EC%97%AD%EB%B3%80%EC%88%98%EC%99%80-%EC%A0%84%EC%A0%81%EB%B3%80%EC%88%98)
@@ -415,10 +473,12 @@ auto list = {"a"s, "b"s, "c"s}; // initializer_list<std::string>
 
 * 기본적으로 전역변수(`global variable`)는 `extern` 변수로 간주한다. (키워드가 생략되어 있음)
   - 다른 파일에서 `extern` 키워드를 사용해서 접근할 수 있다.
+
   - 정의한 전역변수에는 `extern` 키워드를 붙이지 않는다. 내가 원본이기 때문.
     + 붙여도 무시된다. 헷갈리니까 붙이지 말자.
 * 다른 소스파일에서 선언된 외부전역변수를 사용하려면 변수 전방선언 (`variable forward declarations`)을 해야한다.
   - 전방선언이 함수 외부에서 선언되면 소스파일 전체에 적용되고, 함수 내에서 선언되면 해당 블록 내에서만 적용된다.
+
   - **키워드를 생략할 수 없다.** 생략하면 일반 변수 선언과 동일해진다.
   - 변수가 `static` 으로 선언된 경우에는 전방선언을 해도 적용되지 않는다.
   - 함수는 기본적으로 외부 링크 속성이다. `static` 키워드를 사용하면 내부 링크로 설정이 가능하다.
@@ -426,6 +486,7 @@ auto list = {"a"s, "b"s, "c"s}; // initializer_list<std::string>
   - 상수를 외부 전역변수로 사용하려면 해당 변수에 `extern` 키워드를 꼭 붙여야 한다.
 * 헤더파일에서 정의할 경우 해당 헤더를 여러군데에서 쓸 경우 초기화를 여러번 수행하게 되어서 링킹 에러가 발생한다.
   - **헤더파일에는 선언만 하고 초기화를 cpp파일에서 하자.**
+
   - `C++17` 에서는 `inline variables`를 통해 `inline` 키워드로 **선언과 동시에 초기화**가 가능해졌다! (헤더에서만 가능)
 * 어디서 값이 바뀔 지 모르고 찾기도 힘들기 때문에 왠만해선 전역변수를 사용하지 말자.
 * 의문 : 상수전역변수는 일반 상수를 여러번 사용하는 것보다 이득인데 왜 많이 안쓰나?
@@ -464,7 +525,7 @@ extern const int g_w(1);
 
 # 함수
 
-## 멤버 함수와 가상 함수
+## 멤버 함수와 가상 함수 예제
 
 ```cpp
 class CEmpty {};
@@ -556,18 +617,17 @@ int main() {
   // 객체에서 멤버 함수에 접근해 주소를 얻으려하면 오류가 발생한다.(&test.bar -> C/C++(300)오류)
   // 함수 호출 코드에서 실제 호출할 함수를 결정하는 것을 함수 바인딩이라 하는데, 객체를 동적할당하지 않으면 컴파일 시점에 해당 객체가 호출할 함수를 결정한다. (static binding)
   // 이 바인딩 된 객체의 함수 포인터는 호출 외에 다른 용도로 사용할 수 없기 때문에 오류가 발생하는 것이다.
-  // 멤버 함수는 변수와 다르게 텍스트 영역에 메모리가 할당되기 때문에 범위 지정 연산자(::)를 사용하여 어디 영역의 함수인지 정확히 지정해주어야 한다.
-  // 하지만 해당 문구(&CTest::foo)를 적용하여 주소를 구하려하면 캐스팅 타입이 맞지 않다고 오류가 발생한다. (C/C++(171)) (static 멤버 함수는 가능하다. 네임스페이스 때문인듯)
-  // void * 는 유저가 원하는 타입으로 형변환이 가능하지만 멤버 함수를 나타내는 함수 포인터는 변환이 불가능하다. 참고 : http://www.cplusplus.com/forum/general/38453/
+  // 멤버 함수 이름(&CTest::foo)을 통해 주소를 구하려고 하면 캐스팅 타입이 맞지 않다고 오류가 발생한다. (C/C++(171)) (static 멤버 함수는 전역 함수와 동일한 함수 포인터 타입이기 때문에 캐스팅을 안해도 된다.)
+  // void * 는 유저가 원하는 타입으로 형변환이 가능하지만 멤버 함수를 나타내는 함수 포인터로는 변환이 불가능하다. 참고 : http://www.cplusplus.com/forum/general/38453/
   // 그래서 참조자(&)를 사용해서 우회 접근한다. (자세한 이유는 모르겠음..)
   // 참조자는 r-value를 허용하지 않기 때문에 멤버 함수 포인터 변수를 생성하여 출력한다.
-  // printf는 캐스팅 할 필요가 없으니 그대로 사용 가능하다.
+  // printf는 캐스팅 할 필요가 없으니 함수 이름을 그대로 사용 가능하다.
   //
   //  멤버 함수 주소값 비교
   // 1. 재정의 하지 않은 상속 관계의 클래스들의 멤버 함수는 같은 주소값을 가진다.
   // 2. 재정의한 멤버 함수는 다른 주소값을 가진다.
-  // 3. 멤버 함수 포인터는 묵시적 형변환을 허용하지 않는다. 네임스페이스를 굉장히 중요하게 여기기 때문이다.
-  // std::cout << reinterpret_cast<void *>(CTestStatic::bar) << '\n'; // 주소연산자(&)를 붙이지 않아도 된다.
+  // 3. 멤버 함수 포인터는 묵시적 형변환을 허용하지 않는다. this 포인터 때문에 네임스페이스가 굉장히 중요하기 때문이다.
+  // std::cout << CTestStatic::bar << '\n'; // static 멤버 함수는 주소연산자(&)를 붙이지 않아도 된다.
   void (CTestParent::*pParentFoo)() = &CTestParent::foo;
   void (CTestParent::*pParentBar)() = &CTestParent::bar;
   void (CTestParent::*pChildFoo)() = &CTestChildOverride::foo;
@@ -595,3 +655,38 @@ int main() {
 
 * 참고
   - [함수의 주소 출력](https://bigpel66.oopy.io/library/cpp/etc/1) 
+  - [C++에서 함수 포인터 사용하기](https://blog.naver.com/tipsware/221619466275)
+
+
+## 함수 포인터
+
+* `리턴 타입 (*포인터 이름)(매개변수)` 의 형태를 가진 포인터 타입이다. (`C`와 동일한 형태)
+
+  - 이름에 괄호를 넣은 이유는 `포인터 변수를 리턴하는 함수의 전방선언` 으로 해석될 여지가 있기 때문이다. 괄호의 추가로 우선순위가 높아졌다.
+
+```cpp
+  int *Func();   // Func 함수의 전방 선언(forward declaration)
+  int (*pFunc)(); // int(*)() 형의 함수 포인터 정의
+```
+* 함수의 이름 앞에 `주소연산자(Address-of operator, &)`를 붙여 주소를 대입할 수 있다.
+* 주소연산자의 생략이 가능하다.
+* 포인터로 함수 호출 시, 암시적 역참조를 허용하여 일반 함수 호출과 동일한 형태로 사용이 가능하다.
+  
+```cpp
+  (*Func)(); // 원래 형태
+  Func();    // 암시적 추론을 통한 역참조
+```
+* 멤버 함수는 위의 전역 함수, 정적 멤버 함수가 사용하는 타입과 형태가 다르다.
+  - `리턴 타입 (소속 클래스::*포인터 이름)(매개변수)`
+
+  - 함수의 주소가 대입, 사용될 때의 소속과 this 포인터의 자료형을 결정하기 위해 `범위 지정 연산자(::)`를 사용하여 어디 영역의 함수인지 정확히 지정해주어야 한다.
+  - `&소속 클래스::함수명` 의 형태로 주소를 대입해야 한다.
+  - 주소연산자 생략 시 `비표준 구문`으로 처리해서 컴파일 시 오류가 발생한다.
+    + 함수 이름의 표현법을 다양한 문법에서 사용하기 때문에 구분을 명확히 하기 위해 비표준 처리
+  - `&객체.함수명` 을 대입할 경우 `바인딩 오류`가 발생한다. (윗문단 코드의 주석에 설명있음)
+  - 포인터 사용 시 `포인터-멤버 연산자 (.*, ->*)` 를 이용하여 객체와 연결한다.
+
+
+## 가상 함수
+
+*
