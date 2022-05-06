@@ -10,16 +10,20 @@
 - [문자열](#문자열)
 - [파일 입출력](#파일-입출력)
 - [클래스](#클래스)
+  - [생성자와 소멸자](#생성자와-소멸자)
+  - [Initialization](#initialization)
+  - [Non-Static Data Member Initialization (NSDMI, 비정적 데이터 멤버 초기화)](#non-static-data-member-initialization-nsdmi-비정적-데이터-멤버-초기화)
   - [Uniform Initailizer](#uniform-initailizer)
   - [헤더 파일](#헤더-파일)
 - [변수 범위, 주기, 링크](#변수-범위-주기-링크)
 - [키워드](#키워드)
-  - [sizeof 연산자](#sizeof-연산자)
   - [this 키워드](#this-키워드)
   - [static 키워드](#static-키워드)
   - [extern 키워드](#extern-키워드)
+  - [virtual 키워드](#virtual-키워드)
   - [inline 키워드](#inline-키워드)
 - [연산자](#연산자)
+  - [sizeof 연산자](#sizeof-연산자)
   - [캐스팅 연산자](#캐스팅-연산자)
   - [범위 지정 연산자](#범위-지정-연산자)
 - [함수](#함수)
@@ -62,7 +66,7 @@
     - 공식적인 정의는 **어떠한 저장 영역(`any region of storage`)** 이다.
     - `C++` 에서 `object` 와 `instance` 는 동의어다.
       - `instance` 는 공식적으로 정의된 용어가 아니지만 `instance of type X` 이런식으로 객체를 표현한다.
-    - `변수(variable)` 는 선언을 완료한 정적 데이터 멤버인 객체 또는 참조를 의미한다.
+    - `변수(variable)` 는 선언을 완료한 [정적 데이터 멤버](https://en.cppreference.com/w/cpp/language/data_members#Member_initialization)인 객체 또는 참조를 의미한다.
       - 여기서 정적 데이터는 키워드인 `static`의 의미가 아닌 정해진(`fixed`)을 뜻한다.
     - 아래의 속성들을 가진다.
       - 크기 (sizeof)
@@ -84,6 +88,13 @@
     - 정의(`definition`)
       - 엔터티가 프로그램에서 사용될 때 컴파일러가 기계어 코드를 생성하는데 필요한 모든 정보를 제공하는 것
       - 클래스 작성은 선언과 동시에 정의를 하는 것과 같다. (멤버함수는 선언과 정의를 분리할 수 있다)
+
+  - ### [POD(Plain Old Data) type](https://en.cppreference.com/w/cpp/named_req/PODType)
+    - C언어와 호환이 가능한 타입을 의미한다.
+    - 표준문서에는 정의되어 있지 않다..
+    - `C++20`부터 좀 더 정교한 타입 요구사항들로 대체되었다.(`Trivial Type` 등등)
+  - ### [cv type qualifiers](https://en.cppreference.com/w/cpp/language/cv)
+    - 상수(`const`), 휘발성(`volatile`) 한정자를 의미한다.
 
   - 간단한 포함관계 
     - 실체가 없는 것 : 이름 > 식별자 > 키워드
@@ -165,6 +176,7 @@
 # 구조체
 
   - `프로젝트 속성 -> 코드 생성 -> 구조체 멤버 맞춤` 옵션이 `기본값`으로 설정되어 있을 경우 구조체 내에서 용량이 가장 큰 변수의 크기를 기본값으로 잡아서 메모리를 할당하게 된다.
+    - `스칼라 타입` 변수만 고려한다. 구조체, 클래스 타입 변수는 고려대상이 아님.
     - 왜 `1byte`로 설정하지 않는가? -> 컴퓨터 입장에서는 `4의 배수` 또는 `2^n` 단위로 메모리를 할당하는 것이 더 효율적이다.
   - 멤버가 없더라도 최소바이트인 1바이트가 할당된다.
     - 변수를 정의하게 되면 메모리에 공간이 잡혀야 하므로 최소 바이트 수인 1바이트 공간을 차지하게 하여 변수를 잡아주는 것이다. (객체를 구분하기 위해)
@@ -350,14 +362,246 @@
 ---
 # 클래스
 
+  - 객체의 사용설명서 (객체는 단순한 저장 공간)
   - 구조체처럼 여러 변수를 모아두고 하나로 묶어서 사용할 수 있는 기능을 제공한다.
     
-  - C++에서는 객체를 만들기 위한 수단으로 클래스를 제공한다.
+  - C++에서는 객체를 만들기 위한 수단으로 클래스를 제공한다. (코드 내에서의 객체 식별자는 저장공간의 주소를 의미한다.)
   - 사용자 정의형 (`user-defined type`) 이다.
   - **캡슐화** : 여러 변수와 함수를 모아서 하나의 클래스 혹은 구조체로 만들어주는 것을 말한다.
   - **은닉화** : 클래스에서 제공하는 멤버를 외부에 공개하는 수준을 정하는 것을 말한다.
   - `friend CTestClass` : `CTestClass` 에게 접근허가를 내어준다. `CTestClass` 는 이 클래스의 `private` 데이터에 `public` 처럼 접근이 가능하다.
     - 현재 클래스에서는 `CTestClass`의 `private` 데이터에 접근할 수 없다. 단방향임.
+
+## 생성자와 소멸자
+
+  - 객체의 초기화가 발생할 때 생성자가 호출되고, 저장공간 해제 시 소멸자가 호출된다.
+
+  - 한 객체당 생성자와 소멸자는 단 한번 호출된다.
+    - 모든 객체의 초기화는 한번만 가능하다. 이후에 값이 변경되는 것은 `대입(assignment)` 이다.
+  - 초기화 순서는 `정의된 순서`, 즉 메모리 상의 주소 순서와 같다.
+    - 접근 지정자에 따라 달라질 수 있다고 하는데(**C++23까지만**), MSVC컴파일러는 코드순으로 초기화한다.
+    - [스칼라 타입](https://en.cppreference.com/w/cpp/types/is_scalar) 변수들은 초기화 구문이 없으면 정해지지 않은 값들이 들어간다.(`default initialization`)
+    - [익명 유니온(anonymous union)과 변형 멤버(variant member)](https://en.cppreference.com/w/cpp/language/union#Union-like_class)는 `member initializer`가 없기 때문에 초기화가 안된다.
+  - 간단한 예제를 통해 생성자와 소멸자, 초기화의 순서를 알아보자.
+    - `64비트 환경`이며, 포인터 연산 기준은 `1바이트` 이다.
+    - `qword` == `8byte`, `dword` == `4byte`, `byte` == `1byte`
+
+```cpp
+  #include <iostream>
+  class CTest {
+    public:
+    int mNum = 99;
+    char mChar = 'x';
+    
+    CTest() {
+      std::cout << "CTest Constructor" << '\n';
+    }
+    CTest(int mNum)
+      : mNum{mNum} {
+      std::cout << "CTest int Constructor" << '\n';
+    }
+    CTest(char w)
+      : mChar{w} {
+      std::cout << "CTest char Constructor" << '\n';
+    }
+    ~CTest() {
+      std::cout << mNum << " CTest Destructor" << '\n';
+    }
+  };
+
+  class CBase {
+    public:
+    char* mName{"CBase"};
+
+    CBase() {
+      std::cout << mName << " Constructor" << '\n';
+    }
+    CBase(int i)
+      : mName{"CBase Int"} {
+      std::cout << mName << " Constructor" << '\n';
+    }
+    virtual ~CBase() {
+      std::cout << "CBase Destructor" << '\n';
+    }
+  };
+
+  class CDerived : public CBase {
+    public:
+    int mNum{100};
+    CTest mObj1{};
+    CTest mObj2;
+    char mChar;
+
+    CDerived() : mObj1(1), mObj2('a'), CBase(1) {
+      mName = "CDerived";
+      std::cout << mName << " Constructor" << '\n';
+    }
+    ~CDerived() {
+      std::cout << mName << " Destructor" << '\n';
+    }
+
+  };
+
+  int main() {
+    CBase* derived = new CDerived;
+    delete derived;
+
+    return 0;
+  }
+```
+  - `derived` 객체의 초기화 순서
+    - `new` 연산자 호출 (40byte 메모리 공간 확보)
+    - `this` 설정
+    - `CDerived` 클래스의 인자가 없는 생성자 호출
+    - `CBase` 클래스의 `int` 인자 1개를 받는 생성자 호출
+    - (가상함수가 존재하기 때문에) `this`의 값에 `CBase` 클래스의 가상함수 테이블(`VFTable`) 주소를 입력 (`qword`)
+    - `this + 8` 의 값을 `"CBase Int"` 의 주소로 초기화 (`mName`, `qword`)
+    - `this`에 `CDerived` 클래스의 가상함수 테이블(`VFTable`) 주소를 입력 (덮어씀)
+    - `this + 16` 의 값을 `64h` 로 초기화 (`mNum`, `dword`)
+    - `this + 20` 과 인자 `1` 을 저장 후 `CTest` 클래스의 `int` 인자 1개를 받는 생성자 호출 (`mObj1(1)`)
+      - `this` 의 값을 `1` 로 초기화 (`mNum`, `dword`)
+      - `this + 4` 의 값을 `78h(ascii code의 'x')` 로 초기화 (`mChar`, `byte`)
+      - 생성자의 함수 바디 부분 실행
+    - `this + 28` 과 인자 `61h` 를 저장 후 `CTest` 클래스의 `char` 인자 1개를 받는 생성자 호출 (`mObj2('a')`)
+      - `this` 의 값을 `63h` 로 초기화 (`mNum`, `dword`)
+      - `this + 4` 의 값을 `61h` 로 초기화 (`mChar`, `byte`)
+      - `CTest` 생성자의 함수 바디 부분 실행
+    - `CDerived` 생성자의 함수 바디 부분 실행
+  - `derived` 객체의 소멸 순서
+    - 가상함수 테이블에서 소멸자 주소를 찾은 뒤 호출 (어셈블리에 단계가 한개 더 있음. 찾아볼 것)
+    - `this` 설정 후 `CDerived` 클래스의 소멸자 호출
+    - `CDerived` 소멸자의 함수 바디 부분 실행
+    - `this + 28` 을 저장한 후 (`mObj2`) 및 함수 바디 부분 실행
+    - `this + 20` 을 저장한 후 (`mObj1`) 및 함수 바디 부분 실행
+    - `CBase` 클래스의 소멸자 호출 및 함수 바디 부분 실행
+    - `delete` 연산자 호출 (메모리 공간 제거)
+
+  - 참고
+    - [Constructor](https://docs.microsoft.com/en-us/cpp/cpp/constructors-cpp?view=msvc-170)
+    - [Non Static Data Members](https://en.cppreference.com/w/cpp/language/data_members)
+
+<p align="center"> <img src="img/constructor_result.png"> </p>
+
+## [Initialization](https://docs.microsoft.com/en-us/cpp/cpp/initializers?view=msvc-170)
+
+  - ### Default Initialization
+    - `기본 생성자 (==인자가 없는 생성자)`로 클래스, 구조체, 공용체를 초기화하는 것
+
+    - 식별자 뒤에 아무런 표현을 하지 않는것이다.
+    - `스칼라 타입 변수`는 정해지지 않은 값들이 들어간다.
+    - `상수 타입 변수`는 스칼라 타입이면 에러를, 기본 생성자를 가진 클래스 타입이면 경고를 띄운다. (다른 초기화를 꼭 사용하자)
+    - `정적 변수`는 `zero initalization`이 진행된다.
+```cpp
+  MyClass mc1;
+  MyClass* mc3 = new MyClass;
+```
+  - ### Zero Initialization
+    - 변수를 0값으로 설정하는것, 암묵적으로 타입에 맞게 변환된다.
+
+    - 다음의 상황에 적용된다.
+      - `정적 주기` 를 가진 변수들. 특별하게 생성자를 통해 한번 더 초기화 될 수 있다.
+      - `value initaializagion` 중 `스칼라 타입`과 `POD클래스 타입`에 빈 중괄호로 초기화 한 경우
+      - 배열의 특정 멤버가 초기화될 경우 나머지 멤버들은 0으로 초기화된다.
+```cpp
+  static float f1;
+  double d{};
+  int* ptr{};                       // nullptr로 초기화된다.
+  int int_array[5] = { 8, 9, 10 };  // 4, 5번 배열의 int 값은 0으로 초기화된다.
+```
+  - ### Value Initialization
+    - 빈 소괄호 또는 중괄호로 초기화하는 모든 초기화(약간 큰 개념)
+
+    - `public constructor` 를 가진 클래스는 기본 생성자가 호출된다.
+    - `default` 키워드로 생성된 생성자가 아닌 사용자가 정의한 기본 생성자인 경우 초기화 표현이 없는 모든 변수는 `기본 초기화`가 진행된다. (중요)
+    - 생성자가 존재하는 타입일 경우, 생성자 호출 전에 크기만큼 메모리를 정리한다.
+      - 일반 생성자 호출
+
+        ![](img/default_initialize.png)
+      - `default` 키워드로 생성한 기본 생성자 호출 (1D8h bytes에 XOR 결과값(0)을 넣는다.)
+
+        ![](img/zero_initialize.png)
+  - ### Copy Initialization (복사 초기화)
+    - 다른 객체를 사용하여 한 객체를 초기화 하는 것
+
+    - 다음의 상황에 적용된다.
+      - `equal 기호(=)` 사용 시(`비정적 데이터 멤버` 초기화 포함)
+      - 함수 인자로 전달 시
+      - 함수에서 객체를 리턴할 시
+      - 예외를 던질 시(`throw, catch`)
+      - 클래스 멤버를 `aggregate initialization` 로 초기화 할 시 
+    - 복사 생성자를 제거하거나 접근할 수 없게 만들 경우 컴파일 에러가 발생한다.
+```cpp
+
+  int i = 5;                 // i를 복사 초기화
+  MyClass mc1{ i };
+  MyClass mc2 = mc1;         // mc1 값으로 mc2를 복사 초기화
+  MyClass mc1.set_int(i);    // i 값으로 함수 인자를 복사 초기화
+  int i2 = mc2.get_int();    // get_int()의 리턴값으로 i2를 복사 초기화
+  try {
+      throw MyException();
+  } catch (MyException ex){  // 예외 발생 시 ex를 복사 초기화
+      cout << ex.what();
+  }
+```
+  - ### Direct Initialization (직접 초기화)
+    - 비어있지 않은 소괄호 또는 중괄호를 사용하여 초기화 하는 것
+
+    - 복사 초기화와 달리 사용자 정의 생성자를 호출할 수 있다.
+    - `static_cast` 를 사용한 초기화에도 적용된다.
+    - `lambda` 식 내부에 복사된(`captured`) 변수들의 초기화에도 적용된다.
+    - [예제](https://docs.microsoft.com/en-us/cpp/cpp/initializers?view=msvc-170#direct-initialization)
+  - ### List Initialization (목록 초기화)
+    - 중괄호로 묶여있는 `initializer list`를 사용하여 초기화 하는 것
+
+    - [예제](https://docs.microsoft.com/en-us/cpp/cpp/initializers?view=msvc-170#list-initialization)
+  - ### Aggregate Initialization (집합체 초기화)
+    - 특수한 상황에서 사용하는 `목록 초기화`의 일종. 배열아니면 거의 볼 일이 없다.
+
+    - [예제](https://docs.microsoft.com/en-us/cpp/cpp/initializers?view=msvc-170#agginit)
+  - ### Reference Initialization (참조 초기화)
+    - 변환될 수 있는 타입으로만 초기화가 가능하다.
+    - 함수 호출식에서 인자에 참조 유형이 있거나 참조 유형을 반환하는 경우에 초기화가 진행된다.
+
+    - TODO : 자세한 내용은 r-value 공부한 뒤에..
+    - https://en.cppreference.com/w/cpp/language/reference_initialization
+    - [예제](https://docs.microsoft.com/en-us/cpp/cpp/initializers?view=msvc-170#reference-initialization)
+
+
+  - 참고
+    - [cppreference](https://en.cppreference.com/w/cpp/language/initialization)
+
+## Non-Static Data Member Initialization (NSDMI, 비정적 데이터 멤버 초기화)
+
+  - 클래스, 구조체 내부에서 멤버 변수 선언 시 값을 지정해 주는 초기화 방법
+  
+  - `C++11`에서 추가됨 (왜 없었지)
+  - `member initializer lists` 의 초기화 내용과 겹치면 무시한다. (생성자 쪽이 우선순위가 높음)
+  - 소괄호를 통한 초기화는 지원하지 않는다. (`전방선언`과 혼동되어서 그런듯?)
+```cpp
+class CTest {
+  public:
+  int mNum = 99;      // 비정적 데이터 멤버 초기화
+  char mChar = 'x';   // 비정적 데이터 멤버 초기화
+  
+  CTest() {
+    std::cout << "CTest Constructor" << '\n';
+  }
+  CTest(int num) : mNum{num} {  // 99는 사라진다.
+    std::cout << "CTest int Constructor" << '\n';
+  }
+  CTest(char c) : mChar{c} {    // 'x'는 사라진다.
+    std::cout << "CTest char Constructor" << '\n';
+  }
+  ~CTest() {
+    std::cout << mNum << " CTest Destructor" << '\n';
+  }
+};
+```
+
+  - 참고
+    - [Constructor and member initializer lists](https://en.cppreference.com/w/cpp/language/constructor)
+    - [Non Static Data Members](https://en.cppreference.com/w/cpp/language/data_members)
+    - [Non Static Data Members Initialization](https://www.cppstories.com/2015/02/non-static-data-members-initialization/)
 
 ## [Uniform Initailizer](https://modoocode.com/286)
 
@@ -365,7 +609,7 @@
     - CPP 컴파일러는 함수의 선언처럼 보이는 것들을 모두 함수의 선언로 해석한다.
 
   - ()가 함수를 선언하는 데에도 사용되고, 객체의 생성자를 호출하는 데에도 사용되기 때문에 `c++11`부터 도입되었다.
-  - 생성자 호출에 () 대신 {} 를 사용하면 된다.
+  - 생성자 호출에 `소괄호()` 대신 `중괄호{}` 를 사용하면 된다.
   - 암시적 타입 변환을 사용하지 못한다.
   - 함수 리턴 시 생성자의 객체 타입을 적지 않아도 된다. (리턴 타입을 보고 추론해준다)
   - 생성자에 배열처럼 리스트를 집어넣을 수 있다.(`initalizer_list`)
@@ -383,7 +627,7 @@ auto b{1};        // 두 번째 형태 이므로 그냥 int
 auto c = {1, 2};  // 첫 번째 형태이므로 std::initializer_list<int>
 auto d{1, 2};     // 두 번째 형태 인데 인자가 2개 이상이므로 컴파일 오류
 
-using namespace std::literals;  // 문자열 리터럴 연산자를 사용하기 위해 추가해줘야함.
+using namespace std::literals;  // 문자열 리터럴 연산자의 네임스페이스
 auto list = {"a", "b", "cc"};   // initializer_list<const char*>
 auto list = {"a"s, "b"s, "c"s}; // initializer_list<std::string>
 ```
@@ -443,25 +687,11 @@ auto list = {"a"s, "b"s, "c"s}; // initializer_list<std::string>
       - 외부전역변수 (`extern global variable`)
       - 인라인 상수전역변수 (`inline const global variables`), (`C++17`)
 
-![](./img/scope%2Cduration%2Clinkage.PNG)
+![](img/scope%2Cduration%2Clinkage.PNG)
 
 
 ---
 # [키워드](https://docs.microsoft.com/en-us/cpp/cpp/keywords-cpp?view=msvc-170)
-
-## sizeof 연산자
-
-  - 타입 이름 또는 단항연산 표현(`unary-expression`)을 인자로 받는 연산자.
-
-  - `size_t` 타입의 결과를 생성한다.
-    - 인텔리센스로 연산 결과값을 바로 알 수 있다. (`4Ui64` : 64비트 운영체제 부호 없는 정수형(`unsigned integral`) 타입의 크기 4)
-  - 타입 이름을 제외한 나머지 연산 시 괄호를 사용하지 않아도 된다(!)
-  - 절대 0이 결과값으로 나오지 않는다. (나누기 같은 구문에서 에러를 발생시킬 수 있기 때문에 최소값을 1로 정해놓았다.)
-  - 배열 식별자의 경우 배열의 총 바이트 수를 산출한다. 포인터 타입은 포인터 크기가 나온다.
-  - 클래스, 구조체, 유니온의 경우 컴파일러 옵션(`/Zp`) 또는 `pack pragma`에 따라 각각의 멤버 변수 크기의 합과 다를 수 있다.
-  - 컴파일 타임에 크기가 정해지지 않거나 텍스트 영역에 저장되는 함수(함수포인터는 가능)는 연산할 수 없다.
-  - 참고
-    - [클래스의 크기](https://blog.naver.com/tipsware/221090063784)
 
 ## [this 키워드](https://docs.microsoft.com/en-us/cpp/cpp/this-pointer?view=msvc-170)
 
@@ -471,13 +701,25 @@ auto list = {"a"s, "b"s, "c"s}; // initializer_list<std::string>
     - 객체 이름이 해당 객체의 주소값이기 때문에 함수 주소와 같이 코드 영역에 포함된다.
     - 때문에 `this` 는 **객체가 아닌 엔터티**이다.
   - 객체를 통해 비정적 멤버 함수가 호출되었을 때, 컴파일러는 객체의 주소를 숨겨진 인자로 전달한다.
+    - 객체가 `nullptr` 이어도 해당 멤버 함수 내에서 멤버 변수를 사용하지 않으면 정상동작 한다(!)
 
 ```cpp
   myDate.setMonth(3);    // 소스 코드의 형태
   setMonth(&myDate, 3);  // 컴파일러가 해석한 형태
+
+  class CNull {
+    public:
+    void foo(){
+      std::cout << "nullptr test : " << this << std::endl;
+    }
+  };
+  
+  CNull obj = nullptr;
+  obj->foo();    // 정상동작 한다.
 ```
   - 객체의 멤버 함수에서 접근하는 멤버 변수의 앞에는 `this->` 또는 `(*this).` 구문이 생략되어 있다.
   - 자기 자신을 참조하는 것을 방지할 때도 사용한다. (`&object != this`)
+
 
 ## static 키워드
 
@@ -504,7 +746,6 @@ auto list = {"a"s, "b"s, "c"s}; // initializer_list<std::string>
       - 정적 멤버 함수 포인터와 일반 멤버 함수 포인터는 타입이 다르다.
 
 ```cpp
-// using funcPointer = void(*)();
 CTest test; // static void foo() 멤버 함수를 가지고 있다.
 void (*func)() = test.foo;            // ok 
 void (*func2)() = CTest::foo;         // ok
@@ -565,13 +806,38 @@ void (*func3)() = &CTest::foo;        // ok
   extern const int g_w(1); 
 ```
 
+## [virtual 키워드](https://docs.microsoft.com/en-us/cpp/cpp/virtual-cpp?view=msvc-170)
+
+  - [가상 함수](#가상-함수) 또는 가상 베이스 클래스(`virtual base class`)를 선언할 때 사용
+
+  - 가상 베이스 클래스는 `다중 상속` 시 부모를 하나의 베이스 객체로 놓고 모든 자식들이 멤버 변수들을 공유하도록 만든다.
+    - `기본 클래스(base class)`가 여러 `파생 클래스(derived class)`를 가지고, 임의의 클래스가 파생 클래스들을 다중상속 받을 경우에 사용한다.
+    - `가상 상속`을 받지 않으면 생성자를 파생 클래스 개수만큼 호출한다.
+  - 콜론(`:`) 뒤, 기본 클래스의 이름 앞, `접근 지정자(access specifier)` 앞 뒤에 `virtual` 키워드를 붙여 가상 상속을 할 수 있다.
+  - [가상 베이스 클래스의 예제](https://www.learncpp.com/cpp-tutorial/virtual-base-classes/)
+
+
 ## inline 키워드
 
-- 빨리 하자
+  - 빨리 하자
 
 
 ---
 # 연산자
+
+## sizeof 연산자
+
+  - 타입 이름 또는 단항연산 표현(`unary-expression`)을 인자로 받는 연산자.
+
+  - `size_t` 타입의 결과를 생성한다.
+    - 인텔리센스로 연산 결과값을 바로 알 수 있다. (`4Ui64` : 64비트 운영체제 부호 없는 정수형(`unsigned integral`) 타입의 크기 4)
+  - 타입 이름을 제외한 나머지 연산 시 괄호를 사용하지 않아도 된다(!)
+  - 절대 0이 결과값으로 나오지 않는다. (나누기 같은 구문에서 에러를 발생시킬 수 있기 때문에 최소값을 1로 정해놓았다.)
+  - 배열 식별자의 경우 배열의 총 바이트 수를 산출한다. 포인터 타입은 포인터 크기가 나온다.
+  - 클래스, 구조체, 유니온의 경우 컴파일러 옵션(`/Zp`) 또는 `pack pragma`에 따라 각각의 멤버 변수 크기의 합과 다를 수 있다.
+  - 컴파일 타임에 크기가 정해지지 않거나 텍스트 영역에 저장되는 함수(함수포인터는 가능)는 연산할 수 없다.
+  - 참고
+    - [클래스의 크기](https://blog.naver.com/tipsware/221090063784)
 
 ## 캐스팅 연산자
 
@@ -586,9 +852,12 @@ void (*func3)() = &CTest::foo;        // ok
 
 ## 멤버 함수와 가상 함수 예제
 
-  - `std::addressof() (C++17)` 를 확인해보자.
+  - TODO : `std::addressof() (C++17)` 를 확인해보자.
 
 ```cpp
+#include <iostream>
+#include <conio.h>   // _getch() 함수 사용
+
 class CEmpty {};
   class CTest {
   public:
@@ -642,13 +911,13 @@ int main() {
   std::cout << typeid(parent).name() << " size : " << sizeof parent << " byte\n"; // 16 byte
   
   // cout에 멤버 변수의 주소를 인자로 받는 오버로딩 함수가 없기 때문에 캐스팅 없이 출력하면 가장 적합하게 처리할 수 있는 함수를 고른다.
-  // 멤버 변수는 출력하면 아무 값도 안나온다. (어떤 타입 인자를 처리하는 함수인지 모르겠음)
+  // 멤버 변수의 주소를 그냥 출력하면 아무 값도 안나온다. (클래스이름::* 타입이다.)
   // reinterpret_cast 연산자는 임의의 포인터 타입끼리 변환을 허용하는 캐스트 연산자다.
   // 오버로딩 함수 중 void* 형의 인자를 받는 함수가 있기 때문에 캐스팅 후 출력한다.
   // printf를 사용하면 캐스팅을 하지 않아도 되는데, printf는 가변 인자를 통해 처리하는 방식이기 때문이다.
   //
   //  가상함수 테이블 주소 위치 확인
-  // 1. 가상함수 테이블의 주소는 객체 메모리의 가장 앞부분에 추가된다. (현재 환경에 영향을 받는건가?)
+  // 1. 가상함수 테이블의 주소는 객체 메모리의 가장 앞부분에 추가된다.
   std::cout << std::hex;
   std::cout << typeid(test).name() << " address : \t\t\t" << &test << '\n';        // &test == &test.a
   std::cout << typeid(test).name() << " member address : \t\t" << reinterpret_cast<void *>(&test.a) << '\n';
@@ -745,8 +1014,43 @@ int main() {
       - 함수 이름의 표현법을 다양한 문법에서 사용하기 때문에 구분을 명확히 하기 위해 비표준 처리
     - `&객체.함수명` 을 대입할 경우 `바인딩 오류`가 발생한다. (윗문단 코드의 주석에 설명있음)
     - 포인터 사용 시 `포인터-멤버 연산자 (.*, ->*)` 를 이용하여 객체와 연결한다.
+    
+```cpp
+  // typedef void(CTest::*CTestFuncPointer)();
+  using CTestFuncPointer = void(CTest::*)(); // C++11
+  CTestFuncPointer pMemFunc = &CTest::foo;
+  //void(CTest::*pMemFunc) = &CTest::foo; // alias를 사용 하지 않는 경우
+  
+  CTest test;
+  CTest pTest = new pTest;
+  (test.*pMemFunc)();
+  (pTest->*pMemFunc)();
+```
+
+## [가상 함수](https://docs.microsoft.com/en-us/cpp/cpp/virtual-functions?view=msvc-170)
+
+  - `파생 클래스(derived class)`에서 재정의할 것이라 예상하는(`expected`) 멤버 함수
+  - `기본 클래스(base class)`에 참조 또는 포인터를 사용하여 파생 클래스 객체를 참조할 때, 해당 객체에 대한 가상 함수를 호출하면 파생 클래스의 함수를 실행할 수 있다.
+    - 이 때 기본 클래스의 소멸자를 가상 함수로 만들지 않으면 **파생 클래스의 소멸자가 호출되지 않는다.**
+    - 물론 파생 클래스에서 정의한 **모든 멤버 변수들도 소멸되지 않는다.**
+  - 함수 처리 전에 적합한 주소를 찾아내는 작업이 추가되기 때문에 꼭 필요한 경우가 아니면 사용하지 말자.
+    - 파생 클래스가 상속트리의 잎(`leaf`) 노드일 경우 소멸자에 `virtual`을 붙이지 않는 것이 좋다.
 
 
-## 가상 함수
+기본 클래스를 참조하는 파생 클래스 객체에서, 기본 클래스 함수를 호출하여 this 포인터를 사용하면 누가 나오나? - 아마 파생 클래스 이지 않을까? 메모리 주소가 그쪽잉게..
+vtable이 없으면 컴파일러가 해석할 때 선언된 클래스 타입을 우선한다. 하지만 함수 호출 시 사용되는 객체의 주소는 객체를 따라가게 된다.
 
-  -
+식별자의 타입은 코드 상에서의 구분일 뿐 실제 주소는 객체를 가리키고 있다.
+
+```cpp
+  CBase obj = new CDerived;
+  obj.NonVirtualFunc();       // CBase의 함수 실행
+  obj.VirtualFunc();          // CBase의 함수 실행
+  obj.OverridedVirtualFunc(); // CDerived의 함수 실행
+```
+
+상속된 클래스가 메모리에 올라가는 순서? -> 멤버 이니셜라이저 리스트를 사용하지 못하는 이유
+빈 베이스 클래스를 상속받는 빈 파생 클래스의 typeid 는 베이스 클래스이다 -> 파생 클래스를 특정할 수 있는 요인이 하나도 없기 때문이다.
+
+  - 참고
+    - [가상함수와 상속](https://modoocode.com/211)
