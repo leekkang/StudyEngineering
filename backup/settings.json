@@ -18,7 +18,8 @@
     ],
     "explorer.confirmDragAndDrop": false,
     // 참고 : https://medium.com/analytics-vidhya/how-to-replace-external-terminal-in-visual-studio-code-with-the-new-windows-terminal-66e8460f2d31
-    "terminal.external.windowsExec": "wt -p \"Command Prompt\" cmd",
+    //"terminal.external.windowsExec": "wt -p \"Command Prompt\" cmd",
+    "terminal.external.windowsExec": "wt -p \"Windows PowerShell\" cmd",
     //"terminal.external.windowsExec": "C:\\Users\\Kanghyuk\\AppData\\Local\\Microsoft\\WindowsApps\\wt.exe", // 안타깝게도 인자를 못쓴다.
     "terminal.explorerKind": "external",
     "shellLauncher.shells.windows": [
