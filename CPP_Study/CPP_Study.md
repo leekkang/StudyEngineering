@@ -12,8 +12,9 @@
 - [클래스](#클래스)
   - [생성자와 소멸자](#생성자와-소멸자)
   - [Initialization](#initialization)
-  - [Non-Static Data Member Initialization (NSDMI, 비정적 데이터 멤버 초기화)](#non-static-data-member-initialization-nsdmi-비정적-데이터-멤버-초기화)
+    - [Non-Static Data Member Initialization (NSDMI, 비정적 데이터 멤버 초기화)](#non-static-data-member-initialization-nsdmi-비정적-데이터-멤버-초기화)
   - [Uniform Initailizer](#uniform-initailizer)
+  - [Member Access Control (접근 지정자)](#member-access-control-접근-지정자)
   - [헤더 파일](#헤더-파일)
 - [변수 범위, 주기, 링크](#변수-범위-주기-링크)
 - [키워드](#키워드)
@@ -29,7 +30,11 @@
 - [함수](#함수)
   - [멤버 함수와 가상 함수 예제](#멤버-함수와-가상-함수-예제)
   - [함수 포인터](#함수-포인터)
-  - [가상 함수](#가상-함수)
+  - [상속과 [가상 함수](https://docs.microsoft.com/en-us/cpp/cpp/virtual-functions?view=msvc-170)](#상속과-가상-함수)
+    - [상속 (`Inheritance`)](#상속-inheritance)
+    - [가상 함수 (`Virtual Function`)](#가상-함수-virtual-function)
+    - [가상함수 테이블](#가상함수-테이블)
+    - [Virtual Table Table](#virtual-table-table)
 
 ---
 
@@ -71,8 +76,9 @@
     - 아래의 속성들을 가진다.
       - 크기 (sizeof)
       - [정렬 필요조건 (alignment requirement)](https://en.cppreference.com/w/cpp/language/object#Alignment)
-        - 객체를 생성할 수 있는 연속된 주소들 사이의 바이트 수
-        - 메모리 최적화에 사용하는듯? 
+        - 객체를 생성할 수 있는 연속된 주소들 사이의 바이트 수 (배열은 타입크기만 확인)
+        - 스칼라 타입 중 가장 크기가 큰 타입의 바이트 수와 동일하다.
+        - `바이트 패딩(byte padding)` 시의 기준 크기보다 작거나 같다.
       - [저장 기간 (storage duration)](https://en.cppreference.com/w/cpp/language/storage_duration)
       - [수명 (lifetime)](https://en.cppreference.com/w/cpp/language/lifetime)
       - 타입
@@ -91,7 +97,6 @@
 
   - ### [POD(Plain Old Data) type](https://en.cppreference.com/w/cpp/named_req/PODType)
     - C언어와 호환이 가능한 타입을 의미한다.
-    - 표준문서에는 정의되어 있지 않다..
     - `C++20`부터 좀 더 정교한 타입 요구사항들로 대체되었다.(`Trivial Type` 등등)
   - ### [cv type qualifiers](https://en.cppreference.com/w/cpp/language/cv)
     - 상수(`const`), 휘발성(`volatile`) 한정자를 의미한다.
@@ -105,6 +110,7 @@
     - [entity vs identifier](https://stackoverflow.com/questions/13542905/whats-the-difference-between-entity-and-identifier)
     - [difference between object and instance](https://stackoverflow.com/questions/22206044/difference-between-object-and-instance-c)
     - [Class and Objects](https://isocpp.org/wiki/faq/classes-and-objects#overview-object)
+    - [is_pod Class](https://docs.microsoft.com/en-us/cpp/standard-library/is-pod-class?view=msvc-170)
 
 
 ---
@@ -175,13 +181,19 @@
 ---
 # 구조체
 
-  - `프로젝트 속성 -> 코드 생성 -> 구조체 멤버 맞춤` 옵션이 `기본값`으로 설정되어 있을 경우 구조체 내에서 용량이 가장 큰 변수의 크기를 기본값으로 잡아서 메모리를 할당하게 된다.
+  - 바이트 패딩(`byte padding`)이라는 기법을 사용한다. (컴파일러마다 있을수도, 없을수도 있지만 MSVC에는 있다.)
+    - 클래스(구조체)에 바이트를 추가해 CPU 접근에 부하를 덜어주는 기법
+      - 같은 변수에 두 번 접근하는 것을 방지해준다.
+    - `프로젝트 속성 -> 코드 생성 -> 구조체 멤버 맞춤` 옵션이 `기본값`으로 설정되어 있을 경우 구조체 내에서 용량이 가장 큰 변수의 크기를 기본값으로 잡아서 메모리를 할당하게 된다.
     - `스칼라 타입` 변수만 고려한다. 구조체, 클래스 타입 변수는 고려대상이 아님.
     - 왜 `1byte`로 설정하지 않는가? -> 컴퓨터 입장에서는 `4의 배수` 또는 `2^n` 단위로 메모리를 할당하는 것이 더 효율적이다.
   - 멤버가 없더라도 최소바이트인 1바이트가 할당된다.
     - 변수를 정의하게 되면 메모리에 공간이 잡혀야 하므로 최소 바이트 수인 1바이트 공간을 차지하게 하여 변수를 잡아주는 것이다. (객체를 구분하기 위해)
   - 이제와서는 클래스와 구조체의 차이는 접근 제한자의 적용유무 밖에 없다.
     - 구조체 내에서도 함수를 선언할 수 있다.
+  - 참고
+    - [바이트 패딩](https://supercoding.tistory.com/37)
+    - [align](https://docs.microsoft.com/ko-kr/previous-versions/visualstudio/visual-studio-2010/83ythb65(v=vs.100)?redirectedfrom=MSDN)
 
 ```cpp
   // 이 구조체의 크기는 24바이트이다. -> |A B       |    Number    | intNum C   | -> 8바이트가 기본단위가 되었다.
@@ -378,7 +390,7 @@
 
   - 한 객체당 생성자와 소멸자는 단 한번 호출된다.
     - 모든 객체의 초기화는 한번만 가능하다. 이후에 값이 변경되는 것은 `대입(assignment)` 이다.
-  - 초기화 순서는 `정의된 순서`, 즉 메모리 상의 주소 순서와 같다.
+  - 초기화 순서는 `정의된 순서`, 즉 메모리 상의 주소 순서와 같다. (낮은 주소 -> 높은 주소)
     - 접근 지정자에 따라 달라질 수 있다고 하는데(**C++23까지만**), MSVC컴파일러는 코드순으로 초기화한다.
     - [스칼라 타입](https://en.cppreference.com/w/cpp/types/is_scalar) 변수들은 초기화 구문이 없으면 정해지지 않은 값들이 들어간다.(`default initialization`)
     - [익명 유니온(anonymous union)과 변형 멤버(variant member)](https://en.cppreference.com/w/cpp/language/union#Union-like_class)는 `member initializer`가 없기 때문에 초기화가 안된다.
@@ -570,7 +582,7 @@
   - 참고
     - [cppreference](https://en.cppreference.com/w/cpp/language/initialization)
 
-## Non-Static Data Member Initialization (NSDMI, 비정적 데이터 멤버 초기화)
+### Non-Static Data Member Initialization (NSDMI, 비정적 데이터 멤버 초기화)
 
   - 클래스, 구조체 내부에서 멤버 변수 선언 시 값을 지정해 주는 초기화 방법
   
@@ -631,6 +643,10 @@ using namespace std::literals;  // 문자열 리터럴 연산자의 네임스페
 auto list = {"a", "b", "cc"};   // initializer_list<const char*>
 auto list = {"a"s, "b"s, "c"s}; // initializer_list<std::string>
 ```
+
+## Member Access Control (접근 지정자)
+
+  - 
 
 ## 헤더 파일
 
@@ -834,17 +850,19 @@ void (*func3)() = &CTest::foo;        // ok
   - 타입 이름을 제외한 나머지 연산 시 괄호를 사용하지 않아도 된다(!)
   - 절대 0이 결과값으로 나오지 않는다. (나누기 같은 구문에서 에러를 발생시킬 수 있기 때문에 최소값을 1로 정해놓았다.)
   - 배열 식별자의 경우 배열의 총 바이트 수를 산출한다. 포인터 타입은 포인터 크기가 나온다.
-  - 클래스, 구조체, 유니온의 경우 컴파일러 옵션(`/Zp`) 또는 `pack pragma`에 따라 각각의 멤버 변수 크기의 합과 다를 수 있다.
+  - 클래스, 구조체, 유니온의 경우 컴파일러 옵션(`/Zp`) 또는 `pack pragma`에 따라 각각의 멤버 변수 크기의 합과 다를 수 있다. (바이트 패딩)
   - 컴파일 타임에 크기가 정해지지 않거나 텍스트 영역에 저장되는 함수(함수포인터는 가능)는 연산할 수 없다.
   - 참고
     - [클래스의 크기](https://blog.naver.com/tipsware/221090063784)
 
 ## 캐스팅 연산자
 
+  - 
+
 ## 범위 지정 연산자
 
 - `::`
-- 질문 : 멤버변수의 주소에 `&객체.변수` 가 아닌 `&클래스::변수` 로 접근하면 어디를 참조하게 되는것인가?
+- 질문 : 멤버변수의 주소에 `&객체.변수` 가 아닌 `&클래스::변수` 로 접근하면 어디를 참조하게 되는것인가? -> 상속 시 클래스 내부에서 식별자의 모호함을 제거하기 위해 사용한다. 외부에서는 사용할 일이 없음.(static 제외)
 
 
 ---
@@ -902,7 +920,7 @@ int main() {
   //  크기 비교
   // 1. empty 클래스도 스택 영역에 메모리가 올라간다.
   // 2. static 멤버 변수는 클래스의 크기에 영향을 주지 않는다. (bss 영역에 올라감)
-  // 3. 가상함수를 포함하는 클래스는 주소 크기만큼 크기가 커진다. 주소값이 8바이트이기 때문에 16바이트(구조체 멤버 맞춤 옵션)의 결과가 나온다.
+  // 3. 가상함수를 포함하는 클래스는 주소 크기만큼 크기가 커진다. 주소값이 8바이트이기 때문에 16바이트(바이트 패딩)의 결과가 나온다.
   // 4. 가상함수의 개수는 크기와 상관없다. -> 가상함수 테이블은 배열? 리스트? 로 생성되며 클래스들은 테이블의 주소를 가진다.
   std::cout << typeid(empty).name() << " size : " << sizeof empty << " byte\n";   // 1 byte
   std::cout << typeid(test).name() << " size : " << sizeof test << " byte\n";     // 1 byte
@@ -919,10 +937,10 @@ int main() {
   //  가상함수 테이블 주소 위치 확인
   // 1. 가상함수 테이블의 주소는 객체 메모리의 가장 앞부분에 추가된다.
   std::cout << std::hex;
-  std::cout << typeid(test).name() << " address : \t\t\t" << &test << '\n';        // &test == &test.a
-  std::cout << typeid(test).name() << " member address : \t\t" << reinterpret_cast<void *>(&test.a) << '\n';
-  std::cout << typeid(parent).name() << " address : \t\t" << &parent << '\n';    // &parent + 8 == &parent.a
-  std::cout << typeid(parent).name() << " member address : \t" << reinterpret_cast<void *>(&parent.a) << '\n';
+  std::cout << &test << " : " << typeid(test).name() << " address" << '\n';        // &test == &test.a
+  std::cout << reinterpret_cast<void *>(&test.a) << " : " << typeid(test).name() << " member address" << '\n';
+  std::cout << &parent << " : " << typeid(parent).name() << " address" << '\n';    // &parent + 8 == &parent.a
+  std::cout << reinterpret_cast<void *>(&parent.a) << " : " << typeid(parent).name() << " member address" << '\n';
   //printf("%p\n", &test.a); // 캐스팅을 하지 않아도 된다.
   //printf("%p\n", &parent.a);
   std::cout << std::endl;
@@ -938,10 +956,10 @@ int main() {
   memcpy(&parent2VTAddr, &parent2, sizeof size_t);
   memcpy(&childVTAddr, &child, sizeof size_t);
   memcpy(&overridedVTAddr, &overrided, sizeof size_t);
-  std::cout << typeid(parent).name() << " VTable address : \t" << parentVTAddr << '\n';     // 7ff788805860  
-  std::cout << typeid(parent2).name() << " VTable address : \t" << parent2VTAddr << '\n';   // 7ff788805860  
-  std::cout << typeid(child).name() << " VTable address : \t" << childVTAddr << '\n';       // 7ff788805880  
-  std::cout << typeid(overrided).name() << " VTable address : " << overridedVTAddr << '\n'; // 7ff7888058a0
+  std::cout << parentVTAddr << " : " << typeid(parent).name() << " VTable address" << '\n';       // 7ff7f0976830  
+  std::cout << parent2VTAddr << " : " << typeid(parent2).name() << " VTable address" << '\n';     // 7ff7f0976830  
+  std::cout << childVTAddr << " : " << typeid(child).name() << " VTable address" << '\n';         // 7ff7f0976850  
+  std::cout << overridedVTAddr << " : " << typeid(overrided).name() << " VTable address" << '\n'; // 7ff7f0976870
   std::cout << std::endl;
 
   // 객체에서 멤버 함수에 접근해 주소를 얻으려하면 오류가 발생한다.(&test.bar -> C/C++(300)오류)
@@ -958,19 +976,14 @@ int main() {
   // 2. 재정의한 멤버 함수는 다른 주소값을 가진다.
   // 3. 멤버 함수 포인터는 묵시적 형변환을 허용하지 않는다. this 포인터 때문에 네임스페이스가 굉장히 중요하기 때문이다.
   // std::cout << CTestStatic::bar << '\n'; // static 멤버 함수는 주소연산자(&)를 붙이지 않아도 된다.
-  void (CTestParent::*pParentFoo)() = &CTestParent::foo;
   void (CTestParent::*pParentBar)() = &CTestParent::bar;
-  void (CTestParent::*pChildFoo)() = &CTestChildOverride::foo;
-  // void (CTestParent::*pChildBar)() = &CTestChildOverride::bar;
-  void (CTestChildOverride::*pOverrideFoo)() = &CTestChildOverride::foo;
+  void (CTestParent::*pChildBar)() = &CTestChild::bar;
   void (CTestChildOverride::*pOverrideBar)() = &CTestChildOverride::bar;
+//   void (CTestParent::*pOverrideBar)() = &CTestChildOverride::bar;
   
-  std::cout << typeid(parent).name() << " foo func address : \t" << reinterpret_cast<void *&>(pParentFoo) << '\n';    // 00007FF788732437    
-  std::cout << typeid(parent).name() << " bar func address : \t" << reinterpret_cast<void *&>(pParentBar) << '\n';    // 00007FF788734FD9    
-  std::cout << typeid(child).name() << " foo func address : \t" << reinterpret_cast<void *&>(pChildFoo) << '\n';      // 00007FF788732437    
-  // std::cout << typeid(child).name() << " bar func address : " << reinterpret_cast<void *&>(pChildBar) << '\n';
-  std::cout << typeid(overrided).name() << " foo func address : " << reinterpret_cast<void *&>(pOverrideFoo) << '\n'; // 00007FF788732437
-  std::cout << typeid(overrided).name() << " bar func address : " << reinterpret_cast<void *&>(pOverrideBar) << '\n'; // 00007FF788735FE2
+  std::cout << reinterpret_cast<void *&>(pParentBar) << " : " << typeid(parent).name() << " bar func address" << '\n';      // 00007FF7F08A4FD9
+  std::cout << reinterpret_cast<void *&>(pChildBar) << " : " << typeid(child).name() << " bar func address" << '\n';        // 00007FF7F08A4FD9
+  std::cout << reinterpret_cast<void *&>(pOverrideBar) << " : " << typeid(overrided).name() << " bar func address" << '\n'; // 00007FF7F08A5FE2
   // printf("%p\n", &CTestParent::foo); // 캐스팅을 하지 않아도 된다.
   std::cout << std::endl;
 
@@ -1027,20 +1040,65 @@ int main() {
   (pTest->*pMemFunc)();
 ```
 
-## [가상 함수](https://docs.microsoft.com/en-us/cpp/cpp/virtual-functions?view=msvc-170)
+## [상속](https://docs.microsoft.com/en-us/cpp/cpp/inheritance-cpp?view=msvc-170)과 [가상 함수](https://docs.microsoft.com/en-us/cpp/cpp/virtual-functions?view=msvc-170)
 
-  - `파생 클래스(derived class)`에서 재정의할 것이라 예상하는(`expected`) 멤버 함수
+### 상속 (`Inheritance`)
+  - 기존 클래스에서 파생된 새 클래스가 기존 클래스의 특성을 가지는 메커니즘
+ 
+  - 데이터 상으로는 `파생 클래스`의 멤버 변수에 `기본 클래스`의 객체를 추가한 것과 동일하다.
+    - 파생 클래스의 가장 낮은 주소에 배치한다.
+    - 때문에 초기화 시 기본 클래스의 생성자가 먼저 호출되는 것이다.
+  - 부모-자식 관계에서 부모 클래스는 자식 클래스의 `direct base class` 가 되고, 부모-자식-손자 관계에서 부모 클래스는 손자 클래스의 `indirect base class` 가 된다.
+  - 기본 클래스는 파생 클래스 앞에 선언해야 한다. 전방 선언도 안된다.
+  - `C++` 에서는 `다중 상속`이 가능하다.
+    - 두 개의 파생 클래스를 상속받는 클래스는 기본 클래스를 2개 포함하게 되는데, 생성자가 두 번 호출되는 불상사를 막기 위해 기본 클래스를 상속받을 때 `virtual` 키워드를 붙여 `가상 기본 클래스`로 만든다.
+    - 가상 기본 클래스가 생성되면 데이터 멤버들의 순서와 `sizeof` 결과값이 변경된다.
+    - 이름이 같은 멤버(변수, 함수)에 접근할 때 범위 지정 연산자(::)를 사용하여 모호성을 제거할 수 있다.
+    - 자세한 내용은 [virtual table table]() 에 정리했다.
+      - TODO : 데이터 순서 확실히 알아볼 것
+    - 
+
+  - 참고
+    - [VTable Notes on Multiple Inheritance in GCC](https://ww2.ii.uj.edu.pl/~kapela/pn/cpp_vtable.html)
+
+### 가상 함수 (`Virtual Function`)
+  - `파생 클래스(derived class)`에서 재정의할 것이라 예상하는(`expected`)(약속하는?) 비정적 멤버 함수
+  
   - `기본 클래스(base class)`에 참조 또는 포인터를 사용하여 파생 클래스 객체를 참조할 때, 해당 객체에 대한 가상 함수를 호출하면 파생 클래스의 함수를 실행할 수 있다.
-    - 이 때 기본 클래스의 소멸자를 가상 함수로 만들지 않으면 **파생 클래스의 소멸자가 호출되지 않는다.**
+    - 이 때 기본 클래스의 소멸자를 가상 함수로 만들지 않으면 **파생 클래스의 소멸자가 호출되지 않는다.** 식별자의 타입이 기본 클래스라서 파생 클래스의 존재를 모르기 때문이다.
+    
     - 물론 파생 클래스에서 정의한 **모든 멤버 변수들도 소멸되지 않는다.**
-  - 함수 처리 전에 적합한 주소를 찾아내는 작업이 추가되기 때문에 꼭 필요한 경우가 아니면 사용하지 말자.
-    - 파생 클래스가 상속트리의 잎(`leaf`) 노드일 경우 소멸자에 `virtual`을 붙이지 않는 것이 좋다.
+  - **식별자 타입, 객체 타입과 관계없이** `virtual`, `override`가 아닌 함수는 **그대로 호출**, `virtual`, `override` 함수는 객체의 주소 첫번째에 저장되어 있는 **가상함수 테이블에서 주소를 찾아 호출**
+    - 객체 `derived`의 주소에서 가상함수 테이블 주소에 역참조 하는 것을 볼 수 있다.
 
+    ![](img/virtual_func_assembly.png)
+  - 함수 처리 전에 가상함수 테이블에 들어가서 주소를 가져오는 작업이 추가되기 때문에 꼭 필요한 경우가 아니면 사용하지 말자.
+
+### 가상함수 테이블
+
+코드가 저장장치에 로드될 때 갖게 되는 정보가 달라진다.
+ 가상함수 또는 재정의 함수인 경우
+아래의 코드에서 foo()함수가 가상함수 또는 재정의 함수 일 때, 코드는 test 객체의 주소, 가상함수 여부, 가상함수 오프셋(상대주소) 세 가지 정보를 가지게 되는 것이다.
+ 가상함수 또는 재정의 함수가 아닌 경우
+  test 객체의 주소, foo()함수의 주소
+```cpp
+test->foo();
+```
+
+### Virtual Table Table 
+
+가상함수 테이블 저장 순서는 기본 클래스 가상함수 -> 파생 클래스 가상함수 순이다.
+선언한 순서대로 함수 정의 부분 주소를 테이블에 채워넣는 형태다.
+
+파생 클래스를 상속받는 클래스에서의 가상함수 테이블 순서는 어떻게 될까??
 
 기본 클래스를 참조하는 파생 클래스 객체에서, 기본 클래스 함수를 호출하여 this 포인터를 사용하면 누가 나오나? - 아마 파생 클래스 이지 않을까? 메모리 주소가 그쪽잉게..
 vtable이 없으면 컴파일러가 해석할 때 선언된 클래스 타입을 우선한다. 하지만 함수 호출 시 사용되는 객체의 주소는 객체를 따라가게 된다.
 
 식별자의 타입은 코드 상에서의 구분일 뿐 실제 주소는 객체를 가리키고 있다.
+근데 왜 파생 클래스 객체가 가상함수가 아닌 베이스 클래스 함수를 호출했을 때 this->변수 가 성립이 안되나?
+ -> 변수들은 this 주소를 기준으로 상대주소를 의미한다. 특정 메모리의 절대주소가 아님. 그래서 파생 클래스 객체에서 베이스 클래스의 함수를 호출한뒤 멤버변수를 호출하면 베이스 클래스의 멤버변수가 호출되는 것이다.
+ -> 상속을 받으면 베이스 객체 변수가 추가되는 것과 같다. 모든 멤버 변수 앞에 위치한다. 그래서 초기화 시 베이스 클래스의 생성자가 먼저 출력되는 것이다.
 
 ```cpp
   CBase obj = new CDerived;
