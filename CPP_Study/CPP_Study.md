@@ -16,6 +16,12 @@
   - [Uniform Initailizer](#uniform-initailizer)
   - [Member Access Control (접근 지정자)](#member-access-control-접근-지정자)
   - [헤더 파일](#헤더-파일)
+- [상속과 [가상 함수](https://docs.microsoft.com/en-us/cpp/cpp/virtual-functions?view=msvc-170)](#상속과-가상-함수)
+  - [상속 (`Inheritance`)](#상속-inheritance)
+  - [가상 함수 (`Virtual Function`)](#가상-함수-virtual-function)
+  - [Abstract class, Pure Virtual Function (추상클래스, 순수 가상 함수)](#abstract-class-pure-virtual-function-추상클래스-순수-가상-함수)
+  - [Virtual Function Table (가상함수 테이블)](#virtual-function-table-가상함수-테이블)
+  - [Virtual Table Table](#virtual-table-table)
 - [변수 범위, 주기, 링크](#변수-범위-주기-링크)
 - [키워드](#키워드)
   - [this 키워드](#this-키워드)
@@ -30,11 +36,6 @@
 - [함수](#함수)
   - [멤버 함수와 가상 함수 예제](#멤버-함수와-가상-함수-예제)
   - [함수 포인터](#함수-포인터)
-  - [상속과 [가상 함수](https://docs.microsoft.com/en-us/cpp/cpp/virtual-functions?view=msvc-170)](#상속과-가상-함수)
-    - [상속 (`Inheritance`)](#상속-inheritance)
-    - [가상 함수 (`Virtual Function`)](#가상-함수-virtual-function)
-    - [가상함수 테이블](#가상함수-테이블)
-    - [Virtual Table Table](#virtual-table-table)
 
 ---
 
@@ -54,21 +55,29 @@
 
   - ### [`identifier` (식별자)](https://docs.microsoft.com/en-us/cpp/cpp/identifiers-cpp?view=msvc-170)
     - 이름들을 지칭하는 일련의 문자열
+  
     - 코드에 적힌 예약되지 않은 이름들은 전부 식별자
+  
   - ### [`keyword` (키워드)](https://docs.microsoft.com/en-us/cpp/cpp/keywords-cpp?view=msvc-170)
     - 특별한 의미로 사용하기 위해 언어가 예약한 식별자. 식별자로 사용할 수 없다.
+  
     - 두 개의 연속된 밑줄을 포함하는 식별자(ex, `__stdcall`)는 컴파일러 구현을 위해 예약된 것이다.
       - `__cdecl` 키워드는 밑줄 없이 사용이 가능하다.
   - ### `entity` (엔터티, 개체)
     - 데이터 또는 정보들의 집합을 포함하는 어떤 메모리 (또는 레지스터)
+ 
     - 식별자로 네이밍 한다. (identifier is just a name for some entity)
     - 종류 : `values`, `objects`, `references`, `enumerators`, `types`, `functions`, `class members`, `namespaces`, `templates(specializations 포함)`, `structured bindings(C++17)`, `parameter packs`
     - 전처리기인 매크로 (`macro`)는 엔터티가 아니다.
+  
   - ### [`types` (타입, 유형)](https://en.cppreference.com/w/cpp/language/type)
     - 무언가의 종류를 나타내기 위해 사용하는 엔터티
+  
     - `객체, 참조, 함수 및 식`이 가지는 **속성**이며, 엔터티에 허용되는 연산을 제한하고 비트 시퀀스에 의미를 부여한다.
+  
   - ### [`object` (객체)](https://en.cppreference.com/w/cpp/language/object)
     - 공식적인 정의는 **어떠한 저장 영역(`any region of storage`)** 이다.
+  
     - `C++` 에서 `object` 와 `instance` 는 동의어다.
       - `instance` 는 공식적으로 정의된 용어가 아니지만 `instance of type X` 이런식으로 객체를 표현한다.
     - `변수(variable)` 는 선언을 완료한 [정적 데이터 멤버](https://en.cppreference.com/w/cpp/language/data_members#Member_initialization)인 객체 또는 참조를 의미한다.
@@ -77,6 +86,7 @@
       - 크기 (sizeof)
       - [정렬 필요조건 (alignment requirement)](https://en.cppreference.com/w/cpp/language/object#Alignment)
         - 객체를 생성할 수 있는 연속된 주소들 사이의 바이트 수 (배열은 타입크기만 확인)
+  
         - 스칼라 타입 중 가장 크기가 큰 타입의 바이트 수와 동일하다.
         - `바이트 패딩(byte padding)` 시의 기준 크기보다 작거나 같다.
       - [저장 기간 (storage duration)](https://en.cppreference.com/w/cpp/language/storage_duration)
@@ -87,6 +97,7 @@
 
   - ### [선언(declaration)과 정의(definition)](https://docs.microsoft.com/en-us/cpp/cpp/declarations-and-definitions-cpp?redirectedfrom=MSDN&view=msvc-170)
     - 둘의 가장 큰 차이점은 **메모리를 할당하는가** 이다.
+ 
     - 메모리를 할당하지 않고 식별자만 알려준다면 `선언`, 메모리가 할당된 식별자는 `정의`
     - 선언(`declaration`)
       - 엔터티의 타입과 기타 다른 특성에 대한 정보를 가지고 엔터티에 고유한 이름을 지정하는 것
@@ -97,12 +108,14 @@
 
   - ### [POD(Plain Old Data) type](https://en.cppreference.com/w/cpp/named_req/PODType)
     - C언어와 호환이 가능한 타입을 의미한다.
+  
     - `C++20`부터 좀 더 정교한 타입 요구사항들로 대체되었다.(`Trivial Type` 등등)
   - ### [cv type qualifiers](https://en.cppreference.com/w/cpp/language/cv)
     - 상수(`const`), 휘발성(`volatile`) 한정자를 의미한다.
 
   - 간단한 포함관계 
     - 실체가 없는 것 : 이름 > 식별자 > 키워드
+  
     - 실체가 있는 것 : 엔터티 > 객체, 타입
   - 참고 
     - [Basic Concept of C++ Language](https://en.cppreference.com/w/cpp/language/basic_concepts) 
@@ -168,8 +181,9 @@
 # 레퍼런스
 
   - 포인터와 기능은 동일 -> c++ 버전의 포인터, 사용하기 쉬운 포인터
+    - 초기화 시 필요로 하는 값은 다름. 포인터는 주소값을 사용하고, 레퍼런스는 해당 객체를 사용함 
 
-  - 역참조 필요없음, 일종의 대리자 역할
+  - 역참조 필요없음, 일종의 대리자 역할, 일반 변수랑 동일하게 사용하면 됨
   - 참조 변경 불가능 -> `type* const`와 동일
     - `const type&`을 사용하면 읽기 전용 변수가 된다.
   - 일반적인 객체가 아니기 때문에 저장공간을 반드시 필요로 하는 것은 아니다.
@@ -184,9 +198,11 @@
   - 바이트 패딩(`byte padding`)이라는 기법을 사용한다. (컴파일러마다 있을수도, 없을수도 있지만 MSVC에는 있다.)
     - 클래스(구조체)에 바이트를 추가해 CPU 접근에 부하를 덜어주는 기법
       - 같은 변수에 두 번 접근하는 것을 방지해준다.
+ 
     - `프로젝트 속성 -> 코드 생성 -> 구조체 멤버 맞춤` 옵션이 `기본값`으로 설정되어 있을 경우 구조체 내에서 용량이 가장 큰 변수의 크기를 기본값으로 잡아서 메모리를 할당하게 된다.
     - `스칼라 타입` 변수만 고려한다. 구조체, 클래스 타입 변수는 고려대상이 아님.
     - 왜 `1byte`로 설정하지 않는가? -> 컴퓨터 입장에서는 `4의 배수` 또는 `2^n` 단위로 메모리를 할당하는 것이 더 효율적이다.
+ 
   - 멤버가 없더라도 최소바이트인 1바이트가 할당된다.
     - 변수를 정의하게 되면 메모리에 공간이 잡혀야 하므로 최소 바이트 수인 1바이트 공간을 차지하게 하여 변수를 잡아주는 것이다. (객체를 구분하기 위해)
   - 이제와서는 클래스와 구조체의 차이는 접근 제한자의 적용유무 밖에 없다.
@@ -390,8 +406,13 @@
 
   - 한 객체당 생성자와 소멸자는 단 한번 호출된다.
     - 모든 객체의 초기화는 한번만 가능하다. 이후에 값이 변경되는 것은 `대입(assignment)` 이다.
-  - 초기화 순서는 `정의된 순서`, 즉 메모리 상의 주소 순서와 같다. (낮은 주소 -> 높은 주소)
-    - 접근 지정자에 따라 달라질 수 있다고 하는데(**C++23까지만**), MSVC컴파일러는 코드순으로 초기화한다.
+  - 초기화 순서는 `멤버가 정의된 순서`, 즉 메모리 상의 주소 순서와 같다. (낮은 주소 -> 높은 주소)
+    - `상속` 관계가 있는 객체는 무조건 `기본 클래스`의 생성자가 먼저 호출된다.
+
+      - `다중 상속`의 경우, `기본 클래스`들의 초기화 순서는 `base-list`의 순서대로 초기화가 진행된다. (선언순이 아님!)
+   
+      - `가상 베이스 클래스`가 포함된 상속의 경우, 가상 베이스 클래스의 멤버는 저장공간의 끝(높은 주소)에 저장된다. **초기화 순서와 저장공간 주소 순서가 다름!**
+    - 접근 지정자에 따라 달라질 수 있다고 하는데(C++23까지만), MSVC컴파일러는 코드순으로 초기화한다.
     - [스칼라 타입](https://en.cppreference.com/w/cpp/types/is_scalar) 변수들은 초기화 구문이 없으면 정해지지 않은 값들이 들어간다.(`default initialization`)
     - [익명 유니온(anonymous union)과 변형 멤버(variant member)](https://en.cppreference.com/w/cpp/language/union#Union-like_class)는 `member initializer`가 없기 때문에 초기화가 안된다.
   - 간단한 예제를 통해 생성자와 소멸자, 초기화의 순서를 알아보자.
@@ -462,12 +483,12 @@
   }
 ```
   - `derived` 객체의 초기화 순서
-    - `new` 연산자 호출 (40byte 메모리 공간 확보)
-    - `this` 설정
+    - `new` 연산자 호출 (40byte 메모리 공간 확보 + 주소 확정)
+
     - `CDerived` 클래스의 인자가 없는 생성자 호출
     - `CBase` 클래스의 `int` 인자 1개를 받는 생성자 호출
-    - (가상함수가 존재하기 때문에) `this`의 값에 `CBase` 클래스의 가상함수 테이블(`VFTable`) 주소를 입력 (`qword`)
-    - `this + 8` 의 값을 `"CBase Int"` 의 주소로 초기화 (`mName`, `qword`)
+      - (가상함수가 존재하기 때문에) `this`의 값에 `CBase` 클래스의 가상함수 테이블(`VFTable`) 주소를 입력 (`qword`)
+      - `this + 8` 의 값을 `"CBase Int"` 의 주소로 초기화 (`mName`, `qword`)
     - `this`에 `CDerived` 클래스의 가상함수 테이블(`VFTable`) 주소를 입력 (덮어씀)
     - `this + 16` 의 값을 `64h` 로 초기화 (`mNum`, `dword`)
     - `this + 20` 과 인자 `1` 을 저장 후 `CTest` 클래스의 `int` 인자 1개를 받는 생성자 호출 (`mObj1(1)`)
@@ -481,6 +502,7 @@
     - `CDerived` 생성자의 함수 바디 부분 실행
   - `derived` 객체의 소멸 순서
     - 가상함수 테이블에서 소멸자 주소를 찾은 뒤 호출 (어셈블리에 단계가 한개 더 있음. 찾아볼 것)
+ 
     - `this` 설정 후 `CDerived` 클래스의 소멸자 호출
     - `CDerived` 소멸자의 함수 바디 부분 실행
     - `this + 28` 을 저장한 후 (`mObj2`) 및 함수 바디 부분 실행
@@ -507,11 +529,13 @@
   MyClass mc1;
   MyClass* mc3 = new MyClass;
 ```
+
   - ### Zero Initialization
     - 변수를 0값으로 설정하는것, 암묵적으로 타입에 맞게 변환된다.
 
     - 다음의 상황에 적용된다.
       - `정적 주기` 를 가진 변수들. 특별하게 생성자를 통해 한번 더 초기화 될 수 있다.
+  
       - `value initaializagion` 중 `스칼라 타입`과 `POD클래스 타입`에 빈 중괄호로 초기화 한 경우
       - 배열의 특정 멤버가 초기화될 경우 나머지 멤버들은 0으로 초기화된다.
 ```cpp
@@ -520,6 +544,7 @@
   int* ptr{};                       // nullptr로 초기화된다.
   int int_array[5] = { 8, 9, 10 };  // 4, 5번 배열의 int 값은 0으로 초기화된다.
 ```
+
   - ### Value Initialization
     - 빈 소괄호 또는 중괄호로 초기화하는 모든 초기화(약간 큰 개념)
 
@@ -532,6 +557,7 @@
       - `default` 키워드로 생성한 기본 생성자 호출 (1D8h bytes에 XOR 결과값(0)을 넣는다.)
 
         ![](img/zero_initialize.png)
+
   - ### Copy Initialization (복사 초기화)
     - 다른 객체를 사용하여 한 객체를 초기화 하는 것
 
@@ -562,14 +588,17 @@
     - `static_cast` 를 사용한 초기화에도 적용된다.
     - `lambda` 식 내부에 복사된(`captured`) 변수들의 초기화에도 적용된다.
     - [예제](https://docs.microsoft.com/en-us/cpp/cpp/initializers?view=msvc-170#direct-initialization)
+  
   - ### List Initialization (목록 초기화)
     - 중괄호로 묶여있는 `initializer list`를 사용하여 초기화 하는 것
 
     - [예제](https://docs.microsoft.com/en-us/cpp/cpp/initializers?view=msvc-170#list-initialization)
+  
   - ### Aggregate Initialization (집합체 초기화)
     - 특수한 상황에서 사용하는 `목록 초기화`의 일종. 배열아니면 거의 볼 일이 없다.
 
     - [예제](https://docs.microsoft.com/en-us/cpp/cpp/initializers?view=msvc-170#agginit)
+  
   - ### Reference Initialization (참조 초기화)
     - 변환될 수 있는 타입으로만 초기화가 가능하다.
     - 함수 호출식에서 인자에 참조 유형이 있거나 참조 유형을 반환하는 경우에 초기화가 진행된다.
@@ -646,12 +675,128 @@ auto list = {"a"s, "b"s, "c"s}; // initializer_list<std::string>
 
 ## Member Access Control (접근 지정자)
 
-  - 
+  - TODO
+  - https://docs.microsoft.com/en-us/cpp/cpp/member-access-control-cpp?view=msvc-170
+  - https://en.cppreference.com/w/cpp/language/access
 
 ## 헤더 파일
 
   - 순환 참조 : 서로의 헤더 파일을 `include` 하는 상태. 무조건 피해야 한다.
   - 이것을 피하기 위해 `전방 선언` 을 한다.
+  - TODO
+
+
+
+---
+# [상속](https://docs.microsoft.com/en-us/cpp/cpp/inheritance-cpp?view=msvc-170)과 [가상 함수](https://docs.microsoft.com/en-us/cpp/cpp/virtual-functions?view=msvc-170)
+
+## 상속 (`Inheritance`)
+
+  - 기존 클래스에서 파생된 새 클래스가 기존 클래스의 특성을 가지는 메커니즘
+  
+  - 데이터 상으로는 `파생 클래스`의 멤버 변수에 `기본 클래스`의 객체를 추가한 것과 동일하다.
+    - 일반 단일 상속의 경우, 파생 클래스 멤버 변수의 앞에 위치한다. 낮은 주소를 가진다.
+  
+    - 초기화 순서 또한 기본 클래스의 우선순위가 높다.
+  - `부모-자식 관계`에서 부모 클래스는 자식 클래스의 `direct base class` 가 되고, `부모-자식-손자 관계`에서 부모 클래스는 손자 클래스의 `indirect base class` 가 된다.
+  - 기본 클래스는 파생 클래스 앞에 선언해야 한다. 전방 선언도 안된다.
+  - 이름이 같은 멤버(변수, 함수)에 접근할 때 `범위 지정 연산자(::)`를 사용하여 베이스 클래스의 멤버로 접근할 수 있다.
+    - **베이스 클래스의 가상함수를 호출하고 싶을 때** `obj->CBase::foo()` 이런 식으로 사용한다. 이 때, 가상 함수 메커니즘은 진행하지 않는다.
+  
+    - 멤버 변수도 동일하게 접근이 가능한데, 이름이 같은 시점에서 잘못된 코드다.
+  - `C++` 에서는 [다중 상속](https://docs.microsoft.com/en-us/cpp/cpp/multiple-base-classes?view=msvc-170)이 가능하다.
+    - 두 개의 파생 클래스를 상속받는 클래스는 기본 클래스를 2개 포함하게 되는데, 생성자가 두 번 호출되는 불상사를 막기 위해 기본 클래스를 상속받을 때 `virtual` 키워드를 붙여 `virtual base class(가상 기본 클래스)`로 만든다.
+    
+    - 가상 기본 클래스는 공간을 절약하고 여러 개의 다중 상속을 사용하는 클래스 계층에 모호성이 발생하지 않는 방법을 제공한다.
+    - 가상 기본 클래스가 생성되면 데이터 멤버들의 순서와 `sizeof` 결과값이 변경된다. (단일 상속과 다르다)
+    - 자세한 내용은 [Virtual Table Table 섹션](#virtual-table-table) 에 정리했다.
+
+  - `빈 베이스 클래스`를 상속받는 `빈 파생 클래스`의 `typeid` 는 베이스 클래스이다.
+    - 파생 클래스를 특정할 수 있는 요인이 하나도 없기 때문이다.
+
+
+## 가상 함수 (`Virtual Function`)
+
+  - `파생 클래스(derived class)`에서 재정의할 것이라 예상하는(`expected`)(약속하는?) 비정적 멤버 함수
+  
+  - `기본 클래스(base class)`에 **참조 또는 포인터를 사용**하여 파생 클래스 객체를 참조할 때, 해당 객체에 대한 가상 함수를 호출하면 파생 클래스의 함수를 실행할 수 있다.
+    - 이 때 기본 클래스의 소멸자를 가상 함수로 만들지 않으면 **파생 클래스의 소멸자가 호출되지 않는다.** 식별자의 타입이 기본 클래스라서 파생 클래스의 존재를 모르기 때문이다.
+    
+    - 물론 파생 클래스에서 정의한 **모든 멤버 변수들도 소멸되지 않는다.**
+  - 가상 함수를 재정의(`override`) 하는 모든 함수는 가상 함수이다. (`virtual` 키워드가 생략되어 있다.)
+  - 재정의 시 `접근 지정자`의 영향을 받지 않는다.
+    - 코드 짜기 편하라고 만든것이지 메모리와는 상관없기 때문이다.
+  - **참조 또는 포인터 타입의 객체**에서 가상 함수는 **가상함수 테이블에서 주소를 찾아** 함수를 호출한다.
+  - `주소 타입이 아닌 객체`에서의 함수는 가상함수 테이블을 사용하지 않는다.
+  - 함수 처리 전에 가상함수 테이블에 들어가서 주소를 가져오는 작업이 추가되기 때문에 꼭 필요한 경우가 아니면 사용하지 말자.
+```cpp
+  CDerived derived;
+  CDerived& refDerived = derived;
+  derived.foo();
+  refDerived.foo();
+  derived.vFoo();
+  refDerived.vFoo();
+```
+![](img/virtual_func_assembly.png)
+
+  - 베이스 클래스를 참조하는 파생 클래스 객체에서, `베이스 클래스의 비가상 함수`를 호출했을 때, 베이스 클래스의 멤버 변수만 접근할 수 있다.
+    - 당연하다. 베이스 클래스는 파생 클래스의 존재를 모르기 때문이다. 접근하려면 `다운 캐스팅`을 하면 된다.
+  
+    - 상속 메커니즘의 클래스 멤버 변수 앞에는 `this`포인터와 `범위 지정 연산자`가 생략되어 있다. `this->변수` 가 아니라 `this->클래스::변수`가 옳은 표현이다. 
+    - 메모리에서 해당 클래스의 위치로 이동한 다음 해당 클래스의 `멤버 변수 오프셋`을 통해 주소로 접근하는 것이다.
+  - 함수 호출 코드(`객체->함수();`)는 `객체의 주소`, `가상함수 판단`의 정보를 가진다.
+    - 함수가 가상 함수이면 `가상함수 오프셋(상대주소)` 정보를, 비가상 함수이면 `클래스::함수()`의 주소 정보를 가진다.
+
+  - 참고
+    - [virtual function specifier](https://en.cppreference.com/w/cpp/language/virtual)
+    - [가상함수와 가상함수테이블의 이해](https://cosyp.tistory.com/228)
+    - [가상함수와 상속](https://modoocode.com/211)
+
+
+## Abstract class, Pure Virtual Function (추상클래스, 순수 가상 함수)
+
+  - 함수 선언 시 `= 0;` 을 붙여 구현부가 없는 가상 함수를 `순수 가상 함수`라고 한다.
+
+  - 파생 클래스에서 반드시 재정의를 해야 한다는 표시이다.
+  - 순수 가상 함수를 1개 이상 가지고 있는 클래스를 `추상 클래스`라고 한다.
+  - 추상 클래스는 객체를 생성할 수 없다.
+  - 주로 인터페이스를 만드는 데 사용한다.
+```cpp
+  class CAbstract {           // 추상 클래스
+    public:
+    CAbstract() {}
+    virtual ~CAbstract() {}
+    virtual void vPure() = 0; // 순수 가상 함수
+  };
+```
+
+## Virtual Function Table (가상함수 테이블)
+
+  - 클래스에 하나 이상의 가상 함수가 존재할 경우 생성되는 리스트
+ 
+  - 일반적인 경우 객체의 가장 낮은 주소에 배치한다. (`this`와 동일한 주소)
+  - 가상함수 테이블 저장 순서는 기본 클래스 가상함수 -> 파생 클래스 가상함수 순이다.
+    - `선언`한 순서대로 함수 `정의` 부분 주소를 테이블에 채워넣는 형태다.
+   
+    - `다중 상속`의 경우 `base-list` 순서를 따른다. (주소 상의 순서다. 어차피 테이블이 달라서 의미는 없다.)
+  - `다중 상속`의 경우, 가상함수 테이블의 개수는 기본 클래스들의 개수와 같다.
+    - 기본 클래스들은 서로의 가상함수 테이블을 모르고 고유의 오프셋을 가진다.
+  
+    - 때문에 해당 클래스의 테이블에 접근해서 오프셋을 통해 주소를 가져오는 것이다.
+  - 예제를 통해 저장되는 순서를 알아보자.
+
+
+## Virtual Table Table
+
+  - `베이스 클래스 멤버`의 위치를 찾기 위한 메타데이터 리스트
+  - 일반 상속의 경우 참조하는 멤버에 대한 상대적 주소(오프셋)가 일정하다.
+  - 가상 상속의 경우 베이스 클래스의 멤버의 주소가 상속 관계에 따라 변경된다.
+
+  - 참고 (고마워요 `Morgan Deters`!)
+    - [VTable Notes on Multiple Inheritance in GCC](https://ww2.ii.uj.edu.pl/~kapela/pn/cpp_vtable.html)
+    - [What si the VTT for a class](https://stackoverflow.com/questions/6258559/what-is-the-vtt-for-a-class) -> 위와 동일한 내용
+    - [virtual 상속의 원리](https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=kyed203&logNo=220207325648)
+
 
 
 ---
@@ -824,18 +969,20 @@ void (*func3)() = &CTest::foo;        // ok
 
 ## [virtual 키워드](https://docs.microsoft.com/en-us/cpp/cpp/virtual-cpp?view=msvc-170)
 
-  - [가상 함수](#가상-함수) 또는 가상 베이스 클래스(`virtual base class`)를 선언할 때 사용
+  - [가상 함수](#가상-함수-virtual-function) 또는 가상 베이스 클래스(`virtual base class`)를 선언할 때 사용
 
   - 가상 베이스 클래스는 `다중 상속` 시 부모를 하나의 베이스 객체로 놓고 모든 자식들이 멤버 변수들을 공유하도록 만든다.
     - `기본 클래스(base class)`가 여러 `파생 클래스(derived class)`를 가지고, 임의의 클래스가 파생 클래스들을 다중상속 받을 경우에 사용한다.
+
     - `가상 상속`을 받지 않으면 생성자를 파생 클래스 개수만큼 호출한다.
+    - 자세한 내용은 [Virtual Table Table 섹션](#virtual-table-table) 에 정리했다.
   - 콜론(`:`) 뒤, 기본 클래스의 이름 앞, `접근 지정자(access specifier)` 앞 뒤에 `virtual` 키워드를 붙여 가상 상속을 할 수 있다.
   - [가상 베이스 클래스의 예제](https://www.learncpp.com/cpp-tutorial/virtual-base-classes/)
 
 
 ## inline 키워드
 
-  - 빨리 하자
+  - TODO
 
 
 ---
@@ -857,12 +1004,13 @@ void (*func3)() = &CTest::foo;        // ok
 
 ## 캐스팅 연산자
 
-  - 
+  - TODO
 
 ## 범위 지정 연산자
 
 - `::`
 - 질문 : 멤버변수의 주소에 `&객체.변수` 가 아닌 `&클래스::변수` 로 접근하면 어디를 참조하게 되는것인가? -> 상속 시 클래스 내부에서 식별자의 모호함을 제거하기 위해 사용한다. 외부에서는 사용할 일이 없음.(static 제외)
+- TODO
 
 
 ---
@@ -1011,6 +1159,7 @@ int main() {
   int (*pFunc)(); // int(*)() 형의 함수 포인터 정의
 ```
   - 함수의 이름 앞에 `주소연산자(Address-of operator, &)`를 붙여 주소를 대입할 수 있다.
+ 
   - 주소연산자의 생략이 가능하다.
   - 포인터로 함수 호출 시, 암시적 역참조를 허용하여 일반 함수 호출과 동일한 형태로 사용이 가능하다.
   
@@ -1039,76 +1188,3 @@ int main() {
   (test.*pMemFunc)();
   (pTest->*pMemFunc)();
 ```
-
-## [상속](https://docs.microsoft.com/en-us/cpp/cpp/inheritance-cpp?view=msvc-170)과 [가상 함수](https://docs.microsoft.com/en-us/cpp/cpp/virtual-functions?view=msvc-170)
-
-### 상속 (`Inheritance`)
-  - 기존 클래스에서 파생된 새 클래스가 기존 클래스의 특성을 가지는 메커니즘
- 
-  - 데이터 상으로는 `파생 클래스`의 멤버 변수에 `기본 클래스`의 객체를 추가한 것과 동일하다.
-    - 파생 클래스의 가장 낮은 주소에 배치한다.
-    - 때문에 초기화 시 기본 클래스의 생성자가 먼저 호출되는 것이다.
-  - 부모-자식 관계에서 부모 클래스는 자식 클래스의 `direct base class` 가 되고, 부모-자식-손자 관계에서 부모 클래스는 손자 클래스의 `indirect base class` 가 된다.
-  - 기본 클래스는 파생 클래스 앞에 선언해야 한다. 전방 선언도 안된다.
-  - `C++` 에서는 `다중 상속`이 가능하다.
-    - 두 개의 파생 클래스를 상속받는 클래스는 기본 클래스를 2개 포함하게 되는데, 생성자가 두 번 호출되는 불상사를 막기 위해 기본 클래스를 상속받을 때 `virtual` 키워드를 붙여 `가상 기본 클래스`로 만든다.
-    - 가상 기본 클래스가 생성되면 데이터 멤버들의 순서와 `sizeof` 결과값이 변경된다.
-    - 이름이 같은 멤버(변수, 함수)에 접근할 때 범위 지정 연산자(::)를 사용하여 모호성을 제거할 수 있다.
-    - 자세한 내용은 [virtual table table]() 에 정리했다.
-      - TODO : 데이터 순서 확실히 알아볼 것
-    - 
-
-  - 참고
-    - [VTable Notes on Multiple Inheritance in GCC](https://ww2.ii.uj.edu.pl/~kapela/pn/cpp_vtable.html)
-
-### 가상 함수 (`Virtual Function`)
-  - `파생 클래스(derived class)`에서 재정의할 것이라 예상하는(`expected`)(약속하는?) 비정적 멤버 함수
-  
-  - `기본 클래스(base class)`에 참조 또는 포인터를 사용하여 파생 클래스 객체를 참조할 때, 해당 객체에 대한 가상 함수를 호출하면 파생 클래스의 함수를 실행할 수 있다.
-    - 이 때 기본 클래스의 소멸자를 가상 함수로 만들지 않으면 **파생 클래스의 소멸자가 호출되지 않는다.** 식별자의 타입이 기본 클래스라서 파생 클래스의 존재를 모르기 때문이다.
-    
-    - 물론 파생 클래스에서 정의한 **모든 멤버 변수들도 소멸되지 않는다.**
-  - **식별자 타입, 객체 타입과 관계없이** `virtual`, `override`가 아닌 함수는 **그대로 호출**, `virtual`, `override` 함수는 객체의 주소 첫번째에 저장되어 있는 **가상함수 테이블에서 주소를 찾아 호출**
-    - 객체 `derived`의 주소에서 가상함수 테이블 주소에 역참조 하는 것을 볼 수 있다.
-
-    ![](img/virtual_func_assembly.png)
-  - 함수 처리 전에 가상함수 테이블에 들어가서 주소를 가져오는 작업이 추가되기 때문에 꼭 필요한 경우가 아니면 사용하지 말자.
-
-### 가상함수 테이블
-
-코드가 저장장치에 로드될 때 갖게 되는 정보가 달라진다.
- 가상함수 또는 재정의 함수인 경우
-아래의 코드에서 foo()함수가 가상함수 또는 재정의 함수 일 때, 코드는 test 객체의 주소, 가상함수 여부, 가상함수 오프셋(상대주소) 세 가지 정보를 가지게 되는 것이다.
- 가상함수 또는 재정의 함수가 아닌 경우
-  test 객체의 주소, foo()함수의 주소
-```cpp
-test->foo();
-```
-
-### Virtual Table Table 
-
-가상함수 테이블 저장 순서는 기본 클래스 가상함수 -> 파생 클래스 가상함수 순이다.
-선언한 순서대로 함수 정의 부분 주소를 테이블에 채워넣는 형태다.
-
-파생 클래스를 상속받는 클래스에서의 가상함수 테이블 순서는 어떻게 될까??
-
-기본 클래스를 참조하는 파생 클래스 객체에서, 기본 클래스 함수를 호출하여 this 포인터를 사용하면 누가 나오나? - 아마 파생 클래스 이지 않을까? 메모리 주소가 그쪽잉게..
-vtable이 없으면 컴파일러가 해석할 때 선언된 클래스 타입을 우선한다. 하지만 함수 호출 시 사용되는 객체의 주소는 객체를 따라가게 된다.
-
-식별자의 타입은 코드 상에서의 구분일 뿐 실제 주소는 객체를 가리키고 있다.
-근데 왜 파생 클래스 객체가 가상함수가 아닌 베이스 클래스 함수를 호출했을 때 this->변수 가 성립이 안되나?
- -> 변수들은 this 주소를 기준으로 상대주소를 의미한다. 특정 메모리의 절대주소가 아님. 그래서 파생 클래스 객체에서 베이스 클래스의 함수를 호출한뒤 멤버변수를 호출하면 베이스 클래스의 멤버변수가 호출되는 것이다.
- -> 상속을 받으면 베이스 객체 변수가 추가되는 것과 같다. 모든 멤버 변수 앞에 위치한다. 그래서 초기화 시 베이스 클래스의 생성자가 먼저 출력되는 것이다.
-
-```cpp
-  CBase obj = new CDerived;
-  obj.NonVirtualFunc();       // CBase의 함수 실행
-  obj.VirtualFunc();          // CBase의 함수 실행
-  obj.OverridedVirtualFunc(); // CDerived의 함수 실행
-```
-
-상속된 클래스가 메모리에 올라가는 순서? -> 멤버 이니셜라이저 리스트를 사용하지 못하는 이유
-빈 베이스 클래스를 상속받는 빈 파생 클래스의 typeid 는 베이스 클래스이다 -> 파생 클래스를 특정할 수 있는 요인이 하나도 없기 때문이다.
-
-  - 참고
-    - [가상함수와 상속](https://modoocode.com/211)
