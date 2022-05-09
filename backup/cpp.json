@@ -2,6 +2,15 @@
 // 기본 설정: 사용자 코드 조각 구성 -> cpp.json
 // 서버에서 제공하는 코드 조각을 사용하고 싶을 때 : 설정 -> snippet 검색 C_Cpp: Suggest Snippets 체크
 {
+	"operator": {
+		"prefix": "operator",
+		"body": [
+			"${3:bool} operator ${1} (${2:const type& value}) const {",
+			"\t$0",
+			"}"
+		],
+		"description": "Code snippet for operators "
+	},
 	"#include": {
 		"prefix": "include",
 		"body": [

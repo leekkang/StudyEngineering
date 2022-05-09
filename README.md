@@ -1,3 +1,4 @@
+- [Language Study](#language-study)
 - [VSCode Setting](#vscode-setting)
 - [Visual Studio Setting](#visual-studio-setting)
 - [Codility](#codility)
@@ -30,6 +31,14 @@
 ## StudyEngineering
 
   - This repository is for personal study.
+
+
+---
+# Language Study
+
+  - ## [CPP Study](CPP_Study/CPP_Study.md)
+
+  - API Study
 
 ---
 # VSCode Setting
@@ -103,11 +112,9 @@
   - 개략적으로 프로그램의 러닝타임을 표기하는 방법 (정확한 시간 측정은 노동-집약적(labour-intensive)이다.)
   - [Big-O notation]을 사용한다.
   	- 점근 표기법(Asymptotic notation), 함수의 증가 양상을 다른 함수와의 비교로 사용하는 방법.
-  
 $$
 \left | f(x) \right | = O(g(x)) \quad as \; x  \rightarrow \infty
 $$
-
   - 컴퓨팅 파워와 프로그램 실행 시간, 반복 횟수로 대략적인 복잡도를 유추할 수 있다.
   	- 파워 / 시간 이 클 수록, 반복 횟수가 높을 수록 복잡도가 낮다.
   - `공간 복잡도(Space complexity)` 또한 시간 복잡도와 표기법이 같다.
