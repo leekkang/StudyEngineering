@@ -1,4 +1,5 @@
 - [용어 정리](#용어-정리)
+- [객체 지향 프로그래밍](#객체-지향-프로그래밍)
 - [Enum, Enum class 차이](#enum-enum-class-차이)
 - [const pointer](#const-pointer)
 - [동적할당](#동적할당)
@@ -38,6 +39,7 @@
 - [함수](#함수)
   - [멤버 함수와 가상 함수 예제](#멤버-함수와-가상-함수-예제)
   - [함수 포인터](#함수-포인터)
+- [템플릿](#템플릿)
 
 ---
 
@@ -54,6 +56,11 @@
 # 용어 정리
 
   - 이름 : 무언가를 지칭하는 단어. 가장 큰 개념
+
+  - 간단한 포함관계 
+    - 실체가 없는 것 : 이름 > 식별자 > 키워드
+  
+    - 실체가 있는 것 : 엔터티 > 객체, 타입
 
   - ### [`identifier` (식별자)](https://docs.microsoft.com/en-us/cpp/cpp/identifiers-cpp?view=msvc-170)
     - 이름들을 지칭하는 일련의 문자열
@@ -104,9 +111,15 @@
     - 선언(`declaration`)
       - 엔터티의 타입과 기타 다른 특성에 대한 정보를 가지고 엔터티에 고유한 이름을 지정하는 것
       - 정의하기 전에 사용하기 위해 선언하는 것을 `전방 선언(forward declaration)` 이라고 한다.
+      - 전방 선언은 여러번 가능하며, 컴파일 시점에서 구현부 확인이 되지 않으면 에러가 발생한다. (`.cpp` 파일에 `#include` 전처리기를 통한 헤더 코드의 복사가 이루어져야 한다.)
     - 정의(`definition`)
       - 엔터티가 프로그램에서 사용될 때 컴파일러가 기계어 코드를 생성하는데 필요한 모든 정보를 제공하는 것
       - 클래스 작성은 선언과 동시에 정의를 하는 것과 같다. (멤버함수는 선언과 정의를 분리할 수 있다)
+
+  - ### [Built-in(fundamental) Types](https://docs.microsoft.com/en-us/cpp/cpp/fundamental-types-cpp?view=msvc-170)
+    - `C++` 언어 표준에서 지정되어 컴파일러에서 기본 제공되는 타입
+  
+    - 정수형(`integral`), 부동소수점, `void` 세 가지 메인 카테고리로 나뉜다.
 
   - ### [POD(Plain Old Data) type](https://en.cppreference.com/w/cpp/named_req/PODType)
     - C언어와 호환이 가능한 타입을 의미한다.
@@ -114,11 +127,6 @@
     - `C++20`부터 좀 더 정교한 타입 요구사항들로 대체되었다.(`Trivial Type` 등등)
   - ### [cv type qualifiers](https://en.cppreference.com/w/cpp/language/cv)
     - 상수(`const`), 휘발성(`volatile`) 한정자를 의미한다.
-
-  - 간단한 포함관계 
-    - 실체가 없는 것 : 이름 > 식별자 > 키워드
-  
-    - 실체가 있는 것 : 엔터티 > 객체, 타입
   - 참고 
     - [Basic Concept of C++ Language](https://en.cppreference.com/w/cpp/language/basic_concepts) 
     - [identifier vs keyword](https://stackoverflow.com/questions/7279227/c-what-is-the-difference-between-identifier-keyword-name-and-entity)
@@ -126,7 +134,18 @@
     - [difference between object and instance](https://stackoverflow.com/questions/22206044/difference-between-object-and-instance-c)
     - [Class and Objects](https://isocpp.org/wiki/faq/classes-and-objects#overview-object)
     - [is_pod Class](https://docs.microsoft.com/en-us/cpp/standard-library/is-pod-class?view=msvc-170)
+    - [Data Type Ranges](https://docs.microsoft.com/en-us/cpp/cpp/data-type-ranges?view=msvc-170)
 
+---
+# 객체 지향 프로그래밍
+
+  - TODO
+  - 추상화 : 
+  - 캡슐화 : 부품이 너무 많아. 하나로 묶어야겠어. 하지만 어떻게 만드는지는 안보여줄거야.(모양은 대충 알수있지)
+    - `private` 멤버함수의 함수 포인터 접근은 캡슐화에 위배된다.
+  - 은닉화(캡슐화보다 구체적인 개념) : 넌 이 로직의 결과값만 알 수 있어. 필요한 부분만 주니 얼마나 좋아?
+  - 상속성 : 니 기능 나도 좀 쓰자
+  - 다형성 : 같은 종류이지만 하는 일이 달라
 
 ---
 # Enum, Enum class 차이
@@ -401,7 +420,7 @@
   - **은닉화** : 클래스에서 제공하는 멤버를 외부에 공개하는 수준을 정하는 것을 말한다.
   - `friend class CTestClass` : `CTestClass` 에게 접근허가를 내어준다. `CTestClass` 는 이 클래스의 `private` 데이터에 `public` 처럼 접근이 가능하다.
     - 현재 클래스에서는 `CTestClass`의 `private` 데이터에 접근할 수 없다. 단방향임.
-    - 전방 선언과 같이 `CTestClass`를 몰라도 된다.
+    - 전방 선언의 역할도 겸한다. `CTestClass`를 몰라도 된다.
 
 ## 생성자와 소멸자
 
@@ -418,6 +437,9 @@
     - 접근 지정자에 따라 달라질 수 있다고 하는데(C++23까지만), MSVC컴파일러는 코드순으로 초기화한다.
     - [스칼라 타입](https://en.cppreference.com/w/cpp/types/is_scalar) 변수들은 초기화 구문이 없으면 정해지지 않은 값들이 들어간다.(`default initialization`)
     - [익명 유니온(anonymous union)과 변형 멤버(variant member)](https://en.cppreference.com/w/cpp/language/union#Union-like_class)는 `member initializer`가 없기 때문에 초기화가 안된다.
+  - **다른 생성자를 선언하지 않는 경우에** 컴파일러는 인수를 사용하지 않는 `기본 생성자`를 생성한다.
+    - 이 때, 멤버 변수들은 `Default Initialization` 가 아닌 `Zero Initialization`이 진행된다.
+    - 그렇지만 초기화는 꼭 해줘야 한다. MSVC만 지원해주는 것일수도 있다.
   - 간단한 예제를 통해 생성자와 소멸자, 초기화의 순서를 알아보자.
     - `64비트 환경`이며, 포인터 연산 기준은 `1바이트` 이다.
     - `qword` == `8byte`, `dword` == `4byte`, `byte` == `1byte`
@@ -599,6 +621,7 @@
   
   - ### Aggregate Initialization (집합체 초기화)
     - 특수한 상황에서 사용하는 `목록 초기화`의 일종. 배열아니면 거의 볼 일이 없다.
+    - `Aggregate` 는 `생성자`를 정의하지 않고, `접근 지정자` 를 사용하지 않으면서, 상속 관계와 가상 함수가 없는 배열 또는 클래스를 의미한다. (C++03 8.5.1)
 
     - [예제](https://docs.microsoft.com/en-us/cpp/cpp/initializers?view=msvc-170#agginit)
   
@@ -613,6 +636,7 @@
 
   - 참고
     - [cppreference](https://en.cppreference.com/w/cpp/language/initialization)
+    - [What are Aggregates and PODs](https://stackoverflow.com/questions/4178175/what-are-aggregates-and-pods-and-how-why-are-they-special)
 
 ### Non-Static Data Member Initialization (NSDMI, 비정적 데이터 멤버 초기화)
 
@@ -678,17 +702,54 @@ auto list = {"a"s, "b"s, "c"s}; // initializer_list<std::string>
 
 ## Member Access Control (접근 지정자)
 
-  - TODO
-  - https://docs.microsoft.com/en-us/cpp/cpp/member-access-control-cpp?view=msvc-170
-  - https://en.cppreference.com/w/cpp/language/access
+  - 클래스, 구조체, 공용체(유니온) 에서 멤버들의 접근성을 정의하는 키워드이다.
+  
+  - 상속 시, 베이스 클래스 접근 지정자에 따라 접근성이 달라진다. 
+    - 접근성이 낮은(`private`) 쪽으로 덮어쓴다.
+   
+    - 예를 들면, 베이스 클래스 접근 지정자가 `protected`이면, 상속받은 `public` 멤버들은 전부 `protected`로 **접근 지정자가 변경**된다.
+    - **아무것도 안적으면 기본 멤버 접근 지정자를 사용한다. (클래스는 `private`로, 구조체는 `public`으로 선언된다.**)
+    - 웬만해서는 `public` 지정자를 사용한다.
+  - ### `public`
+    - 어느 함수에서나 접근이 가능하다.
+  - ### `private`
+    - 클래스 멤버 함수 또는 친구 클래스의 멤버 함수에서 접근이 가능하다.
+  - ### `protected`
+    - 클래스 멤버 함수 또는 친구 클래스의 멤버 함수, 파생 클래스에서 접근이 가능하다.
+  - `private` 멤버는 다른 멤버들과 `friend`만 접근할 수 있지만, 클래스를 볼 수 있는 모든 코드가 볼 수 있기에, 컴파일 과정의 함수 오버로드 해소 과정이나 모호한 함수 처리 등의 호출 해소 과정에는 동일하게 참여한다.
+    - 컴파일러가 함수 호출을 처리할 때, 아래 세 가지 조건을 순서대로 거친다.
+      - 1. `Name Lookup (이름 조회)`
+      - 2. `오버로드 해소`
+      - 3. `접근성 점검`
+  - 컴파일 시 해당 키워드를 처리하는 것이기 때문에 로우 레벨에서 동작하는 모든 기능들은 영향을 받지 않는다. (함수 포인터를 통한 함수 호출 등)
+  - `static` 멤버들은 접근 지정자의 영향을 받지 않는다. 
+    - 단, 포인터, 참조, 객체를 통한 접근은 지정자의 영향을 받기 때문에 전역으로 접근해야 한다. (`::CBase::Func()`)
+    - 포인터, 참조, 객체를 통한 접근은 지정자에 영향을 받는 형식으로 형변환이 필요하기 때문이다.
+  - 파생 클래스의 가상 함수가 `private` 이면, `파생 클래스 객체를 참조`하는 베이스 클래스 포인터는 가상 함수에 접근이 블가능하다. (C2248 에러)
+  - 참고
+    - [Member Access Control](https://docs.microsoft.com/en-us/cpp/cpp/member-access-control-cpp?view=msvc-170)
+    - [Access specifiers](https://en.cppreference.com/w/cpp/language/access)
+    - [private는 얼마나 비공개적인가?](https://wikidocs.net/469), [다른 사이트](http://egloos.zum.com/sweeper/v/2998794)
 
 ## 헤더 파일
 
+  - 변수, 함수, 클래스 등과 같은 프로그램 요소의 이름을 사용하기 위해 선언해놓는 파일
+ 
+  - 프로그램 컴파일 시 각 `.cpp` 파일들은 컴파일 단위로 독립적으로 컴파일된다.
+  - 컴파일러는 다른 컴파일 단위에서 선언된 이름을 알지 못하기 때문에 각 `.cpp` 파일에서 사용하는 클래스, 함수, 전역 변수에 대한 선언을 제공해야 한다.
+  - 
   - 순환 참조 : 서로의 헤더 파일을 `include` 하는 상태. 무조건 피해야 한다.
   - 이것을 피하기 위해 `전방 선언` 을 한다.
-  - TODO
+  - 전방 선언 시 구현부에서는 해당 엔터티가 정의된 헤더를 참조해야 한다.
+  - `#pragma once` 지시문은 `#ifndef, #define, #endif` 지시문(C style)을 사용한 것과 동일하다.(MSVC는 이렇게 동작함. 다른 컴파일러는 모름.)
 
+질문 : 링커가 obj 파일들을 exe 파일로 만들 때 각 obj 파일마다 중복되는 헤더들도 다같이 복사되는가? 제거할 수있는 방법은 모든 코드를 한 파일에 쓰는방법 밖에 없는가?
+예전에 카트라이더인지 버블파이터인지가 코드들은 하나로 묶어 빌드해서 성능을 올렸다는 기사를 본 것 같다.
 
+  - 참고
+    - [What is external linkage and internal linkage?](https://stackoverflow.com/questions/1358400/what-is-external-linkage-and-internal-linkage)
+    - [Struct with a value in a header file causing "duplicate symbol" linker error](https://stackoverflow.com/questions/2206853/struct-with-a-value-in-a-header-file-causing-duplicate-symbol-linker-error)
+    - [컴파일, 링킹, 헤더파일](https://code4human.tistory.com/110)
 
 ---
 # [상속](https://docs.microsoft.com/en-us/cpp/cpp/inheritance-cpp?view=msvc-170)과 [가상 함수](https://docs.microsoft.com/en-us/cpp/cpp/virtual-functions?view=msvc-170)
@@ -697,8 +758,8 @@ auto list = {"a"s, "b"s, "c"s}; // initializer_list<std::string>
 
   - 기존 클래스에서 파생된 새 클래스가 기존 클래스의 특성을 가지는 메커니즘
   
-  - 데이터 상으로는 `파생 클래스`의 멤버 변수에 `기본 클래스`의 객체를 추가한 것과 동일하다.
-    - 일반 단일 상속의 경우, 파생 클래스 멤버 변수의 앞에 위치한다. 낮은 주소를 가진다.
+  - 데이터 상으로는 `파생 클래스`의 멤버 데이터 목록에 `기본 클래스`의 객체를 추가한 것과 동일하다.
+    - 일반 단일 상속의 경우, 파생 클래스 멤버 변수들의 앞에 위치한다. 낮은 주소를 가진다.
   
     - 초기화 순서 또한 기본 클래스의 우선순위가 높다.
   - `부모-자식 관계`에서 부모 클래스는 자식 클래스의 `direct base class` 가 되고, `부모-자식-손자 관계`에서 부모 클래스는 손자 클래스의 `indirect base class` 가 된다.
@@ -716,6 +777,8 @@ auto list = {"a"s, "b"s, "c"s}; // initializer_list<std::string>
 
   - `빈 베이스 클래스`를 상속받는 `빈 파생 클래스`의 `typeid` 는 베이스 클래스이다.
     - 파생 클래스를 특정할 수 있는 요인이 하나도 없기 때문이다.
+  - [접근 지정자](#member-access-control-접근-지정자)를 사용하여 상속 시 멤버 변수, 함수에 권한을 지정할 수 있다. 
+  - `final` 키워드를 사용하여 이후 현재 클래스 또는 가상 함수를 상속받지 못하도록 제한할 수 있다.
 
 
 ## 가상 함수 (`Virtual Function`)
@@ -732,6 +795,7 @@ auto list = {"a"s, "b"s, "c"s}; // initializer_list<std::string>
   - **참조 또는 포인터 타입의 객체**에서 가상 함수는 **가상함수 테이블에서 주소를 찾아** 함수를 호출한다.
   - `주소 타입이 아닌 객체`에서의 함수는 가상함수 테이블을 사용하지 않는다.
   - 함수 처리 전에 가상함수 테이블에 들어가서 주소를 가져오는 작업이 추가되기 때문에 꼭 필요한 경우가 아니면 사용하지 말자.
+  - `override` 키워드를 사용하여 예기치 못한 에러를 방지할 수 있다. (`const` 등을 빼먹어서 다른 함수로 만든다든지..)
 ```cpp
   CDerived derived;
   CDerived& refDerived = derived;
@@ -758,8 +822,9 @@ auto list = {"a"s, "b"s, "c"s}; // initializer_list<std::string>
 
 ## Abstract class, Pure Virtual Function (추상클래스, 순수 가상 함수)
 
-  - 함수 선언 시 `= 0;` 을 붙여 구현부가 없는 가상 함수를 `순수 가상 함수`라고 한다.
+  - 함수 이름 뒤에 `Pure Specifier(순수 지정자)`(`= 0`) 를 붙여 선언한 가상 함수를 `순수 가상 함수`라고 한다.
 
+    - 구현부분이 없어도 된다. 보통 인터페이스 용도로 사용하기 때문에 구현부에 어떤 용도로 사용하면 되는지 적어놓는다.
   - 파생 클래스에서 반드시 재정의를 해야 한다는 표시이다.
   - 순수 가상 함수를 1개 이상 가지고 있는 클래스를 `추상 클래스`라고 한다.
   - 추상 클래스는 객체를 생성할 수 없다.
@@ -896,7 +961,7 @@ auto list = {"a"s, "b"s, "c"s}; // initializer_list<std::string>
     - `static` 객체는 초기화와 상관없이 `bss` 영역에 올라간다. 생성자를 통한 초기화는 해당 구문이 처음 수행되는 시점에 이루어진다.
       - `bss` 영역은 `dynamic initializer`를 진행하는 곳이다. (컴파일 시 값을 알 수 없는 경우 나중에 초기화를 해주는 것)
 
-      - 이를 함수화하여 호출을하면 생성자의 호출 시점을 조정하는게 가능해진다.
+      - 이를 함수화하여 호출을 하면 생성자의 호출 시점을 조정하는게 가능해진다.
       - `singleton` 클래스를 생성할 때 주의해야 한다.
   - `static` 멤버 변수는 모든 객체가 공유해야 하기 때문에 프로그램 전체 영역에서 메모리 유지가 되어야 한다. **반드시 전역 범위에서 정의 및 초기화를 수행해야 한다.**
     - 함수 내부에서는 선언만 하고 초기화를 cpp파일에서 하자.
@@ -1191,6 +1256,10 @@ int main() {
       - 함수 이름의 표현법을 다양한 문법에서 사용하기 때문에 구분을 명확히 하기 위해 비표준 처리
     - `&객체.함수명` 을 대입할 경우 `바인딩 오류`가 발생한다. (윗문단 코드의 주석에 설명있음)
     - 포인터 사용 시 `포인터-멤버 연산자 (.*, ->*)` 를 이용하여 객체와 연결한다.
+  - 포인터 변수에 바인딩된 함수의 접근 제한자는 무시된다. `private` 멤버 함수도 맘대로 접근할 수 있다.
+    - **주소를 바로 호출**하는 것이기 때문에 로우 레벨에서 기능이 존재하지 않는 접근 지정자는 적용되지 않는다.
+    - 물론 함수 포인터 초기화 시에는 접근 지정자를 따른다.
+    - 캡슐화를 어기는 프로그래밍이지만 콜백 함수로 많이 쓴다.
     
 ```cpp
   // typedef void(CTest::*CTestFuncPointer)();
@@ -1203,3 +1272,10 @@ int main() {
   (test.*pMemFunc)();
   (pTest->*pMemFunc)();
 ```
+
+
+---
+# 템플릿
+
+  - TODO
+  - [바튼-넥만 트릭](https://wikidocs.net/481)
