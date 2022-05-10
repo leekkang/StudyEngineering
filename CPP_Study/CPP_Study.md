@@ -4,19 +4,25 @@
 - [const pointer](#const-pointer)
 - [동적할당](#동적할당)
 - [레퍼런스](#레퍼런스)
-- [구조체](#구조체)
-- [메모리](#메모리)
-  - [프로그램 실행 순서](#프로그램-실행-순서)
 - [재귀함수](#재귀함수)
 - [문자열](#문자열)
 - [파일 입출력](#파일-입출력)
+- [메모리](#메모리)
+  - [프로그램 실행 순서](#프로그램-실행-순서)
+  - [가상 메모리(virtual memory)](#가상-메모리virtual-memory)
+  - [프로세스](#프로세스)
+- [프로그램 실행](#프로그램-실행)
+  - [컴파일러](#컴파일러)
+  - [헤더 파일](#헤더-파일)
+  - [링커(Linker, Link Editor))](#링커linker-link-editor)
+  - [로더(Loader))](#로더loader)
+- [구조체](#구조체)
 - [클래스](#클래스)
   - [생성자와 소멸자](#생성자와-소멸자)
   - [Initialization](#initialization)
     - [Non-Static Data Member Initialization (NSDMI, 비정적 데이터 멤버 초기화)](#non-static-data-member-initialization-nsdmi-비정적-데이터-멤버-초기화)
   - [Uniform Initailizer](#uniform-initailizer)
   - [Member Access Control (접근 지정자)](#member-access-control-접근-지정자)
-  - [헤더 파일](#헤더-파일)
 - [상속과 [가상 함수](https://docs.microsoft.com/en-us/cpp/cpp/virtual-functions?view=msvc-170)](#상속과-가상-함수)
   - [상속 (`Inheritance`)](#상속-inheritance)
   - [가상 함수 (`Virtual Function`)](#가상-함수-virtual-function)
@@ -39,6 +45,7 @@
 - [함수](#함수)
   - [멤버 함수와 가상 함수 예제](#멤버-함수와-가상-함수-예제)
   - [함수 포인터](#함수-포인터)
+  - [함수 바인딩](#함수-바인딩)
 - [템플릿](#템플릿)
 
 ---
@@ -51,6 +58,10 @@
   - 생성자 디폴트 매개변수는 선언, 정의부가 구분되었을 경우 선언시에 해준다. 정의할 때는 디폴트 매개변수를 적어주지 않아도 된다.
     - 생성자 제한으로 특정 객체에서만 생성가능하게 제한하는 방법?
   - 접근제한자는 컴파일 타임에만 고려되나? 코드작성을 위해서 만들어진건가?
+
+  - 공식 문서 참고
+    - [cppreference](https://en.cppreference.com/w/cpp)
+    - [Microsoft C++ Language documentation](https://docs.microsoft.com/en-us/cpp/cpp/?view=msvc-170)
 
 ---
 # 용어 정리
@@ -127,6 +138,13 @@
     - `C++20`부터 좀 더 정교한 타입 요구사항들로 대체되었다.(`Trivial Type` 등등)
   - ### [cv type qualifiers](https://en.cppreference.com/w/cpp/language/cv)
     - 상수(`const`), 휘발성(`volatile`) 한정자를 의미한다.
+
+  - ### [Translation(Compilation) Unit](https://en.wikipedia.org/wiki/Translation_unit_(programming))
+    - `C++` 에서 컴파일의 기본 단위(`basic unit`) 이다.
+  
+    - `C preprocessor`에 의해 전처리가 끝난 한 개의 `소스 파일`의 컨텐츠들로만 이루어져 있다.
+      - 전처리가 끝난 후이기 때문에 직, 간접적으로 포함된(`#include`같은) 헤더 파일의 코드도 포함되어 있다.
+    - 한 개의 유닛은 `object file`, `library`, `exe` 파일로 컴파일 할 수 있다.
   - 참고 
     - [Basic Concept of C++ Language](https://en.cppreference.com/w/cpp/language/basic_concepts) 
     - [identifier vs keyword](https://stackoverflow.com/questions/7279227/c-what-is-the-difference-between-identifier-keyword-name-and-entity)
@@ -135,6 +153,8 @@
     - [Class and Objects](https://isocpp.org/wiki/faq/classes-and-objects#overview-object)
     - [is_pod Class](https://docs.microsoft.com/en-us/cpp/standard-library/is-pod-class?view=msvc-170)
     - [Data Type Ranges](https://docs.microsoft.com/en-us/cpp/cpp/data-type-ranges?view=msvc-170)
+    - [What is a "translation unit" in C++](https://stackoverflow.com/questions/1106149/what-is-a-translation-unit-in-c)
+
 
 ---
 # 객체 지향 프로그래밍
@@ -146,6 +166,7 @@
   - 은닉화(캡슐화보다 구체적인 개념) : 넌 이 로직의 결과값만 알 수 있어. 필요한 부분만 주니 얼마나 좋아?
   - 상속성 : 니 기능 나도 좀 쓰자
   - 다형성 : 같은 종류이지만 하는 일이 달라
+
 
 ---
 # Enum, Enum class 차이
@@ -211,96 +232,6 @@
     - 컴파일러가 구현 중에 필요할 경우 알아서 공간을 만든다.
     - 메모리가 할당될 경우 포인터와 같은 크기이다.
     - `sizeof()`연산자 사용 불가
-
-
----
-# 구조체
-
-  - 바이트 패딩(`byte padding`)이라는 기법을 사용한다. (컴파일러마다 있을수도, 없을수도 있지만 MSVC에는 있다.)
-    - 클래스(구조체)에 바이트를 추가해 CPU 접근에 부하를 덜어주는 기법
-      - 같은 변수에 두 번 접근하는 것을 방지해준다.
- 
-    - `프로젝트 속성 -> 코드 생성 -> 구조체 멤버 맞춤` 옵션이 `기본값`으로 설정되어 있을 경우 구조체 내에서 용량이 가장 큰 변수의 크기를 기본값으로 잡아서 메모리를 할당하게 된다.
-    - `스칼라 타입` 변수만 고려한다. 구조체, 클래스 타입 변수는 고려대상이 아님.
-    - 왜 `1byte`로 설정하지 않는가? -> 컴퓨터 입장에서는 `4의 배수` 또는 `2^n` 단위로 메모리를 할당하는 것이 더 효율적이다.
- 
-  - 멤버가 없더라도 최소바이트인 1바이트가 할당된다.
-    - 변수를 정의하게 되면 메모리에 공간이 잡혀야 하므로 최소 바이트 수인 1바이트 공간을 차지하게 하여 변수를 잡아주는 것이다. (객체를 구분하기 위해)
-  - 이제와서는 클래스와 구조체의 차이는 접근 제한자의 적용유무 밖에 없다.
-    - 구조체 내에서도 함수를 선언할 수 있다.
-  - 참고
-    - [바이트 패딩](https://supercoding.tistory.com/37)
-    - [align](https://docs.microsoft.com/ko-kr/previous-versions/visualstudio/visual-studio-2010/83ythb65(v=vs.100)?redirectedfrom=MSDN)
-
-```cpp
-  // 이 구조체의 크기는 24바이트이다. -> |A B       |    Number    | intNum C   | -> 8바이트가 기본단위가 되었다.
-  struct Test {
-    char	A;
-    char	B;
-    double	doubleNum;
-    int		intNum;
-    char	C;
-  };
-
-  // 이 구조체의 크기는 1바이트이다.
-  struct Test1 {
-  };
-```
-
-
----
-# 메모리
-
-  - cpp의 메모리 영역은 크게 4가지로 나뉜다 : 스택, 데이터, 힙, 코드
-
-  - **텍스트 or 코드** : 유저가 작성한 코드가 저장되는 영역
-    - 
-    - 컴파일러가 작성한 코드를 바이너리코드(0, 1 로 구성된 코드)로 만든 뒤 실행파일을 생성한다.
-  
-    - 실행파일을 더블클릭해서 실행을 하게 되면 바이너리 코드가 메모리에 올라가는데(Load) 이 때 운영체제가 맨 처음 접근하는 곳이 코드 영역이다.
-    - 읽기 전용이다.
-  - **데이터** : `전역변수`, `정적(static)변수`들의 메모리가 할당되는 영역
-    - 
-    - `전역변수` : 함수의 외부에 선언된 변수
-  
-    - `rodata`, `data`, `bss` 로 영역이 나뉜다.
-      - `rodata` : 상수 키워드(const)로 선언되는 영역, 시스템에 사용된 각종 문자열들을 포함. 읽기 전용이지만 데이터 영역에 존재한다.
-      - `data` : 읽기, 쓰기가 가능한, 초기화된 전역변수 또는 정적변수를 포함
-      - `bss(block stated symbol)` : 초기화되지 않았거나 0으로 초기화하는 전역변수 또는 정적변수를 포함
-    - 프로그램이 종료될 때 메모리에서 정리가 된다.
-  - **힙** : 동적할당된 메모리가 할당되는 영역
-    - 
-    - 런타임 시 크기가 정해진다.
- 
-    - 선입선출(FIFO) 방식으로 가장 먼저 들어온 데이터가 가장 먼저 나간다.
-    - 메모리의 낮은 주소에서 높은 주소로 할당된다.
-    - 힙 영역이 스택 영역을 침범하는 경우를 `힙 오버플로우`라고 부른다.
-  - **스택** : `매개변수` 혹은 `지역변수`들의 메모리가 할당되는 영역
-    - 
-    - `매개변수` : 함수의 인자
-    
-    - `지역변수` : 함수의 내부에서 선언된 변수
-    - 컴파일 시 크기가 정해진다.
-    - 후입선출(LIFO) 방식으로 가장 늦게 들어온 데이터가 가장 먼저 나간다.
-    - 메모리의 높은 주소에서 낮은 주소로 할당된다.
-    - 왜 스택이 쌓일수록 메모리 주소값이 낮아지도록 설계했나?
-      - 스택메모리가 커널 영역의 반대방향으로 쌓이기 때문에 커널의 영역을 침범하지 않는다.
-
-      - 힙 영역과 공유 라이브러리 영역을 가운데 두고 마주보는 형태이기 때문에 메모리를 최대한 활용할 수 있다.
-    - 스택 영역이 힙 영역을 침범하는 경우를 `스택 오버플로우`라고 부른다.
-
-
-![32bit 운영체제 메모리 구조](img/memory.jpg)
-
-  - 참고
-    - [SPARC Assembler Memory Map](https://shinluckyarchive.tistory.com/159)
-    - [데이터 영역과 .bss 영역의 차이](https://kldp.org/node/122255)
-    - [정적 지역 변수 원리](https://dataonair.or.kr/db-tech-reference/d-lounge/technical-data/?mod=document&uid=235959)
-
-## 프로그램 실행 순서
-
-![](img/execution.png)
-
 
 
 ---
@@ -405,6 +336,185 @@
     }
     fclose(File);
   }
+```
+
+
+---
+# 메모리
+
+  - 사전적 의미 : 주기억장치, 1차 기억 장치와 동의어다.
+  - cpp의 메모리 영역은 크게 4가지로 나뉜다 : 스택, 데이터, 힙, 코드
+
+  - **텍스트 or 코드** : 유저가 작성한 코드가 저장되는 영역
+    - 
+    - 컴파일러가 작성한 코드를 바이너리코드(0, 1 로 구성된 코드)로 만든 뒤 실행파일을 생성한다.
+  
+    - 실행파일을 더블클릭해서 실행을 하게 되면 바이너리 코드가 메모리에 올라가는데(Load) 이 때 운영체제가 맨 처음 접근하는 곳이 코드 영역이다.
+    - 읽기 전용이다.
+  - **데이터** : `전역변수`, `정적(static)변수`들의 메모리가 할당되는 영역
+    - 
+    - `전역변수` : 함수의 외부에 선언된 변수
+  
+    - `rodata`, `data`, `bss` 로 영역이 나뉜다.
+      - `rodata` : 상수 키워드(const)로 선언되는 영역, 시스템에 사용된 각종 문자열들을 포함. 읽기 전용이지만 데이터 영역에 존재한다.
+      - `data` : 읽기, 쓰기가 가능한, 초기화된 전역변수 또는 정적변수를 포함
+      - `bss(block stated symbol)` : 초기화되지 않았거나 0으로 초기화하는 전역변수 또는 정적변수를 포함
+    - 프로그램이 종료될 때 메모리에서 정리가 된다.
+  - **힙** : 동적할당된 메모리가 할당되는 영역
+    - 
+    - 런타임 시 크기가 정해진다.
+ 
+    - 선입선출(FIFO) 방식으로 가장 먼저 들어온 데이터가 가장 먼저 나간다.
+    - 메모리의 낮은 주소에서 높은 주소로 할당된다.
+    - 힙 영역이 스택 영역을 침범하는 경우를 `힙 오버플로우`라고 부른다.
+  - **스택** : `매개변수` 혹은 `지역변수`들의 메모리가 할당되는 영역
+    - 
+    - `매개변수` : 함수의 인자
+    
+    - `지역변수` : 함수의 내부에서 선언된 변수
+    - 컴파일 시 크기가 정해진다.
+    - 후입선출(LIFO) 방식으로 가장 늦게 들어온 데이터가 가장 먼저 나간다.
+    - 메모리의 높은 주소에서 낮은 주소로 할당된다.
+    - 왜 스택이 쌓일수록 메모리 주소값이 낮아지도록 설계했나?
+      - 스택메모리가 커널 영역의 반대방향으로 쌓이기 때문에 커널의 영역을 침범하지 않는다.
+
+      - 힙 영역과 공유 라이브러리 영역을 가운데 두고 마주보는 형태이기 때문에 메모리를 최대한 활용할 수 있다.
+    - 스택 영역이 힙 영역을 침범하는 경우를 `스택 오버플로우`라고 부른다.
+
+
+![32bit 운영체제 메모리 구조](img/memory.jpg)
+
+  - 참고
+    - [SPARC Assembler Memory Map](https://shinluckyarchive.tistory.com/159)
+    - [데이터 영역과 .bss 영역의 차이](https://kldp.org/node/122255)
+    - [정적 지역 변수 원리](https://dataonair.or.kr/db-tech-reference/d-lounge/technical-data/?mod=document&uid=235959)
+
+
+## 프로그램 실행 순서
+
+![](img/execution.png)
+
+
+## [가상 메모리(virtual memory)]()
+
+  - TODO
+
+
+## 프로세스
+
+  - TODO 
+  - https://www.qaupot.com/posts/d925b3d8f85a4857887b905ce22fdbce
+
+
+
+---
+# 프로그램 실행
+
+## [컴파일러](https://en.wikipedia.org/wiki/Compiler)
+
+  - 특정 프로그래밍 언어로 쓰여 있는 문서를 다른 프로그래밍 언어로 옮기는 언어 번역 프로그램
+ 
+  - 좁은 의미로는 고수준 언어로 쓰인 소스 코드(원시 코드)를 저수준 언어(어셈블리어, 기계어)로 번역하는 프로그램이다.
+  - 원래의 문서를 `소스 코드(원시 코드), 출력된 문서를 목적 코드라고 부른다.
+  - [인터프리터](https://ko.wikipedia.org/wiki/%EC%9D%B8%ED%84%B0%ED%94%84%EB%A6%AC%ED%84%B0)와는 구분되지만 최근에는 `JIT 컴파일` 등의 기술로 실시간 컴파일을 수행하기 때문에 기술적 구분은 사라지는 추세다.
+  - `LLVM(Low Level Virtual Machine)`은 컴파일러의 기반구조이다. (TODO 자세히 알아볼 필요가 있다.)
+  - 컴파일 과정은 
+  - 참고
+    - [Compile 과정](https://www.qaupot.com/posts/b91a4268bce74d4c90378059fe0aca3a)
+    - [LLVM](https://ko.wikipedia.org/wiki/LLVM)
+
+
+## [헤더 파일](https://docs.microsoft.com/en-us/cpp/cpp/header-files-cpp?view=msvc-170)
+
+  - 변수, 함수, 클래스 등과 같은 프로그램 요소의 이름을 사용하기 위해 선언해놓는 파일
+    - 프로그램 컴파일 시 각 `.cpp` 파일들은 컴파일 단위(`translation unit`)로 독립적으로 컴파일된다.
+    
+    - 컴파일러는 다른 컴파일 단위에서 선언된 이름을 알지 못하기 때문에 각 `.cpp` 파일에서 사용하는 클래스, 함수, 전역 변수에 대한 선언을 제공해야 한다.
+    - 때문에 해당하는 선언들을 한데 모아 `헤더`라는 하나의 파일로 만든 뒤 `#include` 전처리기를 통해 한번에 복사 붙여넣기 하는 방법을 선택했다.
+ 
+  - `순환 참조` : 서로의 헤더 파일을 `include` 하는 상태. 무조건 피해야 한다.
+  - 이것을 피하기 위해 `전방 선언` 을 한다.
+  - `중복 참조` : 헤더 파일이 여러 번 포함되어 같은 이름의 엔터티들이 여러번 정의 되는 상태.
+  - 이것을 피하기 위해 `헤더 가드(Header Guard)`라는 전처리기를 사용한다.
+    - `#ifndef __파일이름_H, #define __파일이름_H, #endif` 사이에 헤더 코드를 작성
+
+    - `#pragma once` 전처리기는 MSVC나 몇몇 다른 컴파일러에서 `#ifndef, #define, #endif` 전처리기를 사용한 것과 동일하게 동작한다.
+  - 전방 선언 시 구현부에서는 해당 엔터티가 정의된 헤더를 참조해야 한다.
+  - `Name Mangling`
+    - 컴파일러가 엔터티 구분을 위해 임의로 함수나 변수의 이름을 변경하는 것
+   
+    - 함수 오버로딩의 동작을 위해 필요한 기능이며, 컴파일러마다 다른 mangling 규칙을 가지고 있다.
+    - C와 C++은 mangling 규칙이 다르다. C는 함수 오버로딩 기능을 제공하지 않아서 한 바이너리 안에 하나의 심볼만이 존재하기 때문이다.
+    - `.c` 파일과 `.cpp` 파일을 동시에 컴파일하면 둘의 `Naming Mangling` 이 다르기 때문에 링크 에러(LNK2019)가 발생한다.
+    - `extern "C"` 지시어를 사용하면 C++로 짜여진 코드를 C와 호환되게 만들 수 있다. (C의 Mangling 규칙을 따라가며, `POD` 타입이어야 한다) 
+  - 
+  - 참고
+    - [컴파일, 링킹, 헤더파일](https://code4human.tistory.com/110)
+    - [C++상에서 발생하는 name mangling 에 관한 내용](https://spikez.tistory.com/19)
+    - [헤더 파일과 소스코드 파일의 분리](https://www.qaupot.com/posts/3ded7e111b994e4c8ab04c0b8c636894)
+    - [Link Error 발생시 확인해볼 것들](https://vaert.tistory.com/5)
+
+
+질문 : 링커가 obj 파일들을 exe 파일로 만들 때 각 obj 파일마다 중복되는 헤더들도 다같이 복사되는가? 제거할 수있는 방법은 모든 코드를 한 파일에 쓰는방법 밖에 없는가?
+extern 키워드를 붙이지 않으면 
+예전에 카트라이더인지 버블파이터인지가 코드들을 하나로 묶어 빌드해서 성능을 올렸다는 기사를 본 것 같다.
+
+
+
+## [링커(Linker, Link Editor)](https://ko.wikipedia.org/wiki/%EB%A7%81%EC%BB%A4_(%EC%BB%B4%ED%93%A8%ED%8C%85))
+
+  - 컴파일러가 만들어낸 하나 이상의 `목적 파일`을 가져와 이를 단일 실행 프로그램(`lib`, `dll`, `exe`)으로 병합하는 프로그램
+
+  - 참고
+    - [What is external linkage and internal linkage?](https://stackoverflow.com/questions/1358400/what-is-external-linkage-and-internal-linkage)
+    - [Struct with a value in a header file causing "duplicate symbol" linker error](https://stackoverflow.com/questions/2206853/struct-with-a-value-in-a-header-file-causing-duplicate-symbol-linker-error)
+
+
+## [로더(Loader)](https://ko.wikipedia.org/wiki/%EB%A1%9C%EB%8D%94_(%EC%BB%B4%ED%93%A8%ED%8C%85))
+
+  - 하드디스크와 같은 오프라인 저장 장치에 있는 프로그램을 찾아서 주기억장치(메모리)에 적재하고, 프로그램이 실행되도록 하는 역할을 담당
+ 
+  - `운영체제` 자체를 로드할 때는 특수한 `boot loader` 가 사용된다.
+  - 많은 OS들은 로더를 메모리에 영구적으로 적재하지만, 가상 메모리를 지원하는 OS는 로더를 `호출 가능한 메모리 영역`에 위치시킬 수 있다.
+  - 가상 메모리를 지원하는 OS는 실행파일의 내용을 **실제로 메모리에 복사하지 않고** 할당된 메모리 영역과 실행 파일의 내용 사이에 `매핑`이 있다고 `가상 메모리 하위 시스템`에 선언할 수 있다.
+    - `가상 메모리 하위 시스템`은 프로그램 실행이 실제로 채워지지 않은 메모리의 해당 영역에 도달하는 경우, 해당 메모리 영역을 가진 페이지를 요청 시 채워야 한다.
+  
+    - 프로그램 코드가 실제로 사용될 때까지 실제로 메모리에 복사되지 않는다는 것을 의미한다.
+    - 사용하지 않는 코드는 메모리에 전혀 로드되지 않을 수 있다.
+
+
+---
+# 구조체
+
+  - 바이트 패딩(`byte padding`)이라는 기법을 사용한다. (컴파일러마다 있을수도, 없을수도 있지만 MSVC에는 있다.)
+    - 클래스(구조체)에 바이트를 추가해 CPU 접근에 부하를 덜어주는 기법
+      - 같은 변수에 두 번 접근하는 것을 방지해준다.
+ 
+    - `프로젝트 속성 -> 코드 생성 -> 구조체 멤버 맞춤` 옵션이 `기본값`으로 설정되어 있을 경우 구조체 내에서 용량이 가장 큰 변수의 크기를 기본값으로 잡아서 메모리를 할당하게 된다.
+    - `스칼라 타입` 변수만 고려한다. 구조체, 클래스 타입 변수는 고려대상이 아님.
+    - 왜 `1byte`로 설정하지 않는가? -> 컴퓨터 입장에서는 `4의 배수` 또는 `2^n` 단위로 메모리를 할당하는 것이 더 효율적이다.
+ 
+  - 멤버가 없더라도 최소바이트인 1바이트가 할당된다.
+    - 변수를 정의하게 되면 메모리에 공간이 잡혀야 하므로 최소 바이트 수인 1바이트 공간을 차지하게 하여 변수를 잡아주는 것이다. (객체를 구분하기 위해)
+  - 이제와서는 클래스와 구조체의 차이는 접근 제한자의 적용유무 밖에 없다.
+    - 구조체 내에서도 함수를 선언할 수 있다.
+  - 참고
+    - [바이트 패딩](https://supercoding.tistory.com/37)
+    - [align](https://docs.microsoft.com/ko-kr/previous-versions/visualstudio/visual-studio-2010/83ythb65(v=vs.100)?redirectedfrom=MSDN)
+
+```cpp
+  // 이 구조체의 크기는 24바이트이다. -> |A B       |    Number    | intNum C   | -> 8바이트가 기본단위가 되었다.
+  struct Test {
+    char	A;
+    char	B;
+    double	doubleNum;
+    int		intNum;
+    char	C;
+  };
+
+  // 이 구조체의 크기는 1바이트이다.
+  struct Test1 {
+  };
 ```
 
 
@@ -700,7 +810,7 @@ auto list = {"a", "b", "cc"};   // initializer_list<const char*>
 auto list = {"a"s, "b"s, "c"s}; // initializer_list<std::string>
 ```
 
-## Member Access Control (접근 지정자)
+## [Member Access Control (접근 지정자)](https://docs.microsoft.com/en-us/cpp/cpp/member-access-control-cpp?view=msvc-170)
 
   - 클래스, 구조체, 공용체(유니온) 에서 멤버들의 접근성을 정의하는 키워드이다.
   
@@ -724,32 +834,13 @@ auto list = {"a"s, "b"s, "c"s}; // initializer_list<std::string>
   - 컴파일 시 해당 키워드를 처리하는 것이기 때문에 로우 레벨에서 동작하는 모든 기능들은 영향을 받지 않는다. (함수 포인터를 통한 함수 호출 등)
   - `static` 멤버들은 접근 지정자의 영향을 받지 않는다. 
     - 단, 포인터, 참조, 객체를 통한 접근은 지정자의 영향을 받기 때문에 전역으로 접근해야 한다. (`::CBase::Func()`)
-    - 포인터, 참조, 객체를 통한 접근은 지정자에 영향을 받는 형식으로 형변환이 필요하기 때문이다.
+ 
+    - 포인터, 참조, 객체를 통한 접근은 지정자에 영향을 받는 형식으로 멤버의 `형변환`이 필요하기 때문이다.
   - 파생 클래스의 가상 함수가 `private` 이면, `파생 클래스 객체를 참조`하는 베이스 클래스 포인터는 가상 함수에 접근이 블가능하다. (C2248 에러)
   - 참고
-    - [Member Access Control](https://docs.microsoft.com/en-us/cpp/cpp/member-access-control-cpp?view=msvc-170)
     - [Access specifiers](https://en.cppreference.com/w/cpp/language/access)
     - [private는 얼마나 비공개적인가?](https://wikidocs.net/469), [다른 사이트](http://egloos.zum.com/sweeper/v/2998794)
 
-## 헤더 파일
-
-  - 변수, 함수, 클래스 등과 같은 프로그램 요소의 이름을 사용하기 위해 선언해놓는 파일
- 
-  - 프로그램 컴파일 시 각 `.cpp` 파일들은 컴파일 단위로 독립적으로 컴파일된다.
-  - 컴파일러는 다른 컴파일 단위에서 선언된 이름을 알지 못하기 때문에 각 `.cpp` 파일에서 사용하는 클래스, 함수, 전역 변수에 대한 선언을 제공해야 한다.
-  - 
-  - 순환 참조 : 서로의 헤더 파일을 `include` 하는 상태. 무조건 피해야 한다.
-  - 이것을 피하기 위해 `전방 선언` 을 한다.
-  - 전방 선언 시 구현부에서는 해당 엔터티가 정의된 헤더를 참조해야 한다.
-  - `#pragma once` 지시문은 `#ifndef, #define, #endif` 지시문(C style)을 사용한 것과 동일하다.(MSVC는 이렇게 동작함. 다른 컴파일러는 모름.)
-
-질문 : 링커가 obj 파일들을 exe 파일로 만들 때 각 obj 파일마다 중복되는 헤더들도 다같이 복사되는가? 제거할 수있는 방법은 모든 코드를 한 파일에 쓰는방법 밖에 없는가?
-예전에 카트라이더인지 버블파이터인지가 코드들은 하나로 묶어 빌드해서 성능을 올렸다는 기사를 본 것 같다.
-
-  - 참고
-    - [What is external linkage and internal linkage?](https://stackoverflow.com/questions/1358400/what-is-external-linkage-and-internal-linkage)
-    - [Struct with a value in a header file causing "duplicate symbol" linker error](https://stackoverflow.com/questions/2206853/struct-with-a-value-in-a-header-file-causing-duplicate-symbol-linker-error)
-    - [컴파일, 링킹, 헤더파일](https://code4human.tistory.com/110)
 
 ---
 # [상속](https://docs.microsoft.com/en-us/cpp/cpp/inheritance-cpp?view=msvc-170)과 [가상 함수](https://docs.microsoft.com/en-us/cpp/cpp/virtual-functions?view=msvc-170)
@@ -973,6 +1064,10 @@ auto list = {"a"s, "b"s, "c"s}; // initializer_list<std::string>
     - 함수 포인터 타입에 네임스페이스를 명시하지 않아야 된다.
       - 함수 포인터는 네임스페이스에 엄격하다.
       - 정적 멤버 함수 포인터와 일반 멤버 함수 포인터는 타입이 다르다.
+    - `접근 지정자`의 영향을 받지 않는다 (전역 범위에서의 접근 시, (`::Class::func()`))
+  - `internal linkage`이기 때문에 `컴파일 단위`에서만 공유가 된다. 상수 전역 변수(`const static`)는 헤더 파일에 사용 시 각 유닛마다 변수를 생성한다. 
+    - 개념은 위와 같지만 현대의 컴파일러는 링크 시 `코드 최적화`를 통해 메모리의 소모량을 줄인다.
+    - TODO 컴파일러의 코드 최적화에 대해 알아봐야겠다.
 
 ```cpp
 CTest test; // static void foo() 멤버 함수를 가지고 있다.
@@ -1272,6 +1367,12 @@ int main() {
   (test.*pMemFunc)();
   (pTest->*pMemFunc)();
 ```
+
+
+## 함수 바인딩
+
+  - TODO
+  - `std::bind()` 의 기능?
 
 
 ---
