@@ -13,6 +13,7 @@
   - [프로세스](#프로세스)
 - [프로그램 실행](#프로그램-실행)
   - [컴파일러](#컴파일러)
+  - [컴파일 과정](#컴파일-과정)
   - [헤더 파일](#헤더-파일)
   - [링커(Linker, Link Editor))](#링커linker-link-editor)
   - [로더(Loader))](#로더loader)
@@ -88,7 +89,7 @@
  
     - 식별자로 네이밍 한다. (identifier is just a name for some entity)
     - 종류 : `values`, `objects`, `references`, `enumerators`, `types`, `functions`, `class members`, `namespaces`, `templates(specializations 포함)`, `structured bindings(C++17)`, `parameter packs`
-    - 전처리기인 매크로 (`macro`)는 엔터티가 아니다.
+    - 전처리기가 처리하는 매크로 지시자(`macro directive`, `#define`)는 엔터티가 아니다.
   
   - ### [`types` (타입, 유형)](https://en.cppreference.com/w/cpp/language/type)
     - 무언가의 종류를 나타내기 위해 사용하는 엔터티
@@ -116,13 +117,13 @@
       - 이름 (optional)
 
   - ### [선언(declaration)과 정의(definition)](https://docs.microsoft.com/en-us/cpp/cpp/declarations-and-definitions-cpp?redirectedfrom=MSDN&view=msvc-170)
-    - 둘의 가장 큰 차이점은 **메모리를 할당하는가** 이다.
+    - 둘의 가장 큰 차이점은 **메모리를 할당, 사용하는가** 이다.
  
     - 메모리를 할당하지 않고 식별자만 알려준다면 `선언`, 메모리가 할당된 식별자는 `정의`
     - 선언(`declaration`)
       - 엔터티의 타입과 기타 다른 특성에 대한 정보를 가지고 엔터티에 고유한 이름을 지정하는 것
       - 정의하기 전에 사용하기 위해 선언하는 것을 `전방 선언(forward declaration)` 이라고 한다.
-      - 전방 선언은 여러번 가능하며, 컴파일 시점에서 구현부 확인이 되지 않으면 에러가 발생한다. (`.cpp` 파일에 `#include` 전처리기를 통한 헤더 코드의 복사가 이루어져야 한다.)
+      - 전방 선언은 여러번 가능하며, 컴파일 시점에서 구현부 확인이 되지 않으면 에러가 발생한다. (`.cpp` 파일에 `#include` 전처리 지시자를 통한 헤더 코드의 복사가 이루어져야 한다.)
     - 정의(`definition`)
       - 엔터티가 프로그램에서 사용될 때 컴파일러가 기계어 코드를 생성하는데 필요한 모든 정보를 제공하는 것
       - 클래스 작성은 선언과 동시에 정의를 하는 것과 같다. (멤버함수는 선언과 정의를 분리할 수 있다)
@@ -143,7 +144,7 @@
     - `C++` 에서 컴파일의 기본 단위(`basic unit`) 이다.
   
     - `C preprocessor`에 의해 전처리가 끝난 한 개의 `소스 파일`의 컨텐츠들로만 이루어져 있다.
-      - 전처리가 끝난 후이기 때문에 직, 간접적으로 포함된(`#include`같은) 헤더 파일의 코드도 포함되어 있다.
+      - 전처리가 끝난 후이기 때문에 직, 간접적으로 포함된(`#include`로 복사된) 헤더 파일의 코드도 포함되어 있다.
     - 한 개의 유닛은 `object file`, `library`, `exe` 파일로 컴파일 할 수 있다.
   - 참고 
     - [Basic Concept of C++ Language](https://en.cppreference.com/w/cpp/language/basic_concepts) 
@@ -414,34 +415,92 @@
 
   - 특정 프로그래밍 언어로 쓰여 있는 문서를 다른 프로그래밍 언어로 옮기는 언어 번역 프로그램
  
-  - 좁은 의미로는 고수준 언어로 쓰인 소스 코드(원시 코드)를 저수준 언어(어셈블리어, 기계어)로 번역하는 프로그램이다.
-  - 원래의 문서를 `소스 코드(원시 코드), 출력된 문서를 목적 코드라고 부른다.
+  - 좁은 의미로는 고수준 언어로 쓰인 소스 코드(원시 코드)를 저수준 언어(어셈블리어, 목적 코드, 기계어 코드)로 번역하는 프로그램이다.
+  - 원래의 문서를 `소스 코드(원시 코드)`, 출력된 문서를 `목적 코드`라고 부른다.
+  - 프로그램 컴파일 시 각 `.cpp` 파일들은 컴파일 단위(`translation unit`)로 독립적으로 컴파일된다.
+  - 컴파일러는 다른 컴파일 단위에서 선언된 이름을 알지 못하기 때문에 각 `.cpp` 파일에서 사용하는 클래스, 함수, 전역 변수에 대한 선언을 제공해야 한다.
+  - 때문에 해당하는 선언들을 한데 모아 `헤더`라는 하나의 파일로 만든 뒤 `#include` 전처리 지시자(`directive`)를 통해 한번에 복사 붙여넣기 하는 방법을 선택했다.
+  - ### `목적 코드`에는 구현부에서 사용된 `엔터티들의 존재 유무`만 헤더를 통해 확인하고 생성한 것이기 때문에 실제 구현부 코드들의 주소는 연결되어 있지 않다.
+    - `링커`가 코드의 구현부 코드에 실제 주소를 매핑한다.
   - [인터프리터](https://ko.wikipedia.org/wiki/%EC%9D%B8%ED%84%B0%ED%94%84%EB%A6%AC%ED%84%B0)와는 구분되지만 최근에는 `JIT 컴파일` 등의 기술로 실시간 컴파일을 수행하기 때문에 기술적 구분은 사라지는 추세다.
   - `LLVM(Low Level Virtual Machine)`은 컴파일러의 기반구조이다. (TODO 자세히 알아볼 필요가 있다.)
-  - 컴파일 과정은 
+  - 참고
+    - [LLVM](https://ko.wikipedia.org/wiki/LLVM)
+    - [헤더 파일과 소스코드 파일의 분리](https://www.qaupot.com/posts/3ded7e111b994e4c8ab04c0b8c636894)
+
+
+## [컴파일 과정](https://en.wikipedia.org/wiki/Compiler)
+
+  - 과정은 모든 컴파일러가 조금씩 다르지만 크게 사용하는 몇가지로 분류한다.
+  - 컴파일 디자인의 정확한 페이즈 수에 관계 없이 세 가지 단계 중 하나에 할당할 수 있다.
+  - ### `front end` : 입력을 스캔하고 `소스 언어`에 따라 구문(`syntax`)과 의미론(`semantics`)을 검증한다. 결과물로 `intermediate representation(IR, 중간 표현)`이 나온다.
+    - `Lexical analysis (어휘 분석, tokenization)`
+      - 텍스트를 `lexical token` 이라 불리는 조각들로 나눈다. 토큰은 이름과 값으로 구성된 `pair` 이다.
+  
+      - 어휘소(`lexeme`) 단위로 카테고리를 나누는 `스캐닝`, 어휘소를 처리된 값으로 변환하는 `평가` 두 단계로 나뉘어서 토큰이 생성된다.
+    - `Preprocessing (전처리)`
+      - `매크로`를 치환하고 `조건부 컴파일 (#if 같은거)`을 지원한다.
+  
+      - 보통 구문 의미분석 전에 발생하지만 `scheme`같은 일부 언어는 통사적 형태(문법)에 기반한 매크로 치환을 지원한다.
+    - `Syntax analysis (구문 분석, parsing)`
+      - 구문 구조를 식별하기 위해 토큰의 선형 시퀀스로 `구문 분석 트리`를 생성한다.
+    - `Semantics analysis (의미 분석)`
+      - `분석 트리`에 의미 정보를 추가하고 `symbol table(기호 테이블)`을 구축한다.
+  
+      - 타입 에러 체크, 개체 바인딩(변수와 함수 참조를 정의와 연결), 정의 할당(지역 변수를 사용하기 전에 초기화)과 같은 의미론적 검사를 수행한다.
+
+      ![](img/lexer_and_parser.gif)
+  - ### `middle end (optimizer)` : 대상 CPU 아키텍쳐와 무관한 `IR`에 대한 최적화를 수행한다.
+    - `Analysis (분석)`
+      - `IR`에서 프로그램 정보를 수집한다.
+  
+      - `dependency analysis`, `alias analysis`, `pointer analysis`, `escape analysis` 등을 가지고 `사용 가능한 체인`을 구축한다.
+      - `control-flow graph`, `call graph` 또한 이 단계에서 작성된다.
+
+      ![](img/call_graph.png)
+    - `Optimization (최적화)`
+      - 기능적으로는 동일하지만 더 빠른(더 작은) 형태로 변환한다.
+    
+      - `inline expansion`, `dead code elimination`, `constant propagation`(상수, 리터럴식을 미리 계산해버림), `loop transformation`, `automatic parallelization`(멀티스레드 및 벡터화된 코드로 변환하는 것) 등이 자주 쓰이는 최적화이다.
+      - 해당 최적화의 활성화 여부를 알려주기 위해 컴파일 옵션을 사용해야 한다.
+    - 가장 기능이 많고 다양하며 중요하기 때문에 자세히 알아보려면 각 옵션들을 따로 찾아보자. 
+    - [컴파일러 최적화 위키](https://en.wikipedia.org/wiki/Optimizing_compiler)
+
+  - ### `back end` : 최적화된 `IR`을 `middle end`에서 받아 대상 CPU 아키텍쳐에 특화한 분석, 변환 및 최적화를 수행한다.
+    - `Machine Dependent Optimization (시스템 종속 최적화)`
+      - CPU 아키텍쳐의 세부 사항에 따라 달라진다.
+ 
+      - [peephole optimization](https://en.wikipedia.org/wiki/Peephole_optimization) (짧은 어셈블러 명령 시퀀스를 효율적인 명령으로 다시 쓰는 것)이 대표적이다.
+    - `Code Generation (코드 생성)`
+      - `IR` 을 출력 언어(보통 기계어)로 번역한다.
+ 
+      - [addressing mode](https://en.wikipedia.org/wiki/Addressing_mode) (레지스터와 메모리에 어떤 변수를 넣을지 결정하는 것)와 함께 `리소스와 스토리지 결정`(적절한 기계어 명령의 선택과 스케줄링) 이 포함된다.
+      - 디버깅을 쉽게 하기 위해 `디버그 데이터`를 생성할 때도 있다.
+  
   - 참고
     - [Compile 과정](https://www.qaupot.com/posts/b91a4268bce74d4c90378059fe0aca3a)
-    - [LLVM](https://ko.wikipedia.org/wiki/LLVM)
+    - [#ifndef, #pragma once and Unity Build](https://oojjrs.tistory.com/32)
 
 
 ## [헤더 파일](https://docs.microsoft.com/en-us/cpp/cpp/header-files-cpp?view=msvc-170)
 
   - 변수, 함수, 클래스 등과 같은 프로그램 요소의 이름을 사용하기 위해 선언해놓는 파일
-    - 프로그램 컴파일 시 각 `.cpp` 파일들은 컴파일 단위(`translation unit`)로 독립적으로 컴파일된다.
-    
-    - 컴파일러는 다른 컴파일 단위에서 선언된 이름을 알지 못하기 때문에 각 `.cpp` 파일에서 사용하는 클래스, 함수, 전역 변수에 대한 선언을 제공해야 한다.
-    - 때문에 해당하는 선언들을 한데 모아 `헤더`라는 하나의 파일로 만든 뒤 `#include` 전처리기를 통해 한번에 복사 붙여넣기 하는 방법을 선택했다.
  
-  - `순환 참조` : 서로의 헤더 파일을 `include` 하는 상태. 무조건 피해야 한다.
-  - 이것을 피하기 위해 `전방 선언` 을 한다.
-  - `중복 참조` : 헤더 파일이 여러 번 포함되어 같은 이름의 엔터티들이 여러번 정의 되는 상태.
-  - 이것을 피하기 위해 `헤더 가드(Header Guard)`라는 전처리기를 사용한다.
+  - ### `중복 참조`
+    - 헤더 파일이 여러 번 포함되어 같은 이름의 엔터티들이 **여러번 정의 되는 상태**
+ 
+    - 이것을 피하기 위해 `인클루드 가드(Include Guard, 헤더 가드)`라는 지시자를 사용한다.
     - `#ifndef __파일이름_H, #define __파일이름_H, #endif` 사이에 헤더 코드를 작성
-
-    - `#pragma once` 전처리기는 MSVC나 몇몇 다른 컴파일러에서 `#ifndef, #define, #endif` 전처리기를 사용한 것과 동일하게 동작한다.
-  - 전방 선언 시 구현부에서는 해당 엔터티가 정의된 헤더를 참조해야 한다.
-  - `Name Mangling`
-    - 컴파일러가 엔터티 구분을 위해 임의로 함수나 변수의 이름을 변경하는 것
+    - `#pragma once` 지시자는 MSVC나 몇몇 다른 컴파일러에서 `#ifndef, #define, #endif` 지시자를 사용한 것과 동일하게 동작한다.
+  
+  - ### `순환 참조` 
+    - **서로의 헤더 파일을 `include` 하는 상태**. 무조건 피해야 한다.
+   
+    - 이것을 피하기 위해 `전방 선언` 을 하고, 헤더는 선언한 엔터티의 정의가 있는 `.cpp` 파일에서 인클루드 한다.
+      - 구현부에서 포함하여 헤더가 서로를 모르게 한다.
+    - 전방 선언 시 구현부에서는 해당 엔터티가 정의된 헤더를 참조해야 한다.
+  - 컴파일 시 [Name Mangling(name decoration)](https://en.wikipedia.org/wiki/Name_mangling) 기법이 적용된다.
+    - 컴파일러가 같은 식별자를 가진 다른 엔터티들의 구분을 위해 임의로 함수나 변수의 이름을 변경하는 것
    
     - 함수 오버로딩의 동작을 위해 필요한 기능이며, 컴파일러마다 다른 mangling 규칙을 가지고 있다.
     - C와 C++은 mangling 규칙이 다르다. C는 함수 오버로딩 기능을 제공하지 않아서 한 바이너리 안에 하나의 심볼만이 존재하기 때문이다.
@@ -457,7 +516,6 @@
 
 질문 : 링커가 obj 파일들을 exe 파일로 만들 때 각 obj 파일마다 중복되는 헤더들도 다같이 복사되는가? 제거할 수있는 방법은 모든 코드를 한 파일에 쓰는방법 밖에 없는가?
 extern 키워드를 붙이지 않으면 
-예전에 카트라이더인지 버블파이터인지가 코드들을 하나로 묶어 빌드해서 성능을 올렸다는 기사를 본 것 같다.
 
 
 
@@ -465,9 +523,32 @@ extern 키워드를 붙이지 않으면
 
   - 컴파일러가 만들어낸 하나 이상의 `목적 파일`을 가져와 이를 단일 실행 프로그램(`lib`, `dll`, `exe`)으로 병합하는 프로그램
 
+  - 컴파일러의 일부로 생각하는 사람도, 생각하지 않는 사람도 있다.
+  - `라이브러리`, `런타임 라이브러리`라고 하는 모음에서 오브젝트를 가져올 수 있다.
+    - 전체 라이브러리를 포함시키는 것이 아니라 다른 오브젝트 파일이나 라이브러리가 참조하는 파일들만 포함한다.
+  - `Static Linking (정적 링크)`
+    - 사용되는 모든 라이브러리 루틴을 **복사하여 실행파일을 생성하는 것**
+   
+    - **실행파일 하나만 생성**하기 때문에 동적 링크보다 용량은 크지만 휴대성이 좋다.
+    - 각 프로그램이 필요한 라이브러리 루틴의 버전을 정확하게 포함하기 때문에 다른 프로그램과 충돌하지 않고 `의존성과 관련된 문제`를 방지한다.
+  - `Dynamic Linking (동적 링크, late linking)`
+    - 프로그램이 실행될 때까지 정의되지 않은 일부 심볼들을 해결하는 일을 미루는 것
+   
+    - **실행파일 따로, `DLL 파일` 따로 존재**한다.
+    - 프로그램을 로드하면 오브젝트와 라이브러리를 로드하고 마지막 링크를 수행한다.
+    - 동적 링크는 링커가 필요없다. (운영체제 안에 `동적 링커`라는 프로그램이 수행한다.)
+    - 장점 
+      - 자주 쓰이는 라이브러리(표준 시스템 라이브러리 같은거)는 한 위치에만 저장되어 있으며 이런 단일 라이브러리들의 중복이 사라진다.
+   
+      - 라이브러리 함수의 오류를 라이브러리만 수정하는 것으로 해결할 수 있다.
+    - 단점
+      - 비호환 DLL에 의존적인 실행파일이 만들어 질 수 있다.
+   
+      - 프로그램, 라이브러리 둘 다 검증해야 한다. (정확성, 문서 요구사항, 성능 등)
   - 참고
     - [What is external linkage and internal linkage?](https://stackoverflow.com/questions/1358400/what-is-external-linkage-and-internal-linkage)
     - [Struct with a value in a header file causing "duplicate symbol" linker error](https://stackoverflow.com/questions/2206853/struct-with-a-value-in-a-header-file-causing-duplicate-symbol-linker-error)
+    - [헤더 파일 / Linking 과정](https://www.qaupot.com/posts/71b127e3138d472986757afaceb947c7)
 
 
 ## [로더(Loader)](https://ko.wikipedia.org/wiki/%EB%A1%9C%EB%8D%94_(%EC%BB%B4%ED%93%A8%ED%8C%85))
@@ -481,6 +562,7 @@ extern 키워드를 붙이지 않으면
   
     - 프로그램 코드가 실제로 사용될 때까지 실제로 메모리에 복사되지 않는다는 것을 의미한다.
     - 사용하지 않는 코드는 메모리에 전혀 로드되지 않을 수 있다.
+
 
 
 ---
