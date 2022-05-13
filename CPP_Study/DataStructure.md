@@ -2,17 +2,23 @@
 ## Data Structure
   - 자료구조 관련 정보들을 저장해놓는 문서
 
-
+  - 참고
+    - [Containers library](https://en.cppreference.com/w/cpp/container)
+    - [실전 알고리즘 강좌](https://blog.encrypted.gg/category/%EA%B0%95%EC%A2%8C/%EC%8B%A4%EC%A0%84%20%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98)
+    - [C++ STL 컨테이너의 메모리 사용량 1](https://www.secmem.org/blog/2019/11/14/c++-container-memory-usage/)
 ---
 # STL의 Allocator 분석
 
   - STL의 모든 자료구조가 해당 클래스의 함수로 메모리를 할당받길래 궁금해서 찾아봄
+  - TODO
 
 ---
 # Hash table
 
-    - 해시 함수가 다른 키값에 동일한 해시 코드를 출력할 경우 `해시 충돌`이 발생한다.
+  - 해시 함수가 다른 키값에 동일한 해시 코드를 출력할 경우 `해시 충돌`이 발생한다.
 
+  - 참고
+    - [실전 알고리즘 해시](https://blog.encrypted.gg/1009?category=773649)
 
 ## 해시 충돌 해결방법
 
@@ -61,13 +67,26 @@
     - 벡터의 크기는 `버킷의 크기 X 2` 이다.
     - 실제로 할당되는 바이트 수는 약간 달랐다. ($2^9$일 때, 8231 byte가 할당되었다. 예상은 8192 byte 였음)
 
+```cpp
+	std::cout << "\n -arch=x64 build\n" << std::endl;
+
+	std::cout << "unordered_map<int, int64_t> define" << std::endl;
+	std::unordered_map<int, long long> map;
+	std::cout << "\nsizeof map" << std::endl;
+	std::cout << sizeof(map) << std::endl;
+	std::cout << "\nmap initial bucket_count() : ";
+	int count = map.bucket_count();
+	std::cout << count << std::endl;
+	for (int i = 0; i <= count; ++i) {
+		std::cout << "map.emplace " << i + 1 << std::endl;
+		map.emplace(std::make_pair(i, i));
+	}
+	std::cout << map.bucket_count() << std::endl;
+	std::cout << "\n delete dynamic duration" << std::endl;
+```
+
 ![](img/unordered_map_memory.png)
 
   - 참고
     - [다시 정리하는 C++ STL 자료구조](https://ssinyoung.tistory.com/48)
-
-
-  - 참고
-    - [실전 알고리즘 해시](https://blog.encrypted.gg/1009?category=773649)
-    - [C++ STL 컨테이너의 메모리 사용량 1](https://www.secmem.org/blog/2019/11/14/c++-container-memory-usage/)
     - [C++ STL 컨테이너의 메모리 사용량 2](https://www.secmem.org/blog/2019/12/13/c++-container-memory-usage-2/)

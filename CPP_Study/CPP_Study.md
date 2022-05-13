@@ -24,7 +24,7 @@
     - [Non-Static Data Member Initialization (NSDMI, 비정적 데이터 멤버 초기화)](#non-static-data-member-initialization-nsdmi-비정적-데이터-멤버-초기화)
   - [Uniform Initailizer](#uniform-initailizer)
   - [Member Access Control (접근 지정자)](#member-access-control-접근-지정자)
-- [상속과 [가상 함수](https://docs.microsoft.com/en-us/cpp/cpp/virtual-functions?view=msvc-170)](#상속과-가상-함수)
+- [상속과 가상 함수](#상속과-가상-함수)
   - [상속 (`Inheritance`)](#상속-inheritance)
   - [가상 함수 (`Virtual Function`)](#가상-함수-virtual-function)
   - [Abstract class, Pure Virtual Function (추상클래스, 순수 가상 함수)](#abstract-class-pure-virtual-function-추상클래스-순수-가상-함수)
@@ -517,8 +517,7 @@
     - [Link Error 발생시 확인해볼 것들](https://vaert.tistory.com/5)
 
 
-질문 : 링커가 obj 파일들을 exe 파일로 만들 때 각 obj 파일마다 중복되는 헤더들도 다같이 복사되는가? 제거할 수있는 방법은 모든 코드를 한 파일에 쓰는방법 밖에 없는가?
-extern 키워드를 붙이지 않으면 
+TODO 질문 : 링커가 obj 파일들을 exe 파일로 만들 때 각 obj 파일마다 중복되는 헤더들도 다같이 복사되는가? 제거할 수있는 방법은 모든 코드를 한 파일에 쓰는방법 밖에 없는가?
 
 
 
@@ -539,7 +538,6 @@ extern 키워드를 붙이지 않으면
  
       - `재배치 프로세스`의 일부로서 또는 `dynamic dead-code elimination` 기법과 결합되어 로드 시간에 발생할 수도 있다.
     - 이 단계는 모든 입력 객체를 읽고 임시 주소를 할당한 후에만 수행할 수 있다.
-    - `Linker Relaxation` : 
   - `라이브러리`, `런타임 라이브러리`라고 하는 모음에서 오브젝트를 가져올 수 있다.
     - 전체 라이브러리를 포함시키는 것이 아니라 다른 오브젝트 파일이나 라이브러리가 참조하는 파일들만 포함한다.
   - `Static Linking (정적 링크)`
@@ -941,9 +939,9 @@ auto list = {"a"s, "b"s, "c"s}; // initializer_list<std::string>
 
 
 ---
-# [상속](https://docs.microsoft.com/en-us/cpp/cpp/inheritance-cpp?view=msvc-170)과 [가상 함수](https://docs.microsoft.com/en-us/cpp/cpp/virtual-functions?view=msvc-170)
+# 상속과 가상 함수
 
-## 상속 (`Inheritance`)
+## [상속 (`Inheritance`)](https://docs.microsoft.com/en-us/cpp/cpp/inheritance-cpp?view=msvc-170)
 
   - 기존 클래스에서 파생된 새 클래스가 기존 클래스의 특성을 가지는 메커니즘
   
@@ -970,7 +968,7 @@ auto list = {"a"s, "b"s, "c"s}; // initializer_list<std::string>
   - `final` 키워드를 사용하여 이후 현재 클래스 또는 가상 함수를 상속받지 못하도록 제한할 수 있다.
 
 
-## 가상 함수 (`Virtual Function`)
+## [가상 함수 (`Virtual Function`)](https://docs.microsoft.com/en-us/cpp/cpp/virtual-functions?view=msvc-170)
 
   - `파생 클래스(derived class)`에서 재정의할 것이라 예상하는(`expected`)(약속하는?) 비정적 멤버 함수
   

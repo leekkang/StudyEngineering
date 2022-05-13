@@ -11,19 +11,21 @@
 		],
 		"description": "Code snippet for operators "
 	},
-	"#include": {
-		"prefix": "include",
+	// 참고 : https://jaimemin.tistory.com/1521
+	"algorithm main": {
+		"prefix": "algorithmmain",
 		"body": [
-			"#include $0"
+			"#include <iostream>\n",
+			"int main() {",
+			"\tstd::ios_base::sync_with_stdio(false);",
+			"\tstd::cin.tie(nullptr);",
+			"\tstd::cout.tie(nullptr);\n",
+			"\t$0\n",
+			"\tsystem(\"pause\");",
+			"\treturn 0;",
+			"}\n"
 		],
-		"description": "Code snippet for #include "
-	},
-	"using": {
-		"prefix": "using",
-		"body": [
-			"using namespace $0"
-		],
-		"description": "Code snippet for using namespace "
+		"description": "Code snippet for main of Problem Solving "
 	},
 	"cout": {
 		"prefix": "cout",
