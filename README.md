@@ -1,4 +1,4 @@
-- [Language Study](#language-study)
+- [Document Link](#document-link)
 - [VSCode Setting](#vscode-setting)
 - [Visual Studio Setting](#visual-studio-setting)
 - [Codility](#codility)
@@ -26,6 +26,7 @@
   - [Bellman-Ford Algorithm](#bellman-ford-algorithm)
   - [Floyd-Warshall Algorithm](#floyd-warshall-algorithm)
   - [A* Algorithm](#a-algorithm)
+- [Hash Algorithm](#hash-algorithm)
 
 ---
 ## StudyEngineering
@@ -34,10 +35,11 @@
 
 
 ---
-# Language Study
+# Document Link
 
   - ## [CPP Study](CPP_Study/CPP_Study.md)
 
+  - ## [자료구조](DataStructure.md)
   - API Study
 
 ---
@@ -335,6 +337,20 @@ $$
 ## Floyd-Warshall Algorithm
 
 ## A* Algorithm
+
+
+
+---
+# Hash Algorithm
+
+
+
+
+
+
+
+
+
 
 [탐욕 알고리즘(greedy algorithm)]: https://ko.wikipedia.org/wiki/%ED%83%90%EC%9A%95_%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98
 [LZW 참조1]: https://www2.cs.duke.edu/csed/curious/compression/lzw.html
