@@ -17,6 +17,9 @@
   - [헤더 파일](#헤더-파일)
   - [링커(Linker, Link Editor))](#링커linker-link-editor)
   - [로더(Loader))](#로더loader)
+- [Value Categories](#value-categories)
+  - [L-Value](#l-value)
+  - [R-Value](#r-value)
 - [구조체](#구조체)
 - [클래스](#클래스)
   - [생성자와 소멸자](#생성자와-소멸자)
@@ -136,19 +139,39 @@
   
     - 정수형(`integral`), 부동소수점, `void` 세 가지 메인 카테고리로 나뉜다.
 
-  - ### [POD(Plain Old Data) type](https://en.cppreference.com/w/cpp/named_req/PODType)
-    - C언어와 호환이 가능한 타입을 의미한다.
+  - ### [Trivial Type](https://docs.microsoft.com/en-us/cpp/cpp/trivial-standard-layout-and-pod-types?view=msvc-170#trivial-types)
+    - `C++` 클래스 또는 구조체가 `compiler-provided` 또는 `기본 특수 멤버 함수(생성자 등)` 를 가질 때의 타입이다.
+    
+    - 연속된 메모리 영역을 가지며 컴파일러가 자유롭게 멤버의 순서를 결정할 수 있다.
   
-    - `C++20`부터 좀 더 정교한 타입 요구사항들로 대체되었다.(`Trivial Type` 등등)
+  - ### [POD(Plain Old Data) type](https://docs.microsoft.com/en-us/cpp/cpp/trivial-standard-layout-and-pod-types?view=msvc-170#pod-types)
+    - 클래스 또는 구조체가 `trivial`, `standard-layout` 속성을 모두 가질 때의 타입이다.
+  
+    - C언어와 호환이 가능하다.
+    - `int` 와 같은 `스칼라 타입`도 포함된다.
+    - [cppreference 링크](https://en.cppreference.com/w/cpp/named_req/PODType)
+  
+  - ### [Literal type](https://docs.microsoft.com/en-us/cpp/cpp/trivial-standard-layout-and-pod-types?view=msvc-170#literal_types)
+    - `컴파일 타임`에 타입이 결정되는 레이아웃을 의미한다.
+  
+    - 아래의 타입들이 리터럴 타입이다.
+      - `void`
+      - `scalar type`
+      - `reference`
+      - 위의 세 타입으로 이루어진 `배열`
+      - `기본 소멸자`, 하나 이상의 `constexpr 생성자 (복사, 이동 생성자 제외)`를 가지는 `클래스`. 모든 비정적 데이터 멤버들이 `리터럴 타입`이고 `volatile`이 아니어야 한다.
+  
   - ### [cv type qualifiers](https://en.cppreference.com/w/cpp/language/cv)
     - [상수(`const`), 휘발성(`volatile`) 한정자](#const-키워드)를 의미한다.
 
-  - ### [Translation(Compilation) Unit](https://en.wikipedia.org/wiki/Translation_unit_(programming))
+  - ### [Translation(Compilation) Unit](https://docs.microsoft.com/en-us/cpp/cpp/program-and-linkage-cpp?view=msvc-170)
     - `C++` 에서 컴파일의 기본 단위(`basic unit`) 이다.
   
     - `C preprocessor`에 의해 전처리가 끝난 한 개의 `소스 파일`의 컨텐츠들로만 이루어져 있다.
       - 전처리가 끝난 후이기 때문에 직, 간접적으로 포함된(`#include`로 복사된) 헤더 파일의 코드도 포함되어 있다.
     - 한 개의 유닛은 `object file`, `library`, `exe` 파일로 컴파일 할 수 있다.
+
+
   - 참고 
     - [Basic Concept of C++ Language](https://en.cppreference.com/w/cpp/language/basic_concepts) 
     - [identifier vs keyword](https://stackoverflow.com/questions/7279227/c-what-is-the-difference-between-identifier-keyword-name-and-entity)
@@ -343,6 +366,8 @@
 ```
 
 
+
+
 ---
 # 메모리
 
@@ -408,6 +433,8 @@
 
   - TODO 
   - https://www.qaupot.com/posts/d925b3d8f85a4857887b905ce22fdbce
+
+
 
 
 
@@ -585,6 +612,23 @@ TODO 질문 : 링커가 obj 파일들을 exe 파일로 만들 때 각 obj 파일
 
 
 
+
+
+---
+# [Value Categories](https://en.cppreference.com/w/cpp/language/value_category#glvalue)
+
+## L-Value
+
+  - TODO
+
+## R-Value
+
+  - TODO
+
+
+
+
+
 ---
 # 구조체
 
@@ -618,6 +662,8 @@ TODO 질문 : 링커가 obj 파일들을 exe 파일로 만들 때 각 obj 파일
   struct Test1 {
   };
 ```
+
+
 
 
 ---
@@ -944,6 +990,9 @@ auto list = {"a"s, "b"s, "c"s}; // initializer_list<std::string>
     - [private는 얼마나 비공개적인가?](https://wikidocs.net/469), [다른 사이트](http://egloos.zum.com/sweeper/v/2998794)
 
 
+
+
+
 ---
 # 상속과 가상 함수
 
@@ -1060,6 +1109,8 @@ auto list = {"a"s, "b"s, "c"s}; // initializer_list<std::string>
 
 
 
+
+
 ---
 # [변수 범위, 주기, 링크](https://www.learncpp.com/cpp-tutorial/scope-duration-and-linkage-summary/)
   - 참고 : [Storage class specifiers](https://en.cppreference.com/w/cpp/language/storage_duration)
@@ -1110,6 +1161,9 @@ auto list = {"a"s, "b"s, "c"s}; // initializer_list<std::string>
       - 인라인 상수전역변수 (`inline const global variables`), (`C++17`)
 
 ![](img/scope%2Cduration%2Clinkage.PNG)
+
+
+
 
 
 ---
@@ -1337,7 +1391,7 @@ void (*func3)() = &CTest::foo;        // ok
       - `volatile` 키워드의 처리는 어떤 상황에서도 코드 내의 순서를 따른다는 뜻이다.
   - 값을 주소에 덮어쓰는 작업 자체가 하나의 `지시 기능`의 수행을 의미하는 `임베디드 시스템` 에서 꼭 필요한 키워드이다.
   - 여러 프로세스에서 값의 변경을 확인해야 하기 때문에 `공유 메모리` 객체를 사용하는 `인터럽트 서비스 루틴` 에서도 사용한다.
-  - `멀티 스레드` 환경에서는 **각 스레드 사이의 접근 순서를 보장할 수 없기 때문에** `volatile` 대신 [atomic](#atomic) 을 사용한다.
+  - `멀티 스레드` 환경에서는 **각 스레드 사이의 접근 순서를 보장할 수 없기 때문에** `volatile` 대신 [atomic](#atomic) 을 사용한다. TODO 안쓰는지 같이 쓰는지?
   - `const` 키워드와 마찬가지로 `제한 증가 순서`가 높은 쪽이다.
   - 참고
     - [cv (const and volatile) type qualifiers](https://en.cppreference.com/w/cpp/language/cv)
@@ -1352,6 +1406,10 @@ void (*func3)() = &CTest::foo;        // ok
 ## __declspec 키워드
 
   - TODO
+
+
+
+
 
 ---
 # 연산자
@@ -1386,6 +1444,9 @@ void (*func3)() = &CTest::foo;        // ok
 
   - 포인터의 연산자는 연산자 오버로딩이 안된다.
     - 그래서 `shared_ptr`과 같은 포인터를 관리하는 래핑 함수를 만들어서 사용한다. (추가로 복사, 이동생성자도 호출이 안된다)
+
+
+
 
 
 ---
@@ -1575,11 +1636,17 @@ int main() {
   - `std::bind()` 의 기능?
 
 
+
+
+
 ---
 # 템플릿
 
   - TODO
   - [바튼-넥만 트릭](https://wikidocs.net/481)
+
+
+
 
 
 ---
@@ -1590,3 +1657,4 @@ int main() {
 ## atomic
 
   - TODO
+  - https://en.cppreference.com/w/cpp/atomic/atomic
