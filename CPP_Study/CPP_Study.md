@@ -37,7 +37,10 @@
   - [extern 키워드](#extern-키워드)
   - [virtual 키워드](#virtual-키워드)
   - [inline 키워드](#inline-키워드)
+  - [const 키워드](#const-키워드)
+  - [volatile 키워드](#volatile-키워드)
   - [constexpr 키워드](#constexpr-키워드)
+  - [__declspec 키워드](#__declspec-키워드)
 - [연산자](#연산자)
   - [sizeof 연산자](#sizeof-연산자)
   - [캐스팅 연산자](#캐스팅-연산자)
@@ -48,6 +51,8 @@
   - [함수 포인터](#함수-포인터)
   - [함수 바인딩](#함수-바인딩)
 - [템플릿](#템플릿)
+- [스레드](#스레드)
+  - [atomic](#atomic)
 
 ---
 
@@ -123,7 +128,8 @@
       - 전방 선언은 여러번 가능하며, 컴파일 시점에서 구현부 확인이 되지 않으면 에러가 발생한다. (`.cpp` 파일에 `#include` 전처리 지시자를 통한 헤더 코드의 복사가 이루어져야 한다.)
     - 정의(`definition`)
       - 엔터티가 프로그램에서 사용될 때 컴파일러가 기계어 코드를 생성하는데 필요한 모든 정보를 제공하는 것
-      - 클래스 작성은 선언과 동시에 정의를 하는 것과 같다. (멤버함수는 선언과 정의를 분리할 수 있다)
+      - 클래스 작성은 선언과 동시에 정의를 하는 것과 같다. 몸체 부분이 없으면 `전방 선언`과 동일하게 취급한다.
+      - 멤버 함수도 선언과 정의를 분리할 수 있다.
 
   - ### [Built-in(fundamental) Types](https://docs.microsoft.com/en-us/cpp/cpp/fundamental-types-cpp?view=msvc-170)
     - `C++` 언어 표준에서 지정되어 컴파일러에서 기본 제공되는 타입
@@ -135,7 +141,7 @@
   
     - `C++20`부터 좀 더 정교한 타입 요구사항들로 대체되었다.(`Trivial Type` 등등)
   - ### [cv type qualifiers](https://en.cppreference.com/w/cpp/language/cv)
-    - 상수(`const`), 휘발성(`volatile`) 한정자를 의미한다.
+    - [상수(`const`), 휘발성(`volatile`) 한정자](#const-키워드)를 의미한다.
 
   - ### [Translation(Compilation) Unit](https://en.wikipedia.org/wiki/Translation_unit_(programming))
     - `C++` 에서 컴파일의 기본 단위(`basic unit`) 이다.
@@ -431,7 +437,7 @@
 
 ## [컴파일 과정](https://en.wikipedia.org/wiki/Compiler)
 
-  - 과정은 모든 컴파일러가 조금씩 다르지만 크게 사용하는 몇가지로 분류한다.
+  - 과정은 모든 컴파일러가 조금씩 다르지만 크게 사용하는 몇 가지로 분류한다.
   - 컴파일 디자인의 정확한 페이즈 수에 관계 없이 세 가지 단계 중 하나에 할당할 수 있다.
   - ### `front end` : 입력을 스캔하고 `소스 언어`에 따라 구문(`syntax`)과 의미론(`semantics`)을 검증한다. 결과물로 `intermediate representation(IR, 중간 표현)`이 나온다.
     - `Lexical analysis (어휘 분석, tokenization)`
@@ -1163,7 +1169,6 @@ auto list = {"a"s, "b"s, "c"s}; // initializer_list<std::string>
     - `접근 지정자`의 영향을 받지 않는다 (전역 범위에서의 접근 시, (`::Class::func()`))
   - `internal linkage`이기 때문에 `컴파일 단위`에서만 공유가 된다. 상수 전역 변수(`const static`)는 헤더 파일에 사용 시 각 유닛마다 변수를 생성한다. 
     - 개념은 위와 같지만 현대의 컴파일러는 링크 시 `코드 최적화`를 통해 메모리의 소모량을 줄인다.
-    - TODO 컴파일러의 코드 최적화에 대해 알아봐야겠다.
 
 ```cpp
 CTest test; // static void foo() 멤버 함수를 가지고 있다.
@@ -1239,15 +1244,114 @@ void (*func3)() = &CTest::foo;        // ok
   - [가상 베이스 클래스의 예제](https://www.learncpp.com/cpp-tutorial/virtual-base-classes/)
 
 
-## inline 키워드
+## [inline 키워드](https://docs.microsoft.com/en-us/cpp/cpp/inline-functions-cpp?view=msvc-170)
 
-  - TODO
+  - 컴파일 시 해당 함수의 정의를 함수 호출 코드에 그대로 붙여넣는다.
+ 
+  - ### **최신의 컴파일러는 함수를 정말 적절하게 인라인화 하기 때문에 `inline` 키워드는 거의 사용할 필요가 없다.**
+  - 함수 호출 시 오버헤드를 제거하기 때문에 속도가 빨라질 수 있다.
+  - 클래스 바디 내부에서 정의하는 멤버 함수 앞에는 `inline` 키워드가 생략되어 있다.
+  - ` 인라인 함수`는 **선언과 동시에 정의**해야 한다. 선언만 해놓으면` 링크 에러`가 발생한다.
+  - `인라인 확장 함수`는 일반 함수에 사용할 수 없는 코드 최적화가 적용된다.
+  - 컴파일러가 재량껏 효율을 계산해서 적용한다. 무조건 변경되는 것은 아님
+  - 두 가지 케이스는 인라인 적용이 안된다.
+    - 재귀 함수
+    - `다른 컴파일 유닛`에서 포인터 형태로 호출되는 함수
+  - `__forceinline` 키워드(C 호환용, 거의 안씀)는 최적화를 프로그래머에게 맡기는 키워드다.
+  - `dllexport`와 `dllimport` 키워드로 함수를 인라인으로 정의할 수 있다. 자세한 내용은 `라이브러리`를 참고하자.
+  - ### `매크로 전처리(#define)`와의 비교
+    - 매크로는 `front end`의 `Preprocessing` 단계에 적용되고 `inline expansion` 은 `middle end`의 `Optimization` 단계에 적용된다.
 
+    - `인라인 함수`는 타입 안정성 프로토콜을 따른다.
+    - 키워드를 사용하는 것을 제외하고는 다른 함수와 동일한 구문을 사용한다.
+    - 함수의 파라미터가 단 한번 계산된다. 매크로는 여러번 계산할 가능성이 있다.
+  - ### `C++17` 부터 사용가능한 `inline` 변수는 **다른 `컴파일 단위`에서 각각 `정의`를 할 수 있다.**
+    - 여러 소스 파일이 사용하는 헤더 파일에 정의가 가능하다. 모든 정의는 동일해야 한다.
+   
+    - 모든 유닛에서 동일한 주소를 가지게 된다. (동기화가 된다)
+    - 이 때는 모든 유닛에서 `inline` 으로 선언 되어 있어야 한다.
+    - `C++17` 이상은 인라인 함수도 동일한 기능이 적용된다.
+    - `인라인화가 선호됨`의 의미보다는 `중복 정의가 허용됨`을 의미하는데, 이것은 함수에서 비롯되었다. 이게 변수로 확장된 것이다.
+  - 참고
+    - [inline specifier](https://en.cppreference.com/w/cpp/language/inline)
+
+
+## [const 키워드](https://docs.microsoft.com/en-us/cpp/cpp/const-cpp?view=msvc-170)
+
+  - 프로그래머가 객체 또는 변수를 수정할 수 없음을 나타낸다.
+  
+  - 기본적으로 `internal linkage` 속성을 가지기 때문에 `컴파일 단위`마다 다른 주소를 갖는다.
+  - `const` 멤버 함수는 호출되는 객체를 `읽기 전용` 으로 취급한다. (`const this*`)
+    - `비정적 데이터 멤버`의 수정이 불가능하다. (상수 포인터는 값 변경이 불가능하다.)
+
+    - `상수가 아닌 멤버 함수`의 호출이 불가능하다. (`this`를 인자로 넘겨야 하는데 상수 타입이라 `다른 함수 취급`한다.)
+    - `this` 에 `const_cast` 를 사용하면 위의 두 제한을 없앨 수 있다.
+    ```cpp
+      class CTest {
+        char* mName{"CTest"};
+        public:
+        void foo() {
+          mName = "CTest";
+          std::cout << mName << std::endl;
+        }
+        void cFoo() const {
+          std::cout << mName << std::endl;
+          const_cast<CTest*>(this)->mName = "cFoo"; // 값 변경 가능
+          std::cout << mName << std::endl;
+          const_cast<CTest*>(this)->foo();          // 함수 호출 가능
+        }
+      };
+    ```
+  - `const` 객체는 [제한 증가 순서 (order of increasing restrictions)](https://en.cppreference.com/w/cpp/language/cv#Conversions)가 높은 쪽이다.
+    - 기본 타입에서 제공하는 기능이 제한된다는 뜻이다.
+
+    - 높은 쪽에서 낮은 쪽으로는 `변환`이 불가능하다. (기능을 사용하지 못하기 때문)
+      - `const int ` 변수는 `int` 변수에 대입이 불가능하지만, 반대는 가능하다.
+    - 상속 관계에서 `부모 클래스`의 포지션과 비슷하다. (하지만 클래스는 `다운 캐스팅`으로 대입이 가능하다)
+    - `type qualifier (타입 한정자)` 또는 `volatile` 키워드와 함께 `cv-qualifier (cv 한정자)` 로 표현한다.
+ 
+  - `상수 포인터`는 [const pointer](#const-pointer) 에 정리되어 있다.
+  - `비정적, 비상수 데이터 멤버`에 `mutable` 키워드를 붙일 수 있다.
+    - 해당 멤버 변수는 `const` 제한을 벗어난다.
+
+    - `상수 객체`, `상수 함수`에서의 호출 및 수정이 가능해진다.
+    ```cpp
+      class C {
+        mutable const int* p;         // OK (p는 상수가 아니기 때문)
+        mutable int* const q;         // ill-formed
+        mutable int&       r;         // ill-formed
+      };
+    ```
+  - 참고
+    - [cv (const and volatile) type qualifiers](https://en.cppreference.com/w/cpp/language/cv)
+
+## [volatile 키워드](https://docs.microsoft.com/en-us/cpp/cpp/volatile-cpp?view=msvc-170)
+
+  - 컴파일러의 `코드 최적화를 방지`하고, 레지스터에 값을 복사하여 연산하는 대신 `항상 메모리에 접근해서 값을 읽거나 쓴다`.
+
+  - 불필요한 코드의 동작도 생략하지 않고 모두 실행할 것을 보장한다.
+  - `Reordering (재배치)` 문제를 해결한다.
+      - 재배치는 컴파일러가 `메모리 접근 속도 향상`, `파이프라인 활용` 등 최적화를 목적으로 제한된 범위 내에서 프로그램 명령의 위치를 바꾸는 것을 말한다.
+    
+      - `volatile` 키워드는 `쓰기` 시, 앞선 메모리 접근 즉 이전 코드들의 처리를 보장하고, `읽기` 시, 이후의 메모리 접근보다 먼저 처리함을 보장한다.
+      - `volatile` 키워드의 처리는 어떤 상황에서도 코드 내의 순서를 따른다는 뜻이다.
+  - 값을 주소에 덮어쓰는 작업 자체가 하나의 `지시 기능`의 수행을 의미하는 `임베디드 시스템` 에서 꼭 필요한 키워드이다.
+  - 여러 프로세스에서 값의 변경을 확인해야 하기 때문에 `공유 메모리` 객체를 사용하는 `인터럽트 서비스 루틴` 에서도 사용한다.
+  - `멀티 스레드` 환경에서는 **각 스레드 사이의 접근 순서를 보장할 수 없기 때문에** `volatile` 대신 [atomic](#atomic) 을 사용한다.
+  - `const` 키워드와 마찬가지로 `제한 증가 순서`가 높은 쪽이다.
+  - 참고
+    - [cv (const and volatile) type qualifiers](https://en.cppreference.com/w/cpp/language/cv)
+    - [임베디드 시스템에서 volatile 키워드를 사용하는 이유](https://luna-archive.tistory.com/2)
+    - [c/c++ volatile 키워드](https://skyul.tistory.com/337)
 
 ## constexpr 키워드
 
   - TODO
 
+
+## __declspec 키워드
+
+  - TODO
 
 ---
 # 연산자
@@ -1476,3 +1580,13 @@ int main() {
 
   - TODO
   - [바튼-넥만 트릭](https://wikidocs.net/481)
+
+
+---
+# 스레드
+
+  - TODO
+
+## atomic
+
+  - TODO
