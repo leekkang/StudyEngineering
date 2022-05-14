@@ -28,12 +28,14 @@
   - [Uniform Initailizer](#uniform-initailizer)
   - [Member Access Control (접근 지정자)](#member-access-control-접근-지정자)
 - [상속과 가상 함수](#상속과-가상-함수)
-  - [상속 (`Inheritance`)](#상속-inheritance)
-  - [가상 함수 (`Virtual Function`)](#가상-함수-virtual-function)
+  - [상속 (Inheritance)](#상속-inheritance)
+  - [가상 함수 (Virtual Function)](#가상-함수-virtual-function)
   - [Abstract class, Pure Virtual Function (추상클래스, 순수 가상 함수)](#abstract-class-pure-virtual-function-추상클래스-순수-가상-함수)
   - [Virtual Function Table (가상함수 테이블)](#virtual-function-table-가상함수-테이블)
   - [Virtual Table Table](#virtual-table-table)
 - [변수 범위, 주기, 링크](#변수-범위-주기-링크)
+- [리터럴](#리터럴)
+  - [문자열 리터럴](#문자열-리터럴)
 - [키워드](#키워드)
   - [this 키워드](#this-키워드)
   - [static 키워드](#static-키워드)
@@ -44,6 +46,7 @@
   - [volatile 키워드](#volatile-키워드)
   - [constexpr 키워드](#constexpr-키워드)
   - [__declspec 키워드](#__declspec-키워드)
+  - [explicit 키워드](#explicit-키워드)
 - [연산자](#연산자)
   - [sizeof 연산자](#sizeof-연산자)
   - [캐스팅 연산자](#캐스팅-연산자)
@@ -56,6 +59,7 @@
 - [템플릿](#템플릿)
 - [스레드](#스레드)
   - [atomic](#atomic)
+  - [Coroutines (C++20)](#coroutines-c20)
 
 ---
 
@@ -75,7 +79,7 @@
   - 이름 : 무언가를 지칭하는 단어. 가장 큰 개념
 
   - 간단한 포함관계 
-    - 실체가 없는 것 : 이름 > 식별자 > 키워드
+    - 실체가 없는 것 (어휘적 표현 요소, 토큰) : 이름 > 식별자 > 키워드
   
     - 실체가 있는 것 : 엔터티 > 객체, 타입
 
@@ -371,8 +375,11 @@
 ---
 # 메모리
 
+  - TODO : 운영체제 문서로 옮기자
   - 사전적 의미 : 주기억장치, 1차 기억 장치와 동의어다.
-  - cpp의 메모리 영역은 크게 4가지로 나뉜다 : 스택, 데이터, 힙, 코드
+  - 여기서 말하는 `메모리 구조`는 언어만의 메모리 구조가 아닌 **운영체제에서 나눈 개념**에 가깝다. 운영체제가 효율적으로 저장공간을 관리하기 위해서 도입한 것이다.
+  - `언어의 표준 문서`에는 메모리에 관련된 개념이 **아예 없다**. (지역변수의 스택 개념 이런것도 없음)
+  - 메모리 영역은 크게 4가지로 나뉜다 : 스택, 데이터, 힙, 코드
 
   - **텍스트 or 코드** : 유저가 작성한 코드가 저장되는 영역
     - 
@@ -385,9 +392,16 @@
     - `전역변수` : 함수의 외부에 선언된 변수
   
     - `rodata`, `data`, `bss` 로 영역이 나뉜다.
-      - `rodata` : 상수 키워드(const)로 선언되는 영역, 시스템에 사용된 각종 문자열들을 포함. 읽기 전용이지만 데이터 영역에 존재한다.
-      - `data` : 읽기, 쓰기가 가능한, 초기화된 전역변수 또는 정적변수를 포함
-      - `bss(block stated symbol)` : 초기화되지 않았거나 0으로 초기화하는 전역변수 또는 정적변수를 포함
+      - `rodata` : 상수 키워드(const)로 선언되는 영역, 시스템에 사용된 각종 문자열들을 저장한다. **읽기 전용이지만** 데이터 영역에 존재한다.
+        - `지역 변수`는 `const` 키워드가 붙어도 `스택 영역`에 저장된다. 스코프 종료시 삭제되어야 하기 때문이다.
+        - `문자열 리터럴`이 여기에 저장된다. `C++`에서 문자열 리터럴은 `const char*` 타입이다.
+        - `char x[] = "hello"` 라는 문장에서 "hello"는 문자열 리터럴로 저장이 되는가? -> 기본 컴파일 옵션으로 진행 시 `저장된다.`
+        - 아래 사진에서, 둘 모두 `std::_Sys_errtab` 이라는 곳에서 값을 가져오는 것을 볼 수 있다.
+          ![](img/string_literal.png)
+     
+      - `data` : 읽기, 쓰기가 가능한, 0이 아닌 값으로 초기화된 전역변수 또는 정적변수를 저장한다.
+      - `bss(block stated symbol)` : 초기화되지 않았거나 0으로 초기화하는 `전역변수` 또는 `정적변수`를 저장한다.
+        - `startup()` 함수가 메인 함수 실행 전 `Zero Initialization`를 진행한다.
     - 프로그램이 종료될 때 메모리에서 정리가 된다.
   - **힙** : 동적할당된 메모리가 할당되는 영역
     - 
@@ -417,6 +431,8 @@
     - [SPARC Assembler Memory Map](https://shinluckyarchive.tistory.com/159)
     - [데이터 영역과 .bss 영역의 차이](https://kldp.org/node/122255)
     - [정적 지역 변수 원리](https://dataonair.or.kr/db-tech-reference/d-lounge/technical-data/?mod=document&uid=235959)
+    - [constant와 관련된 질문](https://kldp.org/node/155779)
+    - [What is the difference between char s[] and char *s?](https://stackoverflow.com/questions/1704407/what-is-the-difference-between-char-s-and-char-s)
 
 
 ## 프로그램 실행 순서
@@ -817,6 +833,7 @@ TODO 질문 : 링커가 obj 파일들을 exe 파일로 만들 때 각 obj 파일
     - 변수를 0값으로 설정하는것, 암묵적으로 타입에 맞게 변환된다.
 
     - 다음의 상황에 적용된다.
+      - 전역 변수들
       - `정적 주기` 를 가진 변수들. 특별하게 생성자를 통해 한번 더 초기화 될 수 있다.
   
       - `value initaializagion` 중 `스칼라 타입`과 `POD클래스 타입`에 빈 중괄호로 초기화 한 경우
@@ -996,7 +1013,7 @@ auto list = {"a"s, "b"s, "c"s}; // initializer_list<std::string>
 ---
 # 상속과 가상 함수
 
-## [상속 (`Inheritance`)](https://docs.microsoft.com/en-us/cpp/cpp/inheritance-cpp?view=msvc-170)
+## [상속 (Inheritance)](https://docs.microsoft.com/en-us/cpp/cpp/inheritance-cpp?view=msvc-170)
 
   - 기존 클래스에서 파생된 새 클래스가 기존 클래스의 특성을 가지는 메커니즘
   
@@ -1023,7 +1040,7 @@ auto list = {"a"s, "b"s, "c"s}; // initializer_list<std::string>
   - `final` 키워드를 사용하여 이후 현재 클래스 또는 가상 함수를 상속받지 못하도록 제한할 수 있다.
 
 
-## [가상 함수 (`Virtual Function`)](https://docs.microsoft.com/en-us/cpp/cpp/virtual-functions?view=msvc-170)
+## [가상 함수 (Virtual Function)](https://docs.microsoft.com/en-us/cpp/cpp/virtual-functions?view=msvc-170)
 
   - `파생 클래스(derived class)`에서 재정의할 것이라 예상하는(`expected`)(약속하는?) 비정적 멤버 함수
   
@@ -1113,7 +1130,9 @@ auto list = {"a"s, "b"s, "c"s}; // initializer_list<std::string>
 
 ---
 # [변수 범위, 주기, 링크](https://www.learncpp.com/cpp-tutorial/scope-duration-and-linkage-summary/)
-  - 참고 : [Storage class specifiers](https://en.cppreference.com/w/cpp/language/storage_duration)
+  - 참고
+    - [Storage classes](https://docs.microsoft.com/en-us/cpp/cpp/storage-classes-cpp?view=msvc-170)
+    - [Storage Duration](https://en.cppreference.com/w/cpp/language/storage_duration)
 
   - `Scope`
     - 
@@ -1165,6 +1184,23 @@ auto list = {"a"s, "b"s, "c"s}; // initializer_list<std::string>
 
 
 
+---
+# 리터럴
+
+  - `소스 코드` 상에서 고정된 `값`을 가지는 것. 숫자, 문자, 단어
+  - `constant` 와는 범주가 다르다! 혼동하지 말자.
+  - `constant` 는 변수에 붙는 속성이고, `literal`은 프로그램에 등장하는 `값`이다.
+  - 보통 리터럴은 값을 의미하지만 메모리에 저장되진 않고, 레지스터에서 바로 계산된다.
+
+## 문자열 리터럴
+
+  - TODO
+  - https://docs.microsoft.com/ko-kr/cpp/cpp/string-and-character-literals-cpp?view=msvc-170
+  - 컴파일러 옵션 중 `중복 문자열 제거`가 있다.
+    - https://docs.microsoft.com/ko-kr/cpp/build/reference/gf-eliminate-duplicate-strings?view=msvc-170
+  - 
+
+
 
 ---
 # [키워드](https://docs.microsoft.com/en-us/cpp/cpp/keywords-cpp?view=msvc-170)
@@ -1197,7 +1233,7 @@ auto list = {"a"s, "b"s, "c"s}; // initializer_list<std::string>
   - 자기 자신을 참조하는 것을 방지할 때도 사용한다. (`&object != this`)
 
 
-## static 키워드
+## [static 키워드](https://docs.microsoft.com/en-us/cpp/cpp/storage-classes-cpp?view=msvc-170#static)
 
   - `static` 변수는 생성된 스코프가 종료된 이후에도 해당 값을 유지한다.
 
@@ -1241,7 +1277,7 @@ void (*func3)() = &CTest::foo;        // ok
     - https://ansohxxn.github.io/cpp/chapter8-10/
 
 
-## extern 키워드
+## [extern 키워드](https://docs.microsoft.com/en-us/cpp/cpp/extern-cpp?view=msvc-170)
 
   - `extern` 변수는 정의된 소스파일과 다른 소스파일에도 접근이 가능하다.
 
@@ -1332,13 +1368,17 @@ void (*func3)() = &CTest::foo;        // ok
 
 ## [const 키워드](https://docs.microsoft.com/en-us/cpp/cpp/const-cpp?view=msvc-170)
 
-  - 프로그래머가 객체 또는 변수를 수정할 수 없음을 나타낸다.
-  
+  - 프로그래머가 객체 또는 변수를 수정할 수 없음을 나타내는 키워드이다.
+    - `상수`라는 표현은 일종의 `어휘적 요소`에 가깝다. 따로 실체(메모리)가 존재하는 것은 아니며, `컴파일러`가 코드를 자를 때 발생하는 토큰의 한 종류이다.
+    - `상수` 라고 부르는 엔터티들은 모두 `상수의 특성을 가진~` 으로 해석하는게 맞다. 실제 상수 엔터티는 `리터럴` 이라 부른다.
+
   - 기본적으로 `internal linkage` 속성을 가지기 때문에 `컴파일 단위`마다 다른 주소를 갖는다.
+  - `const` 변수는 선언과 동시에 초기화를 진행해야 한다.
   - `const` 멤버 함수는 호출되는 객체를 `읽기 전용` 으로 취급한다. (`const this*`)
     - `비정적 데이터 멤버`의 수정이 불가능하다. (상수 포인터는 값 변경이 불가능하다.)
 
-    - `상수가 아닌 멤버 함수`의 호출이 불가능하다. (`this`를 인자로 넘겨야 하는데 상수 타입이라 `다른 함수 취급`한다.)
+    - `상수` 객체에서 `상수가 아닌 멤버 함수`의 호출이 불가능하다. (`this`를 인자로 넘겨야 하는데 `상수 타입`이라 `다른 함수 취급`한다.)
+    - 단, 일반 객체에서 `상수 멤버 함수`는 호출이 가능하다. 하지만 우선순위는 `일반 멤버 함수`보다 낮다.
     - `this` 에 `const_cast` 를 사용하면 위의 두 제한을 없앨 수 있다.
     ```cpp
       class CTest {
@@ -1366,7 +1406,7 @@ void (*func3)() = &CTest::foo;        // ok
  
   - `상수 포인터`는 [const pointer](#const-pointer) 에 정리되어 있다.
   - `비정적, 비상수 데이터 멤버`에 `mutable` 키워드를 붙일 수 있다.
-    - 해당 멤버 변수는 `const` 제한을 벗어난다.
+    - 해당 멤버 변수는 클래스, 함수의 `const` 제한을 벗어난다.
 
     - `상수 객체`, `상수 함수`에서의 호출 및 수정이 가능해진다.
     ```cpp
@@ -1378,10 +1418,11 @@ void (*func3)() = &CTest::foo;        // ok
     ```
   - 참고
     - [cv (const and volatile) type qualifiers](https://en.cppreference.com/w/cpp/language/cv)
+    - [constant와 관련된 질문](https://kldp.org/node/155779)
 
 ## [volatile 키워드](https://docs.microsoft.com/en-us/cpp/cpp/volatile-cpp?view=msvc-170)
 
-  - 컴파일러의 `코드 최적화를 방지`하고, 레지스터에 값을 복사하여 연산하는 대신 `항상 메모리에 접근해서 값을 읽거나 쓴다`.
+  - 컴파일러의 `코드 최적화를 방지`하고, 레지스터에 값을 복사하여 연산하는 대신 `항상 메모리에 접근해서 값을 읽거나 쓰도록` 지시하는 키워드이다.
 
   - 불필요한 코드의 동작도 생략하지 않고 모두 실행할 것을 보장한다.
   - `Reordering (재배치)` 문제를 해결한다.
@@ -1398,15 +1439,59 @@ void (*func3)() = &CTest::foo;        // ok
     - [임베디드 시스템에서 volatile 키워드를 사용하는 이유](https://luna-archive.tistory.com/2)
     - [c/c++ volatile 키워드](https://skyul.tistory.com/337)
 
-## constexpr 키워드
 
-  - TODO
+## [constexpr 키워드](https://docs.microsoft.com/en-us/cpp/cpp/constexpr-cpp?view=msvc-170)
+
+  - `const`와 동일한 역할을 하는 `상수 식 (constant expression)` 이다.
+
+  - `const`와 다르게, 함수 자체를 `상수`로 정의할 수 있다.(그래서 `식` 이다.) 모든 함수와 생성자에 적용이 가능하다.
+  - `constexpr` 변수와 함수 선언 시, `constexpr 지정자`를 생략할 수 없다.
+  - `constexpr variables`
+    - `const` 변수와 다르게 **무조건 `컴파일 타임`에 초기화**된다. `const` 변수는 런타임에 초기화될 수도 있다. (일반 변수의 값으로 초기화 할 때 등등..)
+   
+      - `컴파일 타임`에 초기화가 불가능하면, `컴파일 에러`가 발생한다.
+   
+      - `const` 키워드는 `제한을 더해준다`는 느낌이고 `constexpr` 키워드는 `애초에 다른 기능이 없는` 느낌이다.
+        ```cpp
+          int a = 10 + 1;
+          const int b = a + 1;     // 가능
+          constexpr int c = a + 1; // 불가능, 컴파일 에러
+        ```
+    - 때문에, 모든 `constexpr` 변수는 `const` 이다. 
+    - 참조를 `constexpr` 으로 선언할 수 있다. 참조된 객체는 `상수 식`에 의해 초기화되며, 도중에 호출되는 모든 암시적 변환도 `상수 식`이다.
+  - `constexpr functions`
+    - 반환값이 `constexpr` 인 함수이며, **필요한 경우** `컴파일 타임`에 계산될 수 있다.
+      - `상수 식`이 **`컴파일 타임`에 값을 모르거나** (`리터럴`이 아닌 경우) 알 필요가 없을 때, `런타임`에 계산된다. (== 일반 함수와 동일하게 처리된다.)
+        - 함수 내부에서는, 식별자 타입과 관계없이 `컴파일 타임`에 해당 객체를 알 수 있으면 컴파일 타임에 처리가 가능하다.
+
+        - 해당 호출이 `컴파일 타임`에 발생하는 지 쉽게 알아보려면, 디버깅 시 함수 내부의 중단점이 호출되는지 확인하면 된다. 중단점이 호출되면 `상수`가 아닌 값이 사용되었다는 뜻이다.
+        ```cpp
+        // b는 타입이 상수가 아니지만 a가 상수이면 foo는 컴파일에 계산된다.
+        constexpr int foo(int a)  {
+          int b = a + 5;  
+          return b;
+        }
+        
+          int a = 1;
+          const int b = 2;
+          constexpr int c = 3;
+          foo(a);                      //
+          foo(b);                      //
+          constexpr int c = foo(c);
+        ```
+    - 인자와 반환 값은 무조건 `리터럴 타입` 이어야 한다.
+
+    - 함수 내부에서 `상수 식`만을 사용해야 한다. 아니면 컴파일 에러가 난다.
 
 
 ## __declspec 키워드
 
   - TODO
 
+
+## explicit 키워드
+
+  - TODO
 
 
 
@@ -1658,3 +1743,5 @@ int main() {
 
   - TODO
   - https://en.cppreference.com/w/cpp/atomic/atomic
+
+## Coroutines (C++20)
