@@ -37,9 +37,10 @@
 ---
 # Document Link
 
-  - ## [CPP Study](CPP_Study/CPP_Study.md)
+  - ## [CPP Study](docs/CPP_Study.md)
 
-  - ## [자료구조](DataStructure.md)
+  - ## [자료구조](docs/DataStructure.md)
+  - ## [운영 체제](docs/OperatingSystem.md)
   - API Study
 
 ---
