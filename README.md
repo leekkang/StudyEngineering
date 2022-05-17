@@ -41,7 +41,7 @@
 
   - ## [자료구조](docs/DataStructure.md)
   - ## [운영 체제](docs/OperatingSystem.md)
-  - API Study
+  - ## API Study
 
 ---
 # VSCode Setting

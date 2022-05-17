@@ -33,6 +33,7 @@
   - [Abstract class, Pure Virtual Function (추상클래스, 순수 가상 함수)](#abstract-class-pure-virtual-function-추상클래스-순수-가상-함수)
   - [Virtual Function Table (가상 함수 테이블)](#virtual-function-table-가상-함수-테이블)
   - [Virtual Inheritance (가상 상속)](#virtual-inheritance-가상-상속)
+  - [Virtual Base Table (가상 베이스 테이블, vbtable)](#virtual-base-table-가상-베이스-테이블-vbtable)
   - [Virtual Table Table](#virtual-table-table)
 - [변수 범위, 주기, 링크](#변수-범위-주기-링크)
 - [리터럴](#리터럴)
@@ -382,16 +383,14 @@
   - 사전적 의미 : 주기억장치, 1차 기억 장치와 동의어다.
   - 여기서 말하는 `메모리 구조`는 언어만의 메모리 구조가 아닌 **운영체제에서 나눈 개념**에 가깝다. 운영체제가 효율적으로 저장공간을 관리하기 위해서 도입한 것이다.
   - `언어의 표준 문서`에는 메모리에 관련된 개념이 **아예 없다**. (지역변수의 스택 개념 이런것도 없음)
-  - 메모리 영역은 크게 4가지로 나뉜다 : 스택, 데이터, 힙, 코드
+  - 메모리 영역(Section)은 크게 4가지로 나뉜다 : 스택, 데이터, 힙, 코드
 
-  - **텍스트 or 코드** : 유저가 작성한 코드가 저장되는 영역
-    - 
+  - ## **텍스트 or 코드** : 유저가 작성한 코드가 저장되는 영역
     - 컴파일러가 작성한 코드를 바이너리코드(0, 1 로 구성된 코드)로 만든 뒤 실행파일을 생성한다.
   
     - 실행파일을 더블클릭해서 실행을 하게 되면 바이너리 코드가 메모리에 올라가는데(Load) 이 때 운영체제가 맨 처음 접근하는 곳이 코드 영역이다.
     - 읽기 전용이다.
-  - **데이터** : `전역변수`, `정적(static)변수`들의 메모리가 할당되는 영역
-    - 
+  - ## **데이터** : `전역변수`, `정적(static)변수`들의 메모리가 할당되는 영역
     - `전역변수` : 함수의 외부에 선언된 변수
   
     - `rodata`, `data`, `bss` 로 영역이 나뉜다.
@@ -406,15 +405,13 @@
       - `bss(block stated symbol)` : 초기화되지 않았거나 0으로 초기화하는 `전역변수` 또는 `정적변수`를 저장한다.
         - `startup()` 함수가 메인 함수 실행 전 `Zero Initialization`를 진행한다.
     - 프로그램이 종료될 때 메모리에서 정리가 된다.
-  - **힙** : 동적할당된 메모리가 할당되는 영역
-    - 
+  - ## **힙** : 동적할당된 메모리가 할당되는 영역
     - 런타임 시 크기가 정해진다.
  
     - 선입선출(FIFO) 방식으로 가장 먼저 들어온 데이터가 가장 먼저 나간다.
     - 메모리의 낮은 주소에서 높은 주소로 할당된다.
     - 힙 영역이 스택 영역을 침범하는 경우를 `힙 오버플로우`라고 부른다.
-  - **스택** : `매개변수` 혹은 `지역변수`들의 메모리가 할당되는 영역
-    - 
+  - ## **스택** : `매개변수` 혹은 `지역변수`들의 메모리가 할당되는 영역
     - `매개변수` : 함수의 인자
     
     - `지역변수` : 함수의 내부에서 선언된 변수
@@ -708,12 +705,11 @@ TODO 질문 : 링커가 obj 파일들을 exe 파일로 만들 때 각 obj 파일
   - 초기화 순서는 `멤버가 정의된 순서`, 즉 메모리 상의 주소 순서와 같다. (낮은 주소 -> 높은 주소)
     - `상속` 관계가 있는 객체는 무조건 `베이스 클래스`의 생성자가 먼저 호출된다.
 
-      - `다중 상속`의 경우, `베이스 클래스`들의 초기화 순서는 `base-list`의 순서대로 초기화가 진행된다. (선언순이 아님!)
-   
-      - **`가상 베이스 클래스`가 포함된 `가상 상속`의 경우, 초기화 순서와 저장공간 주소 순서가 다르다!** 자세한 내용은 [가상 상속](#virtual-inheritance-가상-상속) 을 참고
-    - 접근 지정자에 따라 달라질 수 있다고 하는데(C++23까지만), MSVC컴파일러는 코드순으로 초기화한다.
-    - [스칼라 타입](https://en.cppreference.com/w/cpp/types/is_scalar) 변수들은 초기화 구문이 없으면 정해지지 않은 값들이 들어간다.(`default initialization`)
+    - `다중 상속`의 경우, `베이스 클래스`들의 초기화 순서는 `base-list`의 순서대로 초기화가 진행된다. (정의순이 아님!)
+    - `접근 지정자`에 따라 달라질 수 있다고 하는데(C++23까지만), MSVC컴파일러는 코드순으로 초기화한다.
+    - [스칼라 타입](https://en.cppreference.com/w/cpp/types/is_scalar) 변수들은 초기화 구문이 없으면 정해지지 않은 값들이 들어간다. (`default initialization`)
     - [익명 유니온(anonymous union)과 변형 멤버(variant member)](https://en.cppreference.com/w/cpp/language/union#Union-like_class)는 `member initializer`가 없기 때문에 초기화가 안된다.
+  - **`가상 베이스 클래스`가 포함된 `가상 상속`의 경우, 초기화 순서와 저장공간 주소 순서 모두 일반 상속과 다르다!** 자세한 내용은 [가상 상속](#virtual-inheritance-가상-상속) 을 참고
   - **다른 생성자를 선언하지 않는 경우에** 컴파일러는 인수를 사용하지 않는 `기본 생성자`를 생성한다.
     - 이 때, 멤버 변수들은 `Default Initialization` 가 아닌 `Zero Initialization`이 진행된다.
     - 그렇지만 초기화는 꼭 해줘야 한다. MSVC만 지원해주는 것일수도 있다.
@@ -1058,8 +1054,8 @@ auto list = {"a"s, "b"s, "c"s}; // initializer_list<std::string>
   - `주소 타입이 아닌 객체`에서의 함수는 `가상함수 테이블`을 사용하지 않는다. 
     - 테이블 자체는 존재한다. 객체 1개당 8바이트(주소 크기)가 추가로 소모되는 것이다.
   - 함수 처리 전에 `가상함수 테이블`에 들어가서 주소를 가져오는 작업이 추가되기 때문에 꼭 필요한 경우가 아니면 사용하지 말자.
-  - 포인터, 레퍼런스 타입 객체의 함수 호출 코드는 `객체의 주소`, `가상함수 판단`의 정보를 가진다.
-    - 함수가 가상 함수이면 `가상함수 오프셋(상대주소)` 정보를, 비가상 함수이면 `클래스::함수()`의 주소 정보를 가진다.
+  - `포인터, 레퍼런스 타입 객체`의 함수 호출 코드는 `객체 내 포인팅 하는 클래스의 시작 주소`, `가상함수 판단`의 정보를 가진다.
+    - 함수가 가상 함수이면 `가상함수 오프셋(상대 위치값)` 정보를, 비가상 함수이면 `클래스::함수()의 주소`를 가진다.
    
     - 주소 타입이 아니면 비가상 함수와 동일한 정보를 가진다.
     ```cpp
@@ -1090,8 +1086,8 @@ auto list = {"a"s, "b"s, "c"s}; // initializer_list<std::string>
 
   - 참고
     - [virtual function specifier](https://en.cppreference.com/w/cpp/language/virtual)
-    - [가상함수와 가상함수테이블의 이해](https://cosyp.tistory.com/228)
     - [가상함수와 상속](https://modoocode.com/211)
+    - [가상함수와 가상함수테이블의 이해](https://cosyp.tistory.com/228)
 
 
 ## Abstract class, Pure Virtual Function (추상클래스, 순수 가상 함수)
@@ -1116,15 +1112,20 @@ auto list = {"a"s, "b"s, "c"s}; // initializer_list<std::string>
 
   - 클래스에 하나 이상의 `가상 함수`가 존재할 경우 생성되는 리스트
  
-  - `컴파일 타임`에 클래스 정의를 바탕으로 
-  - 일반적인 경우 객체의 가장 낮은 주소에 배치한다. (`this`와 동일한 주소)
-  - 가상함수 테이블 저장 순서는 베이스 클래스 가상 함수 -> 파생 클래스 가상 함수 순이다.
-    - `선언`한 순서대로 함수 `정의` 부분 주소를 테이블에 채워넣는 형태다.
+  - `컴파일 타임`에 클래스 정의를 바탕으로 `PE(Portable Executable, 실행 파일)`에 기록해 놓는다.
+    - `데이터의 rodata 영역` 에 저장된다.
    
-    - `다중 상속`의 경우 `base-list` 순서를 따른다. (주소 상의 클래스 배치 순서다. 어차피 테이블이 달라서 의미는 없다.)
-  - `다중 상속`의 경우, 가상함수 테이블의 개수는 `베이스 클래스`들의 개수와 같다.
-    - `다중 상속`은 `베이스 클래스`의 개수가 여러개 이기 때문에 해당 클래스의 멤버에 접근하려면 위치를 알 필요가 있다.
-    - `베이스 클래스들`은 **서로의 가상함수 테이블을 모르고** 고유의 `오프셋`을 가지기 때문이다.
+    - **상속 관계 상관없이 클래스 타입 마다 하나씩 생성된다.**
+  - `가상 함수`가 선언된 클래스의 가장 앞에 배치한다. (객체 내 위치 기준)
+  - `가상 함수 테이블` 저장 순서는 베이스 클래스 가상 함수 -> 파생 클래스 가상 함수 순이다.
+    - `선언`한 순서대로 `함수 주소`를 테이블에 채워넣는 형태다.
+
+  - 객체 내 `테이블의 개수`는 `상속 라인의 개수`와 동일하다. (`가상 상속`은 같을 수도, 다를 수도 있다. 밑에 서술함)
+    - 라인이 같으면 `기존 테이블의 주소`에 현재 테이블의 주소를 덮어쓴다.
+      - 그래서 `재정의`는 객체 내 테이블 생성에 영향을 주지 않는다.
+  
+    - 라인이 다르면 접근할 수 있는 `가상 함수의 종류`가 바뀌기 때문에 새로운 테이블 주소가 추가된다.
+    - 같은 위상의 `베이스 클래스`들은 **서로의 가상 함수를 모르고** 각자의 `함수 오프셋`을 가지기 때문이다.
     ```cpp
       class CBase1 {
         public:
@@ -1157,38 +1158,257 @@ auto list = {"a"s, "b"s, "c"s}; // initializer_list<std::string>
         return 0;
       }
     ```
-      ![](img/multi_vftable.png)
-      - 위의 코드에서, 서로 다른 `가상 함수`가 같은 오프셋(+8)로 호출되는 것을 볼 수 있다.
+    ![](img/multi_vftable.png)
+    - 위의 코드에서, 서로 다른 `가상 함수`가 같은 오프셋(+8)로 호출되는 것을 볼 수 있다.
+
+    - `베이스 클래스` 별로 각각의 테이블 주소를 갖고 있어, 해당 테이블에 맞는 함수를 가져오는 것이라고 판단할 수 있다.
+    - 각각의 멤버 변수(mName) 에 접근하는 `오프셋`도 **포인터의 타입에 따라간다**는 것을 알 수 있다. (둘 다 +8의 오프셋을 가진다, 0의 자리에는 `가상함수 테이블 주소`가 있다)
+    
+      ![](img/multi_vftable_ctor.png)
+    - 각 `베이스 클래스`의 생성자 호출 후 `가상 함수 테이블` 주소를 덮어쓰는 것을 볼 수 있다. (+0과, +16 두 번)
+    - 두 개의 `가상 함수 테이블`은 주소가 다르다, 즉, `CBase1`에 대한 테이블과 `CBase2`에 대한 테이블이 따로 존재하는 것이다.
   
-      - `베이스 클래스` 별로 각각의 테이블을 갖고 있어, 해당 테이블에 맞는 함수를 가져오는 것이라고 판단할 수 있다.
-      - 각각의 멤버 변수(mName) 에 접근하는 `오프셋`도 **포인터의 타입에 따라간다**는 것을 알 수 있다. (둘 다 +8의 오프셋을 가진다, 0의 자리에는 `가상함수 테이블`이 있다)
-  
-  - 일반 다중 상속의 경우, 해당 `베이스 클래스`가 위치하는 주소가 정해져 있기 때문에 별다른 정보가 필요하지 않다.
-  - 하지만, `가상 베이스 클래스`
+  - `순수 가상 함수`도 `가상 함수 테이블`에 포함된다!
+    - **이론적으로 존재하지 않는 함수**지만, 실제론 컴파일러가 `__purecall` 이라는 함수로 채워넣는다.
+ 
+    - 해당 가상 함수를 호출 시, `R6025 런타임 에러`가 발생한다.
+    - `상속 구조`에서 생성자를 통해 뭔가를 하는 코드를 작성하는 경우, 함수 호출 순서를 잘 따져봐야 한다.
+    - 제일 좋은 방법은 생성자에서 `가상 함수`를 호출하지 않는 것이다.
+    - 아래 `참고` 부분에 자세한 설명 링크가 있다.
   
   - 참고
     - [C++의 가상함수 테이블은 언제 생성될까요?](https://www.sysnet.pe.kr/2/0/11167)
+    - [__purecall이 무엇일까?](http://www.jiniya.net/tt/597)
+    - [C++ vtable의 가상 함수 호출 가로채기](https://www.sysnet.pe.kr/2/0/11169?pageno=0)
+
 
 ## Virtual Inheritance (가상 상속)
 
   - `다중 상속` 시 여러 개의 `파생 클래스`가 동일한 `베이스 클래스`를 상속받는 경우, 어떤 `베이스 클래스`에 접근해야 할 지 모호해지는 상황이 발생한다.
 
-  - 이러한 상황을 해결하기 위해 `베이스 클래스`를 `가상화`해 객체에 한 번만 포함되도록 만드는 것을 `가상 상속` 이라고 한다.
-  - 이 때 `virtual` 키워드를 붙여 `가상화` 하는 클래스를 `virtual base class(가상 베이스 클래스)` 라고 한다.
-  - 초기화 순서는 일반 상속에서의 순서와 동일하지만, `가상 베이스 클래스`는 해당 객체의 `제일 높은 주소`에 저장된다. 즉, **초기화 순서와 저장되는 클래스의 주소 순서가 다르다.**
-    - `베이스 클래스`가 가상화가 되면, `파생 클래스`에서 `베이스 클래스` 부분이 사라지기 때문에 전체적으로 저장공간을 재배치를 할 필요가 있기 때문이다.
+  - 이러한 `모호성`을 해결하기 위해 `베이스 클래스`를 `가상화`해 객체에 한 번만 포함되도록 만드는 것을 `가상 상속` 이라고 한다.
+  - 이 때 `virtual` 키워드를 붙여 `가상화` 하는 클래스를 `Virtual Base Class(가상 베이스 클래스)` 라고 한다. (너무 기니까 `VBClass`라고 줄여쓰겠다.)
+  - **여러 번 등장하는 것을 막기 위해 따로 떼내서 특별 취급 하는 것이다.**
+  - `VBClass`는 초기화 우선순위가 가장 높다. 순서는 다음과 같다.
+    1. `상속 트리` 내의 모든 `VBClass`의 초기화를 진행한다. `VBClass` 간의 순서는 기본 상속의 초기화 순서와 같다. (`base-line` 기준 `DFS(Depth First Search)`)
+ 
+    2. 이후 `base-list` 의 순서대로 클래스 초기화를 진행한다. 이 때, `VBClass`의 호출 코드는 **전부 건너뛴다.**
+    3. 마지막으로 해당 객체의 초기화를 진행한다.
+  - 객체 파괴 시, 소멸자의 우선순위가 가장 낮다. `일반 상속 클래스` 처리가 모두 끝난 뒤 `VBClass` 의 소멸자를 호출한다.
+  - `VBClass`는 해당 객체의 `제일 높은 주소`에 저장된다. 즉, **초기화 순서와 저장되는 클래스의 주소 순서가 다르다.**
+    - `베이스 클래스`가 가상화가 되면, `파생 클래스`에서 `베이스 클래스` 부분이 사라지기 때문에 전체적으로 저장공간의 순서가 바뀐다.
+      - 일반 객체 구성 순서에서 `VBClass` 부분만 전부 빼내서 뒤(높은 주소)에 붙인 모양새이다.
+  
+    - `VBClass`가 `가상 함수`를 포함하는 경우(재정의x), **`가상 함수 테이블`의 개수 및 위치가 변경될 수 있다.**
+    - 클래스의 주소 순서가 변경되기 때문에, `가상 베이스 테이블(virtual base table)`이라는 것을 도입했다.
 
-    
-    - `가상 베이스 클래스`는 공간을 절약하고 여러 개의 다중 상속을 사용하는 클래스 계층에 모호성이 발생하지 않는 방법을 제공한다.
-    - `가상 베이스 클래스`가 생성되면 데이터 멤버들의 순서와 `sizeof` 결과값이 변경된다. (단일 상속과 다르다)
-    - 자세한 내용은 [Virtual Table Table 섹션](#virtual-table-table) 에 정리했다.
+  - 복잡하고 내부 계산이 많아 성능 저하가 있기 때문에 애초에 클래스 설계를 제대로 해서 `다중 상속` 상황을 안나오게 하는 것이 제일 효과적이다.
+  - 참고
+    - [virtual 상속의 원리](https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=kyed203&logNo=220207325648)
+    - [가상 상속의 득과 실](https://dataonair.or.kr/db-tech-reference/d-lounge/technical-data/?mod=document&uid=235880)
 
 
+## Virtual Base Table (가상 베이스 테이블, vbtable)
 
-  - 애초에 클래스 설계를 제대로 해서 `다중 상속` 상황을 안나오게 하는 것이 제일 효과적이다.
+  - `가상 상속` 시 배치가 바뀐 `VBClass`의 위치를 찾기 위해 사용하는 테이블이다.
+ 
+  - 내부에서만 사용하기 때문에 정확한 명칭은 없다. `GCC` 에서는 `Virtual Table Table (VTT)` 이라 부르는 듯?
+  - `가상 함수 테이블`처럼 컴파일 중에 `데이터의 rodata 영역` 에 저장된다.
+    - `VBClass`를 상속받는 클래스들은 전부 테이블을 하나씩 가진다.
+ 
+  - 현재 클래스 기준 `VBClass`들의 `오프셋(상대 위치값)`을 가진다.
+    - 배열의 한 요소가 `dword` 크기, 즉 `주소 크기의 절반` 밖에 사용하지 않는다.
+  
+    - `절대 경로`를 저장하는 것이 아니라 `오프셋(상대 경로)`만을 저장하기 때문이다.
+    - 첫 번째 값에는 무조건 `vbtable`에서 `this`까지의 `오프셋`이 저장된다.
+  - `해당 클래스가 원래 있어야 할 곳`에 생성된다. (대신 집어넣은 느낌)
+ 
+  - `함수 호출` 시 다음과 같은 메커니즘을 따른다.
+   
+    ![](diagram/function_call.png)
+
+  - `가상 함수 테이블`보다 먼저 접근하기 때문에 `vbtable`이 있는 클래스는 `가상 함수 테이블`의 위치가 이동한다.
+    - 그래서 `VBClass`의 `가상 함수`를 호출 하면 `vbtable`을 거쳐서 `가상 함수 테이블`에 접근하게 된다.
+  
+    - 만약 현재 클래스가 새로운 `가상 함수`를 가진다면, 현재 클래스의 `가상 함수`를 가리키는 주소를 **추가한다.**
+    - `VBClass`에서 정의된 `가상 함수`와 현재 클래스에서 정의된 `가상 함수`는 **호출 순서와 참조하는 테이블의 주소가 달라진다.**
+    - 실제 데이터는 `vftable / vbtable / 현재 클래스의 멤버 / vftable / VBClass의 멤버` 순으로 구성될 것이다.
+      - 위의 순서에서 첫번째 `vftable`이 가리키는 주소는 두번째 `vftable` + `VBClass의 가상 함수 개수`가 될 것이다.
+
+  - 예제를 통해 메모리에 어떤 순서로 저장되는지 알아보자. (표에서 테이블 옆에 (+)는 같은 테이블 간 상대 위치 오프셋이다. 표기가 안되어있는건 붙어 있지 않은 것들이다.)
+  - (1) `VBClass`가 없는 다중 상속 구조 (56 byte)
+    ```cpp
+      #include <iostream>
+      class CBase {
+        public:
+          char* mName{"CBase"};
+          CBase() {}
+          virtual ~CBase() {}
+
+          void foo() {}
+          virtual void vFoo() {}
+      };
+      class CDerived1 : public CBase {
+        public:
+          char* mName{"CDerived1"};
+          CDerived1() {}
+          virtual ~CDerived1() {}
+
+          virtual void vFoo1() {}
+      };
+      class CDerived2 : public CBase {
+        public:
+          char* mName{"CDerived2"};
+          CDerived2() {}
+          virtual ~CDerived2() {}
+
+          virtual void vFoo2() {}
+      };
+      class CGrandson : public CDerived1, public CDerived2 {
+        public:
+          char* mName{"CGrandson"};
+          CGrandson() {}
+          virtual ~CGrandson() {}
+
+          void vFoo() {}
+      };
+      int main() {
+        CGrandson* gs = new CGrandson;
+        delete gs;
+
+        return 0;
+      }
+    ```
+    | 주소  |    저장된 값     | 값 변경 순서 |   테이블 값(최종)   | 테이블 소유자 변경 과정         | 생성자 호출 순서 |
+    | :---: | :--------------: | :----------: | :-----------------: | :------------------------------ | :--------------- |
+    |   0   |     vftable      |   1, 3, 9    | dtor / vFoo / vFoo1 | CBase -> CDerived1 -> CGrandson | CBase            |
+    |   8   |   CBase::mName   |      2       |                     |                                 | CDerived1        |
+    |  10h  | CDerived1::mName |      4       |                     |                                 | CBase            |
+    |  18h  |     vftable      |   5, 7, 10   | dtor / vFoo / vFoo2 | CBase -> CDerived2 -> CGrandson | CDerived2        |
+    |  20h  |   CBase::mName   |      6       |                     |                                 | CGrandson        |
+    |  28h  | CDerived2::mName |      8       |                     |                                 |
+    |  30h  | CGrandson::mName |      11      |                     |                                 |
+  
+
+  - (2) 1번의 코드에서 `베이스 클래스`들이 각각 `VBClass`를 상속받는 구조 (80 byte)
+    ```cpp
+      ...
+      class CDerived1 : public virtual CBase {
+        ...
+      };
+      class CDerived2 : public virtual CBase {
+        ...
+      };
+      class CGrandson : public CDerived1, public CDerived2 {
+        ...
+      };
+      ...
+    ```
+    | 주소  |    저장된 값     | 값 변경 순서 | 테이블 값(최종) | 테이블 소유자 변경 과정          | 생성자 호출 순서 |
+    | :---: | :--------------: | :----------: | :-------------: | :------------------------------- | :--------------- |
+    |   0   |   vftable (+0)   |    5, 11     |     vFoo1 /     | CDerived1 -> CGrandson           | CBase            |
+    |   8   |   vbtable (+0)   |      1       |   -8 / 38h /    | CGrandson                        | CDerived1        |
+    |  10h  | CDerived1::mName |      7       |                 |                                  | CDerived2        |
+    |  18h  |  vftable (+18h)  |    8, 12     |    / vFoo2 /    | CDerived2 -> CGrandson           | CGrandson        |
+    |  20h  |  vbtable (+10h)  |      2       |  / -8 / 20h /   | CGrandson                        |                  |
+    |  28h  | CDerived2::mName |      10      |                 |                                  |
+    |  30h  | CGrandson::mName |      15      |                 |                                  |
+    |  38h  |   ? / (34h) 0    |      14      |                 |                                  |
+    |  40h  |  vftable (+30h)  | 3, 6, 9, 13  |  / dtor / vFoo  | CBase -> CDer1 -> CDer2 -> CGson |
+    |  48h  |   CBase::mName   |      4       |                 |                                  |
+  
+
+  - (3) 1번의 코드에서 `베이스 클래스`들이 `VBClass` 인 구조 (80 byte)
+    ```cpp
+      ...
+      class CDerived1 : public CBase {
+        ...
+      };
+      class CDerived2 : public CBase {
+        ...
+      };
+      class CGrandson : public virtual CDerived1, public virtual CDerived2 {
+        ...
+      };
+      ...
+    ```
+    | 주소  |    저장된 값     | 값 변경 순서 |   테이블 값(최종)   | 테이블 소유자 변경 과정 | 생성자 호출 순서 |
+    | :---: | :--------------: | :----------: | :-----------------: | :---------------------- | :--------------- |
+    |   0   |     vbtable      |      1       |   0 / 18h / 38h /   | CGrandson               | CBase            |
+    |   8   | CGrandson::mName |      14      |                     |                         | CDerived1        |
+    |  10h  |   ? / (14h) 0    |      12      |                     |                         | CBase            |
+    |  18h  |     vftable      |   2, 4, 10   | dtor / vFoo / vFoo1 | CBase -> CDer1 -> CGson | CDerived2        |
+    |  20h  |   CBase::mName   |      3       |                     |                         | CGrandson        |
+    |  28h  | CDerived1::mName |      5       |                     |                         |
+    |  30h  |   ? / (34h) 0    |      13      |                     |                         |
+    |  38h  |     vftable      |   6, 8, 11   | dtor / vFoo / vFoo2 | CBase -> CDer2 -> CGson |
+    |  40h  |   CBase::mName   |      7       |                     |                         |
+    |  48h  | CDerived2::mName |      9       |                     |                         |
+
+
+  - (4) 1번의 코드에서 `베이스 클래스`들이 `VBClass`이며 `VBClass`를 상속받는 구조 (88 byte)
+    ```cpp
+      ...
+      class CDerived1 : public virtual CBase {
+        ...
+      };
+      class CDerived2 : public virtual CBase {
+        ...
+      };
+      class CGrandson : public virtual CDerived1, public virtual CDerived2 {
+        ...
+      };
+      ...
+    ```
+    | 주소  |    저장된 값     | 값 변경 순서 |   테이블 값(최종)   | 테이블 소유자 변경 과정          | 생성자 호출 순서 |
+    | :---: | :--------------: | :----------: | :-----------------: | :------------------------------- | :--------------- |
+    |   0   |     vbtable      |      1       | 0 / 18h / 28h / 40h | CGrandson                        | CBase            |
+    |   8   | CGrandson::mName |      16      |                     |                                  | CDerived1        |
+    |  10h  |   ? / (14h) 0    |      15      |                     |                                  | CDerived2        |
+    |  18h  |     vftable      | 4, 7, 10, 12 | dtor / vFoo / vFoo1 | CBase -> CDer1 -> CDer2 -> CGson | CGrandson        |
+    |  20h  |   CBase::mName   |      5       |                     |                                  |                  |
+    |  28h  |     vftable      |    6, 13     |        vFoo1        | CDerived1 -> CGrandson           |
+    |  30h  |     vbtable      |      2       |      -8 / -18h      | CGrandson                        |
+    |  38h  | CDerived1::mName |      8       |                     |                                  |
+    |  40h  |     vftable      |    9, 14     |        vFoo2        | CDerived2 -> CGrandson           |
+    |  48h  |     vbtable      |      3       |      -8 / -30h      | CGrandson                        |
+    |  50h  | CDerived2::mName |      11      |                     |                                  |
+
+
+  - (5) 1번의 코드에서 `베이스 클래스` 하나가 `VBClass`이며 `VBClass`를 상속받는 구조 (88 byte)
+    ```cpp
+      ...
+      class CDerived1 : public CBase {
+        ...
+      };
+      class CDerived2 : public virtual CBase {
+        ...
+      };
+      class CGrandson : public virtual CDerived1, public CDerived2 {
+        ...
+      };
+      ...
+    ```
+    | 주소  |    저장된 값     | 값 변경 순서 |   테이블 값(최종)   | 테이블 소유자 변경 과정         | 생성자 호출 순서 |
+    | :---: | :--------------: | :----------: | :-----------------: | :------------------------------ | :--------------- |
+    |   0   |     vftable      |    8, 11     |        vFoo2        | CDerived2 -> CGrandson          | CBase            |
+    |   8   |     vbtable      |      1       |   -8 / 40h / 20h    |                                 | CDerived1        |
+    |  10h  | CDerived2::mName |      10      |                     |                                 | CBase            |
+    |  18h  | CGrandson::mName |      16      |                     |                                 | CDerived2        |
+    |  20h  |   ? / (24h) 0    |      14      |                     |                                 | CGrandson        |
+    |  28h  |     vftable      |   2, 4, 12   | dtor / vFoo / vFoo1 | CBase -> CDerived1 -> CGrandson |
+    |  30h  |   CBase::mName   |      3       |                     |                                 |
+    |  38h  | CDerived1::mName |      5       |                     |                                 |
+    |  40h  |   ? / (44h) 0    |      15      |                     |                                 |
+    |  48h  |     vftable      |   6, 9, 13   |     dtor / vFoo     | CBase -> CDerived2 -> CGrandson |
+    |  50h  |   CBase::mName   |      7       |                     |                                 |
  
   - 참고
     - [가상 상속의 득과 실](https://dataonair.or.kr/db-tech-reference/d-lounge/technical-data/?mod=document&uid=235880)
+    - [VTable Notes on Multiple Inheritance in GCC](https://ww2.ii.uj.edu.pl/~kapela/pn/cpp_vtable.html)
+    - [What is the VTT for a class](https://stackoverflow.com/questions/6258559/what-is-the-vtt-for-a-class) -> 위와 동일한 내용
+    - [What is the virtual table table?](https://quuxplusone.github.io/blog/2019/09/30/what-is-the-vtt/)
+
 
 ## Virtual Table Table
 
@@ -1205,9 +1425,6 @@ auto list = {"a"s, "b"s, "c"s}; // initializer_list<std::string>
       - `가상 클래스`는 하나만 크기에 포함된다. 단, 같은 클래스의 비가상 클래스는 가상화가 안되기 때문에 그대로 더해진다.
 
   - 참고 (고마워요 `Morgan Deters`!)
-    - [VTable Notes on Multiple Inheritance in GCC](https://ww2.ii.uj.edu.pl/~kapela/pn/cpp_vtable.html)
-    - [What si the VTT for a class](https://stackoverflow.com/questions/6258559/what-is-the-vtt-for-a-class) -> 위와 동일한 내용
-    - [virtual 상속의 원리](https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=kyed203&logNo=220207325648)
 
 
 
@@ -1319,6 +1536,8 @@ auto list = {"a"s, "b"s, "c"s}; // initializer_list<std::string>
 ```
   - 객체의 멤버 함수에서 접근하는 멤버 변수의 앞에는 `this->` 또는 `(*this).` 구문이 생략되어 있다.
   - 자기 자신을 참조하는 것을 방지할 때도 사용한다. (`&object != this`)
+  - 상속 관계에서 `this` 포인터는 항상 객체 주소의 시작점을 가리키는 것이 아닌, **객체 내 `현재 함수의 클래스` 시작점을 가리키게 된다.**
+    - `다중 상속`에서 확인할 수 있는데, 첫 번째 `베이스 클래스`의 `this`값과 두 번째 `베이스 클래스`의 `this`값이 다르다.
 
 
 ## [static 키워드](https://docs.microsoft.com/en-us/cpp/cpp/storage-classes-cpp?view=msvc-170#static)
@@ -1644,6 +1863,7 @@ void (*func3)() = &CTest::foo;        // ok
   - 타입 이름을 제외한 나머지 연산 시 괄호를 사용하지 않아도 된다(!)
   - 절대 0이 결과값으로 나오지 않는다. (나누기 같은 구문에서 에러를 발생시킬 수 있기 때문에 최소값을 1로 정해놓았다.)
   - 배열 식별자의 경우 배열의 총 바이트 수를 산출한다. 포인터 타입은 포인터 크기가 나온다.
+  - 레퍼런스는 실제 객체의 크기가 아닌 `레퍼런스 타입`의 크기가 나온다. (`가상 상속` 내의 클래스도 잘 나온다!)
   - 클래스, 구조체, 유니온의 경우 컴파일러 옵션(`/Zp`) 또는 `pack pragma`에 따라 각각의 멤버 변수 크기의 합과 다를 수 있다. (바이트 패딩)
   - 컴파일 타임에 크기가 정해지지 않거나 텍스트 영역에 저장되는 함수(함수포인터는 가능)는 연산할 수 없다.
   - 참고
@@ -1828,7 +2048,7 @@ int main() {
   - 멤버 함수는 위의 전역 함수, 정적 멤버 함수가 사용하는 타입과 형태가 다르다.
     - `리턴 타입 (소속 클래스::*포인터 이름)(매개변수)`
 
-    - 함수의 주소가 대입, 사용될 때의 소속과 this 포인터의 자료형을 결정하기 위해 `범위 지정 연산자(::)`를 사용하여 어디 영역의 함수인지 정확히 지정해주어야 한다.
+    - 함수의 주소가 대입, 사용될 때의 소속과 `this` 포인터의 자료형을 결정하기 위해 `범위 지정 연산자(::)`를 사용하여 어디 영역의 함수인지 정확히 지정해주어야 한다.
     - `&소속 클래스::함수명` 의 형태로 주소를 대입해야 한다.
     - 주소연산자 생략 시 `비표준 구문`으로 처리해서 컴파일 시 오류가 발생한다.
       - 함수 이름의 표현법을 다양한 문법에서 사용하기 때문에 구분을 명확히 하기 위해 비표준 처리

@@ -1,0 +1,35 @@
+@startuml function call
+title Function Call
+'start'
+
+: 함수 호출;
+if(베이스 클래스가 있는가?) then (yes)
+
+  if(가상 베이스 클래스가 있는가?) then (yes)
+  
+    if(가상 베이스 클래스에서 정의된 함수인가?) then (yes)
+      : vbtable에 접근;
+      : 클래스 위치 오프셋 확인;
+      : 시작 주소 + 오프셋으로 this 주소 이동;
+    else (no)
+      : 해당 클래스 부분으로
+        this 주소 이동;
+    endif
+
+  else (no)
+    : 해당 클래스 부분으로
+      this 주소 이동;
+  endif
+  
+else (no)
+endif
+
+if(가상 함수인가?) then (yes)
+  : vftable에 접근;
+  : 함수의 주소 가져옴;
+else (no)
+endif
+: 주소로 이동(call);
+
+'stop'
+@enduml

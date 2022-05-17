@@ -2,6 +2,8 @@
 
   - 운영체제 내에서 메모리 시스템에 대한 전반적인 지식들을 모아놓은 문서
 
+  - [new delete로 메모리 관리하기](https://blog.naver.com/PostView.naver?blogId=tipsware&logNo=221606898397&parentCategoryNo=&categoryNo=87&viewDate=&isShowPopularPosts=false&from=postView)
+
 ---
 # [스택 프레임](https://eliez3r.github.io/post/2019/10/16/study-system.Stack-Frame.html)
 
