@@ -34,7 +34,6 @@
   - [Virtual Function Table (가상 함수 테이블)](#virtual-function-table-가상-함수-테이블)
   - [Virtual Inheritance (가상 상속)](#virtual-inheritance-가상-상속)
   - [Virtual Base Table (가상 베이스 테이블, vbtable)](#virtual-base-table-가상-베이스-테이블-vbtable)
-  - [Virtual Table Table](#virtual-table-table)
 - [변수 범위, 주기, 링크](#변수-범위-주기-링크)
 - [리터럴](#리터럴)
   - [문자열 리터럴](#문자열-리터럴)
@@ -1408,23 +1407,6 @@ auto list = {"a"s, "b"s, "c"s}; // initializer_list<std::string>
     - [VTable Notes on Multiple Inheritance in GCC](https://ww2.ii.uj.edu.pl/~kapela/pn/cpp_vtable.html)
     - [What is the VTT for a class](https://stackoverflow.com/questions/6258559/what-is-the-vtt-for-a-class) -> 위와 동일한 내용
     - [What is the virtual table table?](https://quuxplusone.github.io/blog/2019/09/30/what-is-the-vtt/)
-
-
-## Virtual Table Table
-
-  - `베이스 클래스 멤버`의 위치를 찾기 위한 메타데이터 리스트
-  - 일반 상속의 경우 참조하는 멤버에 대한 상대적 주소(오프셋)가 일정하다.
-  - 가상 상속의 경우 베이스 클래스의 멤버의 주소가 상속 관계에 따라 변경된다.
-  - 객체의 메모리 할당 시, 다음과 같은 순서로 객체의 크기를 확인한다.
-    - 현재 클래스의 크기 확인 (== 멤버 변수들의 크기)
-   
-    - `상속 메커니즘` 이면, `베이스 클래스`의 크기 확인
-    - `상속 메커니즘` 내에 `가상 함수`가 1개 이상 포함되어 있으면, `주소의 크기 * 상속 트리의 넓이(breadth)`를 더함
-      - 상속 트리의 넓이 == 한 클래스의 `베이스 클래스의 수`의 최대값
-    - `상속 메커니즘` 내에 `가상 클래스`가 1개 이상 포함되어 있으면, `주소의 크기 * (가상 클래스의 수 - 1)`를 더함
-      - `가상 클래스`는 하나만 크기에 포함된다. 단, 같은 클래스의 비가상 클래스는 가상화가 안되기 때문에 그대로 더해진다.
-
-  - 참고 (고마워요 `Morgan Deters`!)
 
 
 
