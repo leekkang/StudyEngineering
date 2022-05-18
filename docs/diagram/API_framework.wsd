@@ -1,6 +1,8 @@
-@startuml Framework
+@startuml API Framework
 title Lifecycle Flowchart
 'start'
+
+:wWinMain
 
 'stop'
 @enduml
