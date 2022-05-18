@@ -1,0 +1,6 @@
+@startuml Framework
+title Lifecycle Flowchart
+'start'
+
+'stop'
+@enduml
