@@ -1,8 +1,112 @@
 @startuml API Framework
 title Lifecycle Flowchart
-'start'
 
-:wWinMain
+<style>
+activityDiagram {
+  BackgroundColor Snow
+  FontColor DarkMagenta
+  'BorderColor #FFFFFF'
+  FontName arial
+  FontSize 20
+  'Padding 10'
+
+  activity {
+    BackgroundColor LightCyan
+    LineColor Black
+  }
+  arrow {
+    LineColor DarkViolet
+  }
+  partition {
+    FontColor MidnightBlue
+    LineColor DeepSkyBlue
+    Padding 50
+  }
+}
+</style>
+skinparam Shadowing false
+skinparam ConditionEndStyle hline
+
+'start'
+:wWinMain();
+:GameManager.Init();
+
+partition "In Init() Func" {
+  split
+    :PathManager.Init();
+  split again
+    :ResourceManager.Init();
+  split again
+    :Input.Init();
+    #WhiteSmoke: Bind Keys ;
+  split again
+    :CollisionManager.Init();
+    #WhiteSmoke: Create Profiles ;
+  split again
+    :SceneManager.Init();
+    #WhiteSmoke: Create Main Scene ;
+  split again
+    :Timer.Init();
+  split again
+    #WhiteSmoke:Create BackBuffer]
+  end split
+}
+
+:gameManager.Run();
+repeat
+
+group **Loop**
+if (PeekMessage()) then (WM_DESTROY)
+  end
+else (Others)
+
+  :GameManager.Logic();
+endif
+end group
+
+
+partition "In Logic() Func" {
+  :Timer.Update();
+  partition "In Timer" {
+    #WhiteSmoke: Calc DeltaTime ]
+  }
+
+  split
+    :Input.Update(deltaTime);
+  split again
+    :Update(deltaTime);
+    partition "In Update() Func" {
+      :ResourceManager.Update();
+      :SceneManager.Update(deltaTime);
+      
+      group **Loop** In Scene
+        #WhiteSmoke:Update Objects
+         in current Scene;
+      end group
+    }
+  split again
+    :PostUpdate(deltaTime);
+    :SceneManager.Update(deltaTime);
+    
+    group **Loop** In Scene 
+      #WhiteSmoke:PostUpdate Objects
+       in current Scene;
+    end group
+
+  split again
+    :Collision(deltaTime);
+  split again
+    :Render(deltaTime);
+    :SceneManager.Render(BackDC, deltaTime);
+    
+    group **Loop** In Scene
+      #WhiteSmoke:Render Objects
+       in current Scene;
+    end group
+
+    #WhiteSmoke: Draw Back Buffer to Front ]
+  end split
+}
 
 'stop'
 @enduml
