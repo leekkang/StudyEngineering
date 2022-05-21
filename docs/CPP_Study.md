@@ -974,6 +974,9 @@ auto list = {"a", "b", "cc"};   // initializer_list<const char*>
 auto list = {"a"s, "b"s, "c"s}; // initializer_list<std::string>
 ```
 
+  - 참고
+    - [Uniform Initialization](http://egloos.zum.com/sweeper/v/3058356)
+
 ## [Member Access Control (접근 지정자)](https://docs.microsoft.com/en-us/cpp/cpp/member-access-control-cpp?view=msvc-170)
 
   - 클래스, 구조체, 공용체(유니온) 에서 멤버들의 접근성을 정의하는 `키워드`이다.
