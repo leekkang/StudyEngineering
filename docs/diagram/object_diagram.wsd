@@ -5,17 +5,12 @@ title Framework Class Diagram
 classDiagram {
   BackgroundColor Snow
   FontColor DarkMagenta
-  'BorderColor #FFFFFF'
   FontName arial
   FontSize 20
-  'Padding 10'
-
+  LineColor DarkViolet
+  
   class {
     BackgroundColor LightCyan
-    LineColor DarkViolet
-  }
-  arrow {
-    LineColor DarkViolet
   }
 }
 </style>
@@ -26,7 +21,7 @@ skinparam CircledCharacterFontColor DarkViolet
 
 note as A
 
-  하얀 다이아 연결 : Aggregation, 객체 파괴되도 안없어짐
+  하얀 다이아 연결 : Aggregation, 객체와 별개
 
   까만 다이아 연결 : Composition, 같이 없어짐
 
