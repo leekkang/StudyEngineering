@@ -1,0 +1,137 @@
+@startuml API Framework
+title Framework Class Diagram
+
+<style>
+classDiagram {
+  BackgroundColor Snow
+  FontColor DarkMagenta
+  'BorderColor #FFFFFF'
+  FontName arial
+  FontSize 20
+  'Padding 10'
+
+  class {
+    BackgroundColor LightCyan
+    LineColor DarkViolet
+  }
+  arrow {
+    LineColor DarkViolet
+  }
+}
+</style>
+skinparam Shadowing false
+skinparam CircledCharacterFontColor DarkViolet
+'skinparam CircledCharacterFontSize 15'
+'skinparam CircledCharacterRadius 10'
+
+note as A
+
+  하얀 다이아 연결 : Aggregation, 객체 파괴되도 안없어짐
+
+  까만 다이아 연결 : Composition, 같이 없어짐
+
+end note
+
+class GameManager <<(C, Aqua)>>
+class Timer <<(C, Aqua)>>
+
+class Input <<(C, Aqua)>>
+class PathManager <<(C, Aqua)>>
+class PathInfo <<(S, DeepSkyBlue)>>
+
+class CollisionManager <<(C, Aqua)>>
+class CollisionProfile <<(S, DeepSkyBlue)>>
+
+class SceneManager <<(C, Aqua)>>
+class Scene <<(C, Aqua)>>
+class GameObject <<(C, Aqua)>>
+class Camera <<(C, Aqua)>>
+class SceneCollision <<(C, Aqua)>>
+class SceneResource <<(C, Aqua)>>
+
+class ResourceManager <<(C, Aqua)>>
+class TextureManager <<(C, Aqua)>>
+class Texture <<(C, Aqua)>>
+class ImageInfo <<(S, DeepSkyBlue)>>
+
+class AnimationManager <<(C, Aqua)>>
+class AnimationSequence <<(C, Aqua)>>
+class Animation <<(C, Aqua)>>
+class AnimationInfo <<(C, Aqua)>>
+class AnimationNotify <<(S, DeepSkyBlue)>>
+class AnimationFrameData <<(S, DeepSkyBlue)>>
+
+
+abstract class Collider
+class ColliderBox <<(C, Aqua)>>
+class ColliderCircle <<(C, Aqua)>>
+
+
+class CRef <<(C, Aqua)>>
+class CGameObject <<(C, Aqua)>>
+class CCollider <<(C, Aqua)>>
+class CTexture <<(C, Aqua)>>
+
+GameManager -left- hidden
+hidden ---- CRef
+CRef <|-- CGameObject
+CRef <|--  CCollider
+CRef <|--  CTexture
+
+GameManager -left- hidden2
+hidden2 -- Input
+hidden2 -- PathManager
+
+GameManager *-right-> Timer
+GameManager -- Input
+GameManager -- PathManager
+PathManager *--> PathInfo : map >
+
+GameManager -- ResourceManager
+ResourceManager *--> TextureManager
+ResourceManager *--> AnimationManager
+TextureManager *----> Texture : map >
+AnimationManager *----> AnimationSequence : map >
+
+TextureManager -- hidden3
+AnimationManager -- hidden3
+hidden3 -- Scene
+
+GameManager -- CollisionManager
+CollisionManager *--> CollisionProfile : map >
+
+
+GameManager -- SceneManager
+SceneManager *----> " 1 " Scene
+Scene *-left-> " 1 " Camera
+Scene *---> " 1 " SceneResource
+Scene *---> " 1 " SceneCollision
+Scene *--->  GameObject : list >
+SceneCollision o-->  Collider : vector >
+
+SceneResource o---> Texture : map >
+Texture *--> ImageInfo : vector >
+SceneResource o---> AnimationSequence : map >
+SceneResource -up---> TextureManager : Find
+SceneResource -up---> AnimationManager : Find
+
+
+GameObject *-->  Collider : list >
+Collider <|..  ColliderBox
+Collider <|..  ColliderCircle
+SceneCollision -up-> CollisionManager : Check
+
+GameObject o--> Texture
+GameObject *--> Animation
+Animation *--> AnimationInfo : map >
+AnimationInfo *--> AnimationNotify : vector >
+AnimationInfo o-right-> AnimationSequence
+AnimationSequence o-> Texture
+AnimationSequence *--> AnimationFrameData : vector >
+
+hide hidden
+hide hidden2
+hide hidden3
+
+'stop'
+@enduml
