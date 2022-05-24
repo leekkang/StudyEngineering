@@ -1,4 +1,5 @@
 - [Document Link](#document-link)
+- [노션 링크](#노션-링크)
 - [VSCode Setting](#vscode-setting)
 - [Visual Studio Setting](#visual-studio-setting)
 - [Codility](#codility)
@@ -42,6 +43,13 @@
   - ## [자료구조](docs/DataStructure.md)
   - ## [운영 체제](docs/OperatingSystem.md)
   - ## API Study
+
+
+---
+# 노션 링크
+
+  - public : https://apple-mouse-751.notion.site/3f6df0d26dba420e8f992e368798a5d9
+  - private : https://www.notion.so/Braid-Portfolio-940a0254dfaf42d2893868cc681342c4
 
 ---
 # VSCode Setting
