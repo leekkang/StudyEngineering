@@ -2,6 +2,8 @@
 ## GameMath
   - 게임에서 사용하는 수학 정보들 
 
+  - 참고 블로그
+    - https://wjs7347.tistory.com/17
 
 ---
 # 좌표계 변환
@@ -35,14 +37,15 @@
 
 
 ---
-# 두 선의 교차점 구하기
+# 두 선분의 교차점 구하기
 
   - 직선의 방정식을 `기울기`와 `절편`으로 나타내는 대신 매개변수를 이용하여 나타내면 깔끔하게 구할 수 있다. (벡터 방정식)
+    - `P_1`과 `P_2` 사이를 `t : (1 - t)` 비율로 분리한 것과 같다.
   $$
   P(t) = (1 - t)P_1 + tP_2
   $$
 
-  - 두 직선의 방정식을 매개변수 t, s 로 표현할 때, 2개의 식을 하나로 만들면 다음과 같다.
+  - 두 직선의 방정식을 매개변수 t, s 로 표현할 때, 2개의 식을 하나로 만들면 다음과 같다. 이 때, t와 s가 0~1 사이의 값을 가지지 않으면, **직선은 교차하지만 선분은 교차하지 않는 상태가 된다.**
   $$
   (1 - t)P_1 + tP_2 = (1 - s)P_1 + sP_2
   $$
@@ -53,13 +56,35 @@
   y_1 + t(y_2 - y_1) = y_3 + s(y_4 - y_3) 
   $$
 
-  - t와 s로 정리하면 다음과 같다.
+  - t와 s로 정리하면 다음과 같다. (분모 같음)
   $$
-  t = x_1 + t(x_2 - x_1) = x_3 + s(x_4 - x_3) \\
-  y_1 + t(y_2 - y_1) = y_3 + s(y_4 - y_3) 
+  t = \frac{(x_4 - x_3)(y_1 - y_3) - (y_4 - y_3)(x_1 - x_3)} 
+           {(y_4 - y_3)(x_2 - x_1) - (x_4 - x_3)(y_2 - y_1)} \\
+  
+  s = \frac{(x_2 - x_1)(y_1 - y_3) - (y_2 - y_1)(x_1 - x_3)} 
+           {(y_4 - y_3)(x_2 - x_1) - (x_4 - x_3)(y_2 - y_1)} \\
   $$
 
+  - t와 s는 두 선이 서로 만날때의 값이기 때문에, 최종적으로 두 선의 교점은 다음과 같다. 
+  - `p - p1 : p2 - p = t : 1 - t` 닮음비를 이용한다.
+  $$
+  x = x_1 + t(x_2 - x_1) \\
+  y = y_1 + t(y_2 - y_1) \\
+  $$
+
+  - 두 선분의 교차만 확인하고 싶은 경우 (게임에선 잘 없지만) `외적의 방향성`을 이용해서 쉽게 구분할 수 있다.
+    - 선분의 한 점에서 시작하는 벡터를 기준으로 두 점까지의 벡터 외적값의 부호가 다르면 교차한다고 볼 수 있다.
+
+      ![](img/cross.png)
+   
+    - 위의 그림처럼 $\overrightarrow{ab}$ 를 기준으로 `c`와 `d`의 외적값을 비교하고, $\overrightarrow{cd}$ 를 기준으로 `a`와 `b`의 외적값을 비교하면 된다.
+  
+  - TODO : [크라메르 공식 (Cramer's rule)](https://ko.wikipedia.org/wiki/%ED%81%AC%EB%9D%BC%EB%A9%94%EB%A5%B4_%EB%B2%95%EC%B9%99) 을 알아보자
+  
   - 참고
-    - [2d 충돌 처리](http://www.gisdeveloper.co.kr/?p=89)
+    - [두 선의 교차점 구하기](http://www.gisdeveloper.co.kr/?p=89)
+    - [두 선분의 교차여부 체크](https://crazyj.tistory.com/140?category=753578)
+    - [2d 충돌 처리](https://netcanis.tistory.com/112)
     - [A Minimal Ray-Tracer](https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-box-intersection)
     - [두 직선의 교점 구하기](https://wjs7347.tistory.com/17)
+    - [외적을 이용해서 선분과 선분의 교차점 구하기](https://bowbowbow.tistory.com/17)
