@@ -309,6 +309,40 @@ $$
   \end{align*}
 $$
 
+```cpp
+  bool CCollisionManager::CollisionLineToCircle(Vector2& hitPoint, const LineInfo& line, const CircleInfo& circle) {
+    // 1. 선분의 끝점이 원 안에 있는지 확인
+    // 2. 선분의 길이가 접선의 길이보다 짧은지 확인
+    // 3. 수선의 길이가 반지름보다 작은지 확인
+
+    if (circle.radius > circle.center.Distance(line.p1)) {
+      hitPoint = line.p1;
+      return true;
+    } else if (circle.radius > circle.center.Distance(line.p2)) {
+      hitPoint = line.p2;
+      return true;
+    }
+
+    float lineSquare = line.p1.DistanceSquare(line.p2);
+    float centerSquare = line.p1.DistanceSquare(circle.center);
+
+    // 2. 선분의 길이가 접선의 길이보다 짧은지 확인
+    if (lineSquare < centerSquare - circle.radius * circle.radius)
+      return false;
+
+    // 3. 수선의 길이가 반지름보다 작은지 확인
+    float cross = (line.p2 - line.p1).Cross(circle.center - line.p1);
+    if (cross * cross > circle.radius * circle.radius * lineSquare)
+      return false;
+
+    // 히트포인트는 원의 중심에서 각 점까지의 거리비를 적용한다. (근사값)
+    float centerSquare2 = line.p2.DistanceSquare(circle.center);
+    hitPoint.x = (line.p1.x * centerSquare2 + line.p2.x * centerSquare) / (centerSquare + centerSquare2);
+    hitPoint.y = (line.p1.y * centerSquare2 + line.p2.y * centerSquare) / (centerSquare + centerSquare2);
+
+    return true;
+  }
+```
 
   - 참고
     - [Line Circle Collision Detection](https://micropilot.tistory.com/2956)
