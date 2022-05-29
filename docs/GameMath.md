@@ -228,7 +228,7 @@ $$
       hitPoint.x = (box.LT.x + box.RB.x) * .5f;
       hitPoint.y = (line.p1.y + line.p2.y) * .5f;
       return true;
-    } else if (outcode1 + outcode2 == 11) { // 선분이 사각형을 세로로 자른다 (히트포인트 부정확함)
+    } else if (outcode1 + outcode2 == 12) { // 선분이 사각형을 세로로 자른다 (히트포인트 부정확함)
       hitPoint.x = (line.p1.x + line.p2.x) * .5f;
       hitPoint.y = (box.LT.y + box.RB.y) * .5f;
       return true;
