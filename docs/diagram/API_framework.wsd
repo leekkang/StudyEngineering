@@ -36,9 +36,16 @@ partition "In Init() Func" {
     :PathManager.Init();
   split again
     :ResourceManager.Init();
+    partition "In Init() Func" {
+      :TextureManager.Init();
+      :AnimationManager.Init();
+      :SoundManager.Init();
+      :FontManager.Init();
+    }
   split again
     :Input.Init();
     #WhiteSmoke: Bind Keys ;
+    #WhiteSmoke: Create MouseObj ;
   split again
     :CollisionManager.Init();
     #WhiteSmoke: Create Profiles ;
@@ -65,46 +72,128 @@ endif
 end group
 
 
-partition "In Logic() Func" {
+partition "In Logic() Func " {
   :Timer.Update();
-  partition "In Timer" {
+  partition "In Timer " {
     #WhiteSmoke: Calc DeltaTime ]
   }
 
   split
     :Input.Update(deltaTime);
+    partition "In Update() " {
+      :UpdateMouse();
+      :UpdateKeyState();
+      :UpdateBindKey();
+    }
+
   split again
     :Update(deltaTime);
-    partition "In Update() Func" {
+    partition "In Update() " {
       :ResourceManager.Update();
+      partition "ResourceManager " {
+        :SoundManager.Update();
+      }
+
       :SceneManager.Update(deltaTime);
-      
       group **Loop** In Scene
-        #WhiteSmoke:Update Objects
-         in current Scene;
+
+        #WhiteSmoke:Update GameObjects;
+        group **Loop** In GameObject
+          #TECHNOLOGY:Update Colliders;
+          #TECHNOLOGY:  Add Colliders
+          in SceneCollision;
+        end group
+
+        #WhiteSmoke:Update WidgetWindows;
+        group **Loop** In WidgetWindow
+          #TECHNOLOGY:Update Widgets;
+        end group
+
+          #WhiteSmoke:Add WidgetWindows
+            in SceneCollision;
       end group
     }
-  split again
-    :PostUpdate(deltaTime);
-    :SceneManager.Update(deltaTime);
-    
-    group **Loop** In Scene 
-      #WhiteSmoke:PostUpdate Objects
-       in current Scene;
-    end group
 
   split again
     :Collision(deltaTime);
+
+    :SceneManager.Collision(deltaTime);
+    partition "In Scene Func " {
+      
+      :SceneCollision.CollisionMouse();
+      partition "CollisionMouse() " {
+
+        #WhiteSmoke:ZSort WidgetWindows]
+        #WhiteSmoke:Check WidgetWindows
+                  Collision;
+        group **Loop** In WidgetWindow
+          #TECHNOLOGY:  Check Collision
+          Widgets and Mouse;
+        end group
+
+        #WhiteSmoke:YSort GameObjects]
+        #WhiteSmoke:   Check Collision
+        Colliders and Mouse;
+      }
+
+      
+      :SceneCollision.Collision();
+      partition "Collision() " {
+
+        #WhiteSmoke:Check Colliders
+              Collision;
+        #WhiteSmoke:    Call Collision
+        Callback Function;
+        #WhiteSmoke:Clear Vectors]
+      }
+    }
+
+  split again
+    :PostUpdate(deltaTime);
+    partition "In PostUpdate() " {
+
+      :Input.PostUpdate(deltaTime)
+          (MouseObj PostUpdate);
+
+      :SceneManager.PostUpdate(deltaTime);
+      group **Loop** In Scene
+
+        #WhiteSmoke:PostUpdate GameObjects;
+        group **Loop** In GameObject
+          #TECHNOLOGY:PostUpdate Colliders;
+        end group
+
+        #WhiteSmoke:PostUpdate WidgetWindows;
+        group **Loop** In WidgetWindow
+          #TECHNOLOGY:PostUpdate Widgets;
+        end group
+      end group
+    }
+
   split again
     :Render(deltaTime);
-    :SceneManager.Render(BackDC, deltaTime);
-    
-    group **Loop** In Scene
-      #WhiteSmoke:Render Objects
-       in current Scene;
-    end group
+    partition "In Render() " {
 
+      :SceneManager.Render(BackDC, deltaTime);
+      group **Loop** In Scene
+        #WhiteSmoke:YSort GameObjects]
+        #WhiteSmoke:Render GameObjects;
+        group **Loop** In GameObject
+          #TECHNOLOGY:Render Colliders;
+        end group
+        
+        #WhiteSmoke:ZSort WidgetWindows]
+        #WhiteSmoke:Render WidgetWindows;
+        group **Loop** In WidgetWindow
+          #TECHNOLOGY:Render Widgets;
+        end group
+      end group
+    }
+
+    :Input.Render(deltaTime)
+        (MouseObj Render);
     #WhiteSmoke: Draw Back Buffer to Front ]
+
   end split
 }
 
