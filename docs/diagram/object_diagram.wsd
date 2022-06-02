@@ -21,6 +21,7 @@ skinparam CircledCharacterFontColor DarkViolet
 'skinparam CircledCharacterFontSize 15'
 'skinparam CircledCharacterRadius 10'
 
+'note right of GameManager
 note as A
 
   하얀 다이아 연결 : Aggregation, 객체와 별개
@@ -45,6 +46,8 @@ class GameObject <<(C, Aqua)>>
 class Camera <<(C, Aqua)>>
 class SceneCollision <<(C, Aqua)>>
 class SceneResource <<(C, Aqua)>>
+class WidgetWindow <<(C, Aqua)>>
+class Widget <<(C, Aqua)>>
 
 class ResourceManager <<(C, Aqua)>>
 class TextureManager <<(C, Aqua)>>
@@ -58,10 +61,16 @@ class AnimationInfo <<(C, Aqua)>>
 class AnimationNotify <<(S, DeepSkyBlue)>>
 class AnimationFrameData <<(S, DeepSkyBlue)>>
 
+class SoundManager <<(C, Aqua)>>
+class Sound <<(C, Aqua)>>
+
+class FontManager <<(C, Aqua)>>
+class Font <<(C, Aqua)>>
 
 abstract class Collider
 class ColliderBox <<(C, Aqua)>>
 class ColliderCircle <<(C, Aqua)>>
+class ColliderLine <<(C, Aqua)>>
 
 
 class CRef <<(C, Aqua)>>
@@ -69,17 +78,24 @@ class CGameObject <<(C, Aqua)>>
 class CCollider <<(C, Aqua)>>
 class CTexture <<(C, Aqua)>>
 class CAniamtionSequence <<(C, Aqua)>>
+class CSound <<(C, Aqua)>>
+class CFont <<(C, Aqua)>>
+class CWidget <<(C, Aqua)>>
+class CWidgetWindow <<(C, Aqua)>>
 
-GameManager -left- hidden
-hidden ---- CRef
-CRef <|-- CGameObject
+
+
+GameManager -left- hidden1
+hidden1 -up- CRef
+CRef <|-left-  CGameObject
 CRef <|--  CCollider
 CRef <|--  CTexture
-CRef <|--  CAniamtionSequence
+CRef <|-right-  CAniamtionSequence
+CRef <|--  CSound
+CRef <|--  CFont
+CRef <|-up-  CWidgetWindow
+CRef <|-up-  CWidget
 
-GameManager -left- hidden2
-hidden2 -- Input
-hidden2 -- PathManager
 
 GameManager *-right-> Timer
 GameManager -- Input
@@ -89,12 +105,18 @@ PathManager *--> PathInfo : map >
 GameManager -- ResourceManager
 ResourceManager *--> TextureManager
 ResourceManager *--> AnimationManager
+ResourceManager *--> SoundManager
+ResourceManager *--> FontManager
 TextureManager *----> Texture : map >
 AnimationManager *----> AnimationSequence : map >
+SoundManager *--> Sound : map >
+FontManager *--> Font : map >
 
-TextureManager -- hidden3
-AnimationManager -- hidden3
-hidden3 -- Scene
+TextureManager -- hidden
+AnimationManager -- hidden
+SoundManager -- hidden
+FontManager -- hidden
+hidden -- Scene
 
 GameManager -- CollisionManager
 CollisionManager *--> CollisionProfile : map >
@@ -106,31 +128,37 @@ Scene *-left-> " 1 " Camera
 Scene *---> " 1 " SceneResource
 Scene *---> " 1 " SceneCollision
 Scene *--->  GameObject : list >
+Scene *--->  WidgetWindow : vector >
+WidgetWindow *-->  Widget : vector >
 SceneCollision o-->  Collider : vector >
+SceneCollision o-->  WidgetWindow : vector >
 
 SceneResource o---> Texture : map >
 Texture *--> ImageInfo : vector >
 SceneResource o---> AnimationSequence : map >
+SceneResource o---> Sound : map >
 SceneResource -up---> TextureManager : Find
 SceneResource -up---> AnimationManager : Find
+SceneResource -up---> SoundManager : Find
+SceneResource -up---> FontManager : Find
 
 
 GameObject *-->  Collider : list >
 Collider <|..  ColliderBox
 Collider <|..  ColliderCircle
+Collider <|..  ColliderLine
 SceneCollision -up-> CollisionManager : Check
 
 GameObject o--> Texture
 GameObject *--> Animation
 Animation *--> AnimationInfo : map >
 AnimationInfo *--> AnimationNotify : vector >
-AnimationInfo o-right-> AnimationSequence
+AnimationInfo o--> AnimationSequence
 AnimationSequence o-> Texture
 AnimationSequence *--> AnimationFrameData : vector >
 
 hide hidden
-hide hidden2
-hide hidden3
+hide hidden1
 
 'stop'
 @enduml
