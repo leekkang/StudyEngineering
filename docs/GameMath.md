@@ -295,19 +295,39 @@ $$
     $$
       \frac{\overline{CD}}{\overline{AC}} \le \frac{r}{\overline{AC}} \quad \Rightarrow collision
     $$
-
   
     - 실제 코드에서 확인은 외적의 제곱을 비교하는 식으로 하면 된다.
 $$
   \begin{align*}
-(\overline{AB} \times \overline{AC})^2 &= (\left| \overline{AB} \right| \left|  \overline{AC} \right| sin \theta)^2 \\
-&= \left| \overline{AB} \right|^2 \left|  \overline{CD} \right|^2 \\
+(\overline{AB} \times \overline{AC})^2 &= (\left\| \overline{AB} \right\| \left\|  \overline{AC} \right\| sin \theta)^2 \\
+&= \left\| \overline{AB} \right\|^2 \left\|  \overline{CD} \right\|^2 \\
 
 (\frac{\overline{AB} \times \overline{AC}}{\overline{AB}})^2 &=  \overline{CD} ^2 \\
  
 \therefore (\frac{\overline{AB} \times \overline{AC}}{\overline{AB}})^2 \le  r^2 \quad \Rightarrow collision
   \end{align*}
 $$
+
+  - 교차점의 중심을 구하는 방법은 두 가지가 있다.
+    - 원의 중심에서 선분 으로 정사영을 한 벡터로 구하는 방법
+    $$
+      \begin{align*}
+      \overrightarrow{AD} =& \overrightarrow{AB} \frac{\left\| \overline{AD}\right\|}{\left\|\overline{AB} \right\|} \\
+      \overrightarrow{AB} \cdot \overrightarrow{AC} = &
+      \left\| \overline{AB} \right\| \left\| \overline{AC} \right\| \cos \theta \\ 
+      =& \left\| \overline{AB} \right\| \left\| \overline{AD} \right\| \\
+      \end{align*} 
+
+      \begin{align*}
+      \therefore D &= A + \overrightarrow{AD} \\
+      &= A + \overrightarrow{AB} \frac{\left\| \overline{AD}\right\|}{\left\|\overline{AB} \right\|}  \\
+      &= A + \overrightarrow{AB} \frac{1}{\left\|\overline{AB} \right\|} \frac{\overrightarrow{AB} \cdot \overrightarrow{AC}}{\left\|\overline{AB} \right\|} \\
+        &= A + \frac{\overrightarrow{AB} (\overrightarrow{AB} \cdot \overrightarrow{AC})}{\left\| \overline{AB} \right\| ^2}
+      \end{align*}\\
+    $$
+
+    - 직선의 방정식을 이용하여 x, y 절편을 구하는 방법
+      - [위키](https://ko.wikipedia.org/wiki/%EC%A0%90%EA%B3%BC_%EC%A7%81%EC%84%A0_%EC%82%AC%EC%9D%B4%EC%9D%98_%EA%B1%B0%EB%A6%AC)에 공식이 나와있다.
 
 ```cpp
   bool CCollisionManager::CollisionLineToCircle(Vector2& hitPoint, const LineInfo& line, const CircleInfo& circle) {
@@ -324,21 +344,21 @@ $$
     }
 
     float lineSquare = line.p1.DistanceSquare(line.p2);
-    float centerSquare = line.p1.DistanceSquare(circle.center);
-    float centerSquare2 = line.p2.DistanceSquare(circle.center);
+    float centerSquare = max(circle.center.DistanceSquare(line.p1), circle.center.DistanceSquare(line.p2));
 
     // 2. 선분의 길이가 접선의 길이보다 짧은지 확인 (긴 쪽을 비교해야 한다)
-    if (lineSquare < max(centerSquare, centerSquare2) - circle.radius * circle.radius)
-		  return false;
+    if (lineSquare < centerSquare - circle.radius * circle.radius)
+      return false;
 
     // 3. 수선의 길이가 반지름보다 작은지 확인
     float cross = (line.p2 - line.p1).Cross(circle.center - line.p1);
     if (cross * cross > circle.radius * circle.radius * lineSquare)
       return false;
 
-    // 히트포인트는 원의 중심에서 각 점까지의 거리비를 적용한다. (근사값)
-    hitPoint.x = (line.p1.x * centerSquare2 + line.p2.x * centerSquare) / (centerSquare + centerSquare2);
-    hitPoint.y = (line.p1.y * centerSquare2 + line.p2.y * centerSquare) / (centerSquare + centerSquare2);
+    // 히트포인트는 원의 중심에서 선분으로 정사영을 한 벡터로 구한다.
+    Vector2 vecAB = (line.p2 - line.p1);
+    float dot = vecAB.Dot(circle.center - line.p1);
+    hitPoint = vecAB * (dot / lineSquare);
 
     return true;
   }
