@@ -89,7 +89,6 @@
     - `Shell launcher`
     - `Better Comments`
     - `Auto Comment Blocks`
-    - `change-case`
 
   - [Clang-Format Style Documentation](https://clang.llvm.org/docs/ClangFormatStyleOptions.html)
 
