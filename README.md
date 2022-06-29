@@ -42,7 +42,7 @@
 
   - ## [자료구조](docs/DataStructure.md)
   - ## [운영 체제](docs/OperatingSystem.md)
-  - ## API Study
+  - ## [API Study](docs/API_Study.md)
   - ## [그래픽스](docs/Graphics.md)
   - ## [게임 수학](docs/GameMath.md)
 
