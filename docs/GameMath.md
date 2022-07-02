@@ -3,8 +3,12 @@
 
   - 게임에서 사용하는 수학 정보들 
 
-  - 참고 블로그
+  - 참고
     - https://wjs7347.tistory.com/17
+  - Easing Function
+    - https://github.com/nicolausYes/easing-functions/blob/master/src/easing.cpp
+
+![](img/easing.png)
 
 ---
 # 좌표계 변환
