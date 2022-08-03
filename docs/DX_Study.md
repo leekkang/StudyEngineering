@@ -12,8 +12,6 @@
   - 참고 
     - [Basic Concept of C++ Language](https://en.cppreference.com/w/cpp/language/basic_concepts) 
 
-  - oauth token test (커밋 이후 삭제)
-
 
 ---
 # Culling
