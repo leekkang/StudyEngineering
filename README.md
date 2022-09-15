@@ -2,6 +2,7 @@
 - [노션 링크](#노션-링크)
 - [VSCode Setting](#vscode-setting)
 - [Visual Studio Setting](#visual-studio-setting)
+- [Unicode, ANSI, UTF](#unicode-ansi-utf)
 - [Codility](#codility)
   - [Time Complexity](#time-complexity)
 - [Encoding Algorithm](#encoding-algorithm)
@@ -114,6 +115,29 @@
   - [단축키 참고](https://docs.microsoft.com/ko-kr/visualstudio/ide/default-keyboard-shortcuts-in-visual-studio?view=vs-2019)
   - [단축키 참고](https://najsulman.tistory.com/996)
 
+
+---
+# Unicode, ANSI, UTF
+
+  - ### Unicode : 문자 집합을 가진 테이블
+    - 비슷한 개념으로 `ASCII Code Table`이 있다.
+  - ### UTF : `Unicode Transformation Format`의 약자로, 유니코드를 어떤 조합으로 인코딩 할 것 인가에 대한 프로토콜이다.
+    - `UTF-8`, `UTF-16`, `UTF-32`, `UCS-2`, `UCS-4` 등이 있다.
+    - `BOM (Byte Order Mark)` 가 존재한다. CPU 종류에 따라 처리가 달라지면서 생기는 문제를 해결하기 위해 생긴 프로토콜이다.
+    - `UTF-8` : `EF BB BF`로 시작한다. 없는 경우가 많다. 아스키 코드표를 포함한다. (프로토콜이 똑같다)
+    - `UTF-16` : `UCS-2`의 확장 개념이다. `Little Endian (FF FE, Intel계열)`, `Big Endian (FE FF, Unix계열)`이 있다.
+      - c++에서 `wchar_t`로 표기된다.
+  - ### ANSI : `MS-DOS`의 기본 인코딩 프로토콜. 원래는 영문판이 기본이었으나 요새는 시스템 로케일을 따라간다. 한국은 CP949(EUC-KR 확장판)코드 페이지를 사용한다.
+    - 메모장 저장 시 나오는 ANSI 인코딩은 원래 규격이 아니다. 잘못 썼는데 그냥 그대로 사용하는 것. 실제로는 CP949를 사용한다.
+  
+  - wide char : UTF-16
+  - multi byte : ANSI, UTF-8
+  - 코드 페이지 변경(Unicode -> CP949 같은) 시 시스템 로케일을 따라간다.
+    - `WideCharToMultiByte(CP_ASP,...)`, `MultiByteToWideChar(CP_ASP,...)` 함수 사용 시 시스템 로케일을 따라감. 다른 로케일 적용하고 싶으면 `locale::facet` 사용하자.
+
+  - 참고 
+    - https://sacstory.tistory.com/entry/%EC%9C%A0%EB%8B%88%EC%BD%94%EB%93%9C%EC%99%80-ANSI-%EA%B7%B8%EB%A6%AC%EA%B3%A0-UTF
+    - https://www.joelonsoftware.com/2003/10/08/the-absolute-minimum-every-software-developer-absolutely-positively-must-know-about-unicode-and-character-sets-no-excuses/
 
 ---
 # Codility

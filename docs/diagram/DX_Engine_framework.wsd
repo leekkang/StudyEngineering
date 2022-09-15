@@ -27,12 +27,13 @@ activityDiagram {
 skinparam Shadowing false
 skinparam ConditionEndStyle hline
 
-'start'
-:wWinMain();
-:GameManager.Init();
+start
+:Engine.Init(inst, title...);
 
 partition "In Init() Func" {
   split
+    :DeviceManager.Init();
+  split again
     :PathManager.Init();
   split again
     :ResourceManager.Init();
@@ -43,23 +44,25 @@ partition "In Init() Func" {
       :FontManager.Init();
     }
   split again
+    :CollisionManager.Init();
+    #WhiteSmoke: Create Profiles ;
+  split again
     :Input.Init();
     #WhiteSmoke: Bind Keys ;
     #WhiteSmoke: Create MouseObj ;
   split again
-    :CollisionManager.Init();
-    #WhiteSmoke: Create Profiles ;
+    :EditorManager.Init();
+  split again
+    :RenderManager.Init();
   split again
     :SceneManager.Init();
     #WhiteSmoke: Create Main Scene ;
   split again
     :Timer.Init();
-  split again
-    #WhiteSmoke:Create BackBuffer]
   end split
 }
 
-:gameManager.Run();
+:Engine.Run();
 repeat
 
 group **Loop**
@@ -67,7 +70,7 @@ if (PeekMessage()) then (WM_DESTROY)
   end
 else (Others)
 
-  :GameManager.Logic();
+  :Engine.Logic();
 endif
 end group
 
@@ -85,6 +88,9 @@ partition "In Logic() Func " {
       :UpdateKeyState();
       :UpdateBindKey();
     }
+
+  split again
+    :EditorGUIManager.Update(deltaTime);
 
   split again
     :Update(deltaTime);
