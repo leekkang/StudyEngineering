@@ -5,23 +5,30 @@ title Engine Class Diagram
 classDiagram {
   BackgroundColor Snow
   FontColor DarkMagenta
+  LineColor DarkViolet
   FontName arial
   FontSize 20
-  LineColor DarkViolet
   
-  class {
-    BackgroundColor LightCyan
-  }
+  'class {'
+  '  BackgroundColor LightCyan'
+  '}'
 }
 </style>
+skinparam class {
+    BackgroundColor LightCyan
+}
 skinparam roundCorner 15
 skinparam Shadowing false
 skinparam ClassBorderThickness 1
 skinparam CircledCharacterFontColor DarkViolet
+skinparam CircledCharacterFontStyle bold
 'skinparam CircledCharacterFontSize 15'
 'skinparam CircledCharacterRadius 10'
 
-'note right of GameManager
+skinparam ClassStereotypeFontColor DarkMagenta
+skinparam ClassStereotypeFontSize 15
+
+'note right of Engine
 note as A
 
   하얀 다이아 연결 : Aggregation, 객체와 별개
@@ -30,12 +37,14 @@ note as A
 
 end note
 
-class GameManager <<(C, Aqua)>>
+class Engine <<(C, Aqua) Singleton>>
 class Timer <<(C, Aqua)>>
 
-class Input <<(C, Aqua)>>
-class PathManager <<(C, Aqua)>>
-class PathInfo <<(S, DeepSkyBlue)>>
+package Managers <<Rectangle>> {
+  class Input <<(C, Aqua)>>
+  class PathManager <<(C, Aqua)>>
+  class PathInfo <<(S, DeepSkyBlue)>>
+}
 
 class CollisionManager <<(C, Aqua)>>
 class CollisionProfile <<(S, DeepSkyBlue)>>
@@ -85,7 +94,7 @@ class CWidgetWindow <<(C, Aqua)>>
 
 
 
-GameManager -left- hidden1
+Engine -left- hidden1
 hidden1 -up- CRef
 CRef <|-left-  CGameObject
 CRef <|--  CCollider
@@ -97,12 +106,12 @@ CRef <|-up-  CWidgetWindow
 CRef <|-up-  CWidget
 
 
-GameManager *-right-> Timer
-GameManager -- Input
-GameManager -- PathManager
+Engine *-right-> Timer
+Engine -- Input
+Engine -- PathManager
 PathManager *--> PathInfo : map >
 
-GameManager -- ResourceManager
+Engine -- ResourceManager
 ResourceManager *--> TextureManager
 ResourceManager *--> AnimationManager
 ResourceManager *--> SoundManager
@@ -118,11 +127,11 @@ SoundManager -- hidden
 FontManager -- hidden
 hidden -- Scene
 
-GameManager -- CollisionManager
+Engine -- CollisionManager
 CollisionManager *--> CollisionProfile : map >
 
 
-GameManager -- SceneManager
+Engine -- SceneManager
 SceneManager *----> " 1 " Scene
 Scene *-left-> " 1 " Camera
 Scene *---> " 1 " SceneResource
