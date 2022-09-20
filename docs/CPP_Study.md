@@ -953,6 +953,7 @@ class CTest {
     - [Non Static Data Members](https://en.cppreference.com/w/cpp/language/data_members)
     - [Non Static Data Members Initialization](https://www.cppstories.com/2015/02/non-static-data-members-initialization/)
 
+
 ## [Uniform Initailizer](https://modoocode.com/286)
 
   - `class A` 가 있고 인자를 받지 않는 생성자를 가지고 있을 때, `A a();` 라인은 객체 `a`를 만드는 것이 아닌 `A`를 리턴하고 인자를 받지 않는 함수 `a` 를 선언한 것으로 간주한다.
