@@ -35,21 +35,54 @@ note as A
 
   까만 다이아 연결 : Composition, 같이 없어짐
 
+  구조가 단순한 클래스, 구조체는 생략 또는 따로 떼어놓음
 end note
 
 class Engine <<(C, Aqua) Singleton>>
-class Timer <<(C, Aqua)>>
 
-package Managers <<Rectangle>> {
-  class Input <<(C, Aqua)>>
-  class PathManager <<(C, Aqua)>>
-  class PathInfo <<(S, DeepSkyBlue)>>
+package Manager <<Rectangle>> {
+  class Device <<(C, Aqua) Singleton>>
+  class PathManager <<(C, Aqua) Singleton>>
+  class Input <<(C, Aqua) Singleton>>
+  class CollisionManager <<(C, Aqua) Singleton>>
+  class ResourceManager <<(C, Aqua) Singleton>>
+  class RenderManager <<(C, Aqua) Singleton>>
+  class SceneManager <<(C, Aqua) Singleton>>
+  class EditorManager <<(C, Aqua) Singleton>>
 }
 
-class CollisionManager <<(C, Aqua)>>
 class CollisionProfile <<(S, DeepSkyBlue)>>
 
-class SceneManager <<(C, Aqua)>>
+package Resources <<Rectangle>> {
+  class ShaderManager <<(C, Aqua)>>
+  class TextureManager <<(C, Aqua)>>
+  class MaterialManager <<(C, Aqua)>>
+  class MeshManager <<(C, Aqua)>>
+  class AnimationManager <<(C, Aqua)>>
+
+  class Shader <<(C, Aqua)>>
+  class ConstantBuffer <<(C, Aqua)>>
+
+  class Texture <<(C, Aqua)>>
+  class Sampler <<(C, Aqua)>>
+
+  class Material <<(C, Aqua)>>
+  class RenderState <<(C, Aqua)>>
+
+  class Mesh <<(C, Aqua)>>
+  class MeshContainer <<(S, DeepSkyBlue)>>
+  class MeshSlot <<(S, DeepSkyBlue)>>
+
+  class Animation <<(C, Aqua)>>
+  class AnimationData <<(C, Aqua)>>
+  class AnimationSequence <<(C, Aqua)>>
+  'class SoundManager <<(C, Aqua)>>
+  'class Sound <<(C, Aqua)>>
+
+  'class FontManager <<(C, Aqua)>>
+  'class Font <<(C, Aqua)>>
+}
+
 class Scene <<(C, Aqua)>>
 class GameObject <<(C, Aqua)>>
 class Camera <<(C, Aqua)>>
@@ -57,24 +90,6 @@ class SceneCollision <<(C, Aqua)>>
 class SceneResource <<(C, Aqua)>>
 class WidgetWindow <<(C, Aqua)>>
 class Widget <<(C, Aqua)>>
-
-class ResourceManager <<(C, Aqua)>>
-class TextureManager <<(C, Aqua)>>
-class Texture <<(C, Aqua)>>
-class ImageInfo <<(S, DeepSkyBlue)>>
-
-class AnimationManager <<(C, Aqua)>>
-class AnimationSequence <<(C, Aqua)>>
-class Animation <<(C, Aqua)>>
-class AnimationInfo <<(C, Aqua)>>
-class AnimationNotify <<(S, DeepSkyBlue)>>
-class AnimationFrameData <<(S, DeepSkyBlue)>>
-
-class SoundManager <<(C, Aqua)>>
-class Sound <<(C, Aqua)>>
-
-class FontManager <<(C, Aqua)>>
-class Font <<(C, Aqua)>>
 
 abstract class Collider
 class ColliderBox <<(C, Aqua)>>
@@ -106,29 +121,58 @@ CRef <|-up-  CWidgetWindow
 CRef <|-up-  CWidget
 
 
-Engine *-right-> Timer
-Engine -- Input
-Engine -- PathManager
-PathManager *--> PathInfo : map >
-
-Engine -- ResourceManager
-ResourceManager *--> TextureManager
-ResourceManager *--> AnimationManager
-ResourceManager *--> SoundManager
-ResourceManager *--> FontManager
-TextureManager *----> Texture : map >
-AnimationManager *----> AnimationSequence : map >
-SoundManager *--> Sound : map >
-FontManager *--> Font : map >
-
-TextureManager -- hidden
-AnimationManager -- hidden
-SoundManager -- hidden
-FontManager -- hidden
-hidden -- Scene
-
+'Engine -- Device
+'Engine -- Input
+'Engine -- PathManager
 Engine -- CollisionManager
 CollisionManager *--> CollisionProfile : map >
+Engine -- ResourceManager
+Engine -- RenderManager
+Engine -- SceneManager
+Engine -- EditorManager
+
+
+  ResourceManager *--> ShaderManager
+  ResourceManager *--> TextureManager
+  ResourceManager *--> MaterialManager
+  ResourceManager *--> MeshManager
+  ResourceManager *--> AnimationManager
+  'ResourceManager *--> SoundManager
+  'ResourceManager *--> FontManager
+    ShaderManager *--> Shader : map >
+    ShaderManager *--> ConstantBuffer : map >
+    TextureManager *--> Texture : map >
+    TextureManager *--> Sampler : map >
+    MaterialManager *--> Material : map >
+      Material o--> "1" Texture
+      Material o--> "1" Shader
+      Material o--> "3" RenderState : array >
+    MeshManager *--> Mesh : map >
+      Mesh *--> MeshContainer : vector >
+      Mesh *--> MeshSlot : vector >
+        MeshContainer o--> MeshSlot : vector >
+        MeshSlot o--> "1" Material
+    
+    AnimationManager *--> AnimationSequence : map >
+      Animation *--> AnimationData : map >
+      AnimationInfo o--> AnimationSequence
+      AnimationSequence o-> Texture
+    'SoundManager *--> Sound : map >
+    'FontManager *--> Font : map >
+
+    TextureManager -- hidden
+    AnimationManager -- hidden
+    SoundManager -- hidden
+    FontManager -- hidden
+    hidden -- Scene
+
+
+
+
+
+
+
+
 
 
 Engine -- SceneManager
@@ -160,11 +204,6 @@ SceneCollision -up-> CollisionManager : Check
 
 GameObject o--> Texture
 GameObject *--> Animation
-Animation *--> AnimationInfo : map >
-AnimationInfo *--> AnimationNotify : vector >
-AnimationInfo o--> AnimationSequence
-AnimationSequence o-> Texture
-AnimationSequence *--> AnimationFrameData : vector >
 
 hide hidden
 hide hidden1
