@@ -72,8 +72,8 @@
   $$
 \begin{align*}
   x &= (1 - t)x_1 + tx_2 \\
-  y &= (1 - t)x_1 + tx_2 \quad (0 \le t \le 1)
-\end{align*}
+  y &= (1 - t)x_1 + tx_2 
+\end{align*} \quad (0 \le t \le 1)
   $$
 
   - 직선의 방정식의 표준형 (기울기와 y절편을 이용한 표현)
@@ -336,7 +336,7 @@ $$
 
 (\frac{\overline{AB} \times \overline{AC}}{\overline{AB}})^2 &=  \overline{CD} ^2 \\
  
-\therefore (\frac{\overline{AB} \times \overline{AC}}{\overline{AB}})^2 \le  r^2 \quad \Rightarrow collision
+\therefore (\frac{\overline{AB} \times \overline{AC}}{\overline{AB}})^2 &\le  r^2 \quad \Rightarrow collision
   \end{align*}
 $$
 
@@ -439,21 +439,104 @@ $$
 ---
 ## OBB 충돌 (Oriented-Bounding Box) 충돌
 
-  - `분리축 이론(Separating Axis Theory)`을 이용하여 두 사각형의 충돌 여부를 확인한다.
-    - ### `분리축 이론` : 임의의 두 `볼록 다면체(convex polyhedron)`에 대해 어떤 축이 존재해서 그 축으로 다면체를 투영할 시 투영 구간이 겹치지 않는다면 서로 겹치지 않는다.
+  - `분리축 이론(Hyperplane Separating Theorem)`을 이용하여 두 사각형의 충돌 여부를 확인한다.
+    - ### `분리축 이론` : n차원에서의 임의의 두 `볼록 다면체(convex polyhedron)`가 서로 교차하지 않을 때, 두 물체 사이를 분리하는 `초평면(hyperplane)`이 반드시 존재한다. 이 때, 분리 평면에 수직인 축을 `분리축(separating axis)`라고 한다.
     
-    - 3차원의 도형인 입체를 1차원의 도형인 선으로 변경하여 비교하는 방식이다.
-    - 차원이 1개 줄어들 때마다 각 도형을 이루는 `모든 n-1차원의 도형에 수직인 벡터(법선 벡터)`를 기준으로 하는 추가 계산을 해야 한다.
-      - 수직인 이유는 차원을 1개 줄였을 때 해당 도형을 `충돌을 확인하기 위한 기준 영역`으로 삼기 위해서다.
-        - 단순 비교식 $dist < (a + b) / 2$ 에서 겹치는 영역 이 해당 도형의 정사영과 같다.
-        - 2차원 -> 정사영 결과물 : 선분,  겹치는 영역 비교 단위 : 점
-        - 3차원 -> 정사영 결과물 : 평면,  겹치는 영역 비교 단위 : 선분
-        - 3차원의 경우, 계산 시 법선 벡터 자체에 정사영을 하기 때문에 차원을 2개 줄인 것과 동일하게 동작한다. (다면체 -> 다각형 -> 선분 으로 단순화된다.)
+    - n차원의 도형을 분리축에 투영(projection)하여 1차원의 도형인 선으로 단순화한 후 비교하는 방식이다.
+      - 보통 3차원 입체를 1차원 선으로 변경한다.
+    - 수직인 벡터를 사용하는 이유는 차원을 1개 줄였을 때 해당 도형을 `충돌을 확인하기 위한 기준 영역`으로 삼기 위해서다.
+      - 단순 비교식 $dist <= (a + b) / 2$ 에서 겹치는 영역이 해당 도형의 정사영과 같다.
+      - 2차원 -> 정사영 결과물 : 선분,  겹치는 영역 비교 단위 : 점
+      - 3차원 -> 정사영 결과물 : 평면,  겹치는 영역 비교 단위 : 선분
+      - 3차원의 경우, 계산 시 법선 벡터 자체에 정사영을 하기 때문에 차원을 2개 줄인 것과 동일하게 동작한다. (다면체 -> 다각형 -> 선분 으로 단순화된다.)
     - 저차원으로 이동하여 계산하기 때문에 평행인 도형은 생략이 가능하다.
       - 평행한 두 도형은 법선 벡터가 같기 때문이다.
-    - 검사 횟수는 모든 
-    - 두 삼각형의 경우 각 변에 `수직인 벡터(법선 벡터)` 축에 정사영
+    - ### 검사 횟수는 2차원인 경우 만들수 있는 모든 정사영의 법선 벡터 개수와 같고, 3차원의 경우 여기에 각 모서리의 방향 벡터들의 외적 수가 추가된다.
+      - 외적 벡터를 추가하는 이유는 `모서리 간 충돌 확인`을 위해 두 벡터를 가지는 평면의 법선 벡터를 생성하기 위해서다. (빈도 수가 낮지만 검사해줘야 정확하다)
+        - 아마 equal이 나올 것이다...
+      - 동일한 벡터는 생략이 가능하다. (당연하게도)
+      - 모든 모서리가 좌표축과 평행하지 않은 두 삼각형의 경우 검사 횟수는 6회이다.
+      - 모든 모서리가 좌표축과 평행하지 않은 두 사면체의 경우 검사 횟수는 4 + 4 + (4 * 4) = 24회이다.
+      - 모든 모서리가 좌표축과 평행하지 않은 m면체, n면체의 경우 검사 횟수는 m + n + (m * n)회이다.
+    - 정사영 시, 선분의 길이가 최대가 되는 꼭짓점을 찾는 작업이 필요하다.
+  - 사각형의 충돌 확인 시, 각 모서리는 직교하기 때문에 모서리 벡터를 법선 벡터로 사용할 수 있다.
+  - 분리축을 기준으로 정사영 최댓값과 최솟값을 찾아 더한 후의 길이가 중심점 사이의 길이보다 짧은 축이 존재하면 두 도형은 교차하지 않는다.
+    - 최댓값에서 최솟값을 빼기 때문에 축의 길이를 구할 필요는 없다. 하지만 오버플로우가 발생할 수 있기 때문에 축을 단위 벡터 또는 그 근사값으로 지정하자.
+    $$
+    \begin{align*}
+      dist_{centerV_1V_2} &\gt 
+        (\text{Max}(U \cdot V_1) - \text{Min}(U \cdot V_1) \\ 
+      & \qquad + \text{Max}(U \cdot V_2) - \text{Min}(U \cdot V_2))  
+    \end{align*} 
+    \quad (U = Separating Axis)
+    \quad \Rightarrow not\;crossing
+    $$
 
+  - 분리축에 정사영한 결과값은 `분리축과 정사영할 벡터의 내적 / 분리축의 벡터 길이`값과 같다.
+  $$
+    \begin{align*}
+      Proj_{U}V &= \frac{V \cdot U}{\left| U^{2} \right|} U \quad (U = Separating Axis) \\
+      Comp_{U}V &= \left| Proj_{U}V \right| = \frac{\left| V \cdot U\right|}{\left| U \right|} 
+    \end{align*}
+  $$
+
+  - 충돌점은 OBB를 AABB(Axis-Aligned Bounding Box)로 변경해 충돌 영역 사각형의 중심점을 사용한다.
+  - 원과 OBB의 충돌 시에도 동일하게 원을 AABB로 만들어 처리한다.
+    - 자세한 중심점 찾기는 [여기](https://wizardmania.tistory.com/26?category=610631) 참조
+
+```cpp
+  bool CCollisionManager::Collision2DOBBToOBB(Vector3& hitPoint, const OBB2DInfo& src, const OBB2DInfo& dest) {
+    // 정사영 할 기준이 되는 축을 찾아야 한다.
+    // 축은 다각형을 이루는 모서리의 법선 벡터를 사용하지만, 
+    // 사각형의 경우 모든 모서리가 직교하기 때문에 각 모서리의 벡터를 그대로 사용해도 된다.
+    Vector2	centerLine = src.center - dest.center;
+
+    // 1. src 사각형의 가로 모서리 방향의 벡터를 축으로 사용하는 경우
+    Vector2	axis = src.axis[AXIS2D_X];
+    float centerProjDist = abs(centerLine.Dot(axis));
+    float srcDist = src.length[AXIS2D_X];
+    float destDist = abs(axis.Dot(dest.axis[AXIS2D_X]) * dest.length[AXIS2D_X]) +
+                     abs(axis.Dot(dest.axis[AXIS2D_Y]) * dest.length[AXIS2D_Y]);
+    if (centerProjDist > srcDist + destDist)
+      return false;
+
+    // 2. src 사각형의 세로 모서리 방향의 벡터를 축으로 사용하는 경우
+    axis = src.axis[AXIS2D_Y];
+    centerProjDist = abs(centerLine.Dot(axis));
+    srcDist = src.length[AXIS2D_Y];
+    destDist = abs(axis.Dot(dest.axis[AXIS2D_X]) * dest.length[AXIS2D_X]) +
+               abs(axis.Dot(dest.axis[AXIS2D_Y]) * dest.length[AXIS2D_Y]);
+    if (centerProjDist > srcDist + destDist)
+      return false;
+
+    // 3. dest 사각형의 가로 모서리 방향의 벡터를 축으로 사용하는 경우
+    axis = dest.axis[AXIS2D_X];
+    centerProjDist = abs(centerLine.Dot(axis));
+    srcDist = abs(axis.Dot(src.axis[AXIS2D_X]) * src.length[AXIS2D_X]) +
+              abs(axis.Dot(src.axis[AXIS2D_Y]) * src.length[AXIS2D_Y]);
+    destDist = dest.length[AXIS2D_X];
+    if (centerProjDist > srcDist + destDist)
+      return false;
+
+    // 4. dest 사각형의 세로 모서리 방향의 벡터를 축으로 사용하는 경우
+    axis = dest.axis[AXIS2D_Y];
+    centerProjDist = abs(centerLine.Dot(axis));
+    srcDist = abs(axis.Dot(src.axis[AXIS2D_X]) * src.length[AXIS2D_X]) +
+              abs(axis.Dot(src.axis[AXIS2D_Y]) * src.length[AXIS2D_Y]);;
+    destDist = dest.length[AXIS2D_Y];
+    if (centerProjDist > srcDist + destDist)
+      return false;
+
+    // 히트포인트는 대략적으로 AABB(Axis-Aligned Bounding Box)를 만들어 그 중심점을 사용한다.
+    Vector2 hp = ComputeHitPoint(ConvertBox2DInfo(src), ConvertBox2DInfo(dest));
+    hitPoint.x = hp.x;
+    hitPoint.y = hp.y;
+
+    return true;
+  }
+```
 
   - 참고
     - https://wizardmania.tistory.com/28?category=610631
+    - http://judis.me/wordpress/separating-axis-theorem/
+    - https://www.geometrictools.com/Documentation/DynamicCollisionDetection.pdf
