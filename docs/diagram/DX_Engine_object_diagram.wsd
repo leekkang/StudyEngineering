@@ -38,9 +38,9 @@ note as A
   구조가 단순한 클래스, 구조체는 생략 또는 따로 떼어놓음
 end note
 
-class Engine <<(C, Aqua) Singleton>>
 
 package Manager <<Rectangle>> {
+  class Engine <<(C, Aqua) Singleton>>
   class Device <<(C, Aqua) Singleton>>
   class PathManager <<(C, Aqua) Singleton>>
   class Input <<(C, Aqua) Singleton>>
@@ -51,27 +51,26 @@ package Manager <<Rectangle>> {
   class EditorManager <<(C, Aqua) Singleton>>
 }
 
-class CollisionProfile <<(S, DeepSkyBlue)>>
-
 package Resources <<Rectangle>> {
+  class hidden
   class ShaderManager <<(C, Aqua)>>
   class TextureManager <<(C, Aqua)>>
   class MaterialManager <<(C, Aqua)>>
   class MeshManager <<(C, Aqua)>>
   class AnimationManager <<(C, Aqua)>>
 
-  class Shader <<(C, Aqua)>>
+  abstract class Shader <<abstract>>
   class ConstantBuffer <<(C, Aqua)>>
+  abstract class ConstantBufferData <<abstract>>
 
   class Texture <<(C, Aqua)>>
   class Sampler <<(C, Aqua)>>
 
   class Material <<(C, Aqua)>>
-  class RenderState <<(C, Aqua)>>
 
-  class Mesh <<(C, Aqua)>>
-  class MeshContainer <<(S, DeepSkyBlue)>>
-  class MeshSlot <<(S, DeepSkyBlue)>>
+  abstract class Mesh <<abstract>>
+  struct MeshContainer <<(S, DeepSkyBlue)>>
+  struct MeshSlot <<(S, DeepSkyBlue)>>
 
   class Animation <<(C, Aqua)>>
   class AnimationData <<(C, Aqua)>>
@@ -83,127 +82,129 @@ package Resources <<Rectangle>> {
   'class Font <<(C, Aqua)>>
 }
 
-class Scene <<(C, Aqua)>>
-class GameObject <<(C, Aqua)>>
-class Camera <<(C, Aqua)>>
-class SceneCollision <<(C, Aqua)>>
-class SceneResource <<(C, Aqua)>>
-class WidgetWindow <<(C, Aqua)>>
-class Widget <<(C, Aqua)>>
+package Render <<Rectangle>> {
+  class RenderLayer <<(S, DeepSkyBlue)>>
+  abstract class RenderState <<abstract>>
+}
 
-abstract class Collider
-class ColliderBox <<(C, Aqua)>>
-class ColliderCircle <<(C, Aqua)>>
-class ColliderLine <<(C, Aqua)>>
+package Scene <<Rectangle>> {
+  class Scene <<(C, Aqua)>>
+  class SceneInfo <<(C, Aqua)>>
+  class SceneResource <<(C, Aqua)>>
+  class SceneCollision <<(C, Aqua)>>
+  class CameraManager <<(C, Aqua)>>
+
+  struct Section <<(S, DeepSkyBlue)>>
+  class CollisionSection <<(C, Aqua)>>
+  abstract class Collider <<abstract>>
+
+  class GameObject <<(C, Aqua)>>
+  abstract class Component <<abstract>>
+  class SceneComponent <<(C, Aqua)>>
+  class Transform <<(C, Aqua)>>
+  class ObjectComponent <<(C, Aqua)>>
+}
 
 
 class CRef <<(C, Aqua)>>
-class CGameObject <<(C, Aqua)>>
-class CCollider <<(C, Aqua)>>
+class CShader <<(C, Aqua)>>
+class CConstantBuffer <<(C, Aqua)>>
 class CTexture <<(C, Aqua)>>
+class CMaterial <<(C, Aqua)>>
+class CMesh <<(C, Aqua)>>
+class CRenderState <<(C, Aqua)>>
+class CAniamtion <<(C, Aqua)>>
 class CAniamtionSequence <<(C, Aqua)>>
-class CSound <<(C, Aqua)>>
-class CFont <<(C, Aqua)>>
-class CWidget <<(C, Aqua)>>
-class CWidgetWindow <<(C, Aqua)>>
+class CComponent <<(C, Aqua)>>
+class CGameObject <<(C, Aqua)>>
 
 
 
-Engine -left- hidden1
-hidden1 -up- CRef
-CRef <|-left-  CGameObject
-CRef <|--  CCollider
-CRef <|--  CTexture
-CRef <|-right-  CAniamtionSequence
-CRef <|--  CSound
-CRef <|--  CFont
-CRef <|-up-  CWidgetWindow
-CRef <|-up-  CWidget
+
+CRef <|-up-  CShader
+CRef <|-up-  CConstantBuffer
+CRef <|-up-  CTexture
+CRef <|-up-  CMaterial
+CRef <|-up-  CMesh
+CRef <|--  CRenderState
+CRef <|--  CAniamtion
+CRef <|--  CAniamtionSequence
+CRef <|--  CComponent
+CRef <|--  CGameObject
 
 
 'Engine -- Device
 'Engine -- Input
 'Engine -- PathManager
-Engine -- CollisionManager
-CollisionManager *--> CollisionProfile : map >
-Engine -- ResourceManager
-Engine -- RenderManager
-Engine -- SceneManager
-Engine -- EditorManager
+' Engine -- CollisionManager
+' Engine -- ResourceManager
+' Engine -- RenderManager
+' Engine -- SceneManager
+' Engine -- EditorManager
 
-
-  ResourceManager *--> ShaderManager
-  ResourceManager *--> TextureManager
-  ResourceManager *--> MaterialManager
-  ResourceManager *--> MeshManager
-  ResourceManager *--> AnimationManager
-  'ResourceManager *--> SoundManager
-  'ResourceManager *--> FontManager
+  ' ResourceManager *--> ShaderManager
+  ' ResourceManager *--> TextureManager
+  ' ResourceManager *--> MaterialManager
+  ' ResourceManager *--> MeshManager
+  ' ResourceManager *--> AnimationManager
+  ResourceManager ----- hidden
+  hidden -- ShaderManager
+  hidden -- TextureManager
+  hidden -- MaterialManager
+  hidden -- MeshManager
+  hidden -- AnimationManager
     ShaderManager *--> Shader : map >
-    ShaderManager *--> ConstantBuffer : map >
+    ShaderManager *-------> ConstantBuffer : map >
+      ConstantBufferData o--> ConstantBuffer
     TextureManager *--> Texture : map >
     TextureManager *--> Sampler : map >
     MaterialManager *--> Material : map >
       Material o--> "1" Texture
       Material o--> "1" Shader
       Material o--> "3" RenderState : array >
+      Material o--> "1" ConstantBufferData
     MeshManager *--> Mesh : map >
       Mesh *--> MeshContainer : vector >
       Mesh *--> MeshSlot : vector >
         MeshContainer o--> MeshSlot : vector >
         MeshSlot o--> "1" Material
-    
-    AnimationManager *--> AnimationSequence : map >
+    AnimationManager *------> AnimationSequence : map >
       Animation *--> AnimationData : map >
-      AnimationInfo o--> AnimationSequence
-      AnimationSequence o-> Texture
-    'SoundManager *--> Sound : map >
-    'FontManager *--> Font : map >
+      AnimationData o--> AnimationSequence
+      AnimationSequence o--> Texture
+        Animation o--> "1" ConstantBufferData
 
-    TextureManager -- hidden
-    AnimationManager -- hidden
-    SoundManager -- hidden
-    FontManager -- hidden
-    hidden -- Scene
+  'RenderManager *--> RenderLayer : map >
+    RenderLayer o--> "1" RenderState
+    RenderLayer o-->  SceneComponent : vector >
 
+  'SceneManager *--> " 1 " Scene
+    Scene *--> " 1 " SceneInfo
+    Scene *--> " 1 " CameraManager
+      CameraManager o--> " 1 " SceneComponent
+    Scene *---> " 1 " SceneResource
+    Scene *---> " 1 " SceneCollision
+    Scene *--->  GameObject : list >
+      SceneResource o---> Shader : map >
+      SceneResource o---> Texture : map >
+      SceneResource o---> Material : map >
+      SceneResource o---> Mesh : map >
+      SceneResource o---> AnimationSequence : map >
+'     SceneResource o---> Sound : map >
+      SceneCollision *-->  " 1 " Section
+      SceneCollision *-->  Collider : vector >
+        Section *--> CollisionSection : vector >
+          CollisionSection o--> Collider : vector(tmp) >
 
+      Component <|--  Collider
+        Collider o--> "1" ConstantBufferData
+      Component <|--  SceneComponent
+      Component <|--  ObjectComponent
+      GameObject *-->  SceneComponent : list >
+      GameObject *-->  ObjectComponent : vector >
+        SceneComponent *--> " 1 " Transform
+          Transform o--> "1" ConstantBufferData
 
-
-
-
-
-
-
-
-Engine -- SceneManager
-SceneManager *----> " 1 " Scene
-Scene *-left-> " 1 " Camera
-Scene *---> " 1 " SceneResource
-Scene *---> " 1 " SceneCollision
-Scene *--->  GameObject : list >
-Scene *--->  WidgetWindow : vector >
-WidgetWindow *-->  Widget : vector >
-SceneCollision o-->  Collider : vector >
-SceneCollision o-->  WidgetWindow : vector >
-
-SceneResource o---> Texture : map >
-Texture *--> ImageInfo : vector >
-SceneResource o---> AnimationSequence : map >
-SceneResource o---> Sound : map >
-SceneResource -up---> TextureManager : Find
-SceneResource -up---> AnimationManager : Find
-SceneResource -up---> SoundManager : Find
-SceneResource -up---> FontManager : Find
-
-
-GameObject *-->  Collider : list >
-Collider <|..  ColliderBox
-Collider <|..  ColliderCircle
-Collider <|..  ColliderLine
-SceneCollision -up-> CollisionManager : Check
-
-GameObject o--> Texture
-GameObject *--> Animation
 
 hide hidden
 hide hidden1
