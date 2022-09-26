@@ -1,6 +1,6 @@
 
 
-## CPP Study
+## DX Study
 
   - 몰랐거나 까먹기 쉬운 DX 정보를 기록해놓는 문서
 
