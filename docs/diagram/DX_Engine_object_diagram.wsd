@@ -93,6 +93,7 @@ package Scene <<Rectangle>> {
   class SceneResource <<(C, Aqua)>>
   class SceneCollision <<(C, Aqua)>>
   class CameraManager <<(C, Aqua)>>
+  class SceneViewport <<(C, Aqua)>>
 
   struct Section <<(S, DeepSkyBlue)>>
   class CollisionSection <<(C, Aqua)>>
@@ -101,6 +102,7 @@ package Scene <<Rectangle>> {
   class GameObject <<(C, Aqua)>>
   abstract class Component <<abstract>>
   class SceneComponent <<(C, Aqua)>>
+  class CameraComponent <<(C, Aqua)>>
   class Transform <<(C, Aqua)>>
   class ObjectComponent <<(C, Aqua)>>
 }
@@ -181,7 +183,7 @@ CRef <|--  CGameObject
   'SceneManager *--> " 1 " Scene
     Scene *--> " 1 " SceneInfo
     Scene *--> " 1 " CameraManager
-      CameraManager o--> " 1 " SceneComponent
+      CameraManager *--> " 1 " CameraComponent
     Scene *---> " 1 " SceneResource
     Scene *---> " 1 " SceneCollision
     Scene *--->  GameObject : list >
@@ -199,11 +201,13 @@ CRef <|--  CGameObject
       Component <|--  Collider
         Collider o--> "1" ConstantBufferData
       Component <|--  SceneComponent
+        SceneComponent <|-- CameraComponent
       Component <|--  ObjectComponent
       GameObject *-->  SceneComponent : list >
       GameObject *-->  ObjectComponent : vector >
         SceneComponent *--> " 1 " Transform
           Transform o--> "1" ConstantBufferData
+    Scene *--->  " 1 " SceneViewport
 
 
 hide hidden
