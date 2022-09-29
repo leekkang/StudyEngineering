@@ -1,4 +1,5 @@
-﻿- [좌표계 변환](#좌표계-변환)
+﻿- [행벡터와 열벡터](#행벡터와-열벡터)
+- [좌표계 변환](#좌표계-변환)
 - [선분의 방정식](#선분의-방정식)
 - [충돌](#충돌)
   - [두 선분의 교차점 구하기](#두-선분의-교차점-구하기)
@@ -17,6 +18,14 @@
     - https://github.com/nicolausYes/easing-functions/blob/master/src/easing.cpp
 
 ![](img/easing.png)
+
+
+---
+# 행벡터와 열벡터
+
+  - https://angeloyeo.github.io/2020/09/09/row_vector_and_inner_product.html
+  - https://developer0hye.tistory.com/entry/%EC%9D%B8%EA%B3%B5%EC%A7%80%EB%8A%A5%EC%9D%84-%EC%9C%84%ED%95%9C-%EC%84%A0%ED%98%95%EB%8C%80%EC%88%98-%EC%84%A0%ED%98%95%EB%8C%80%EC%88%98%EC%9D%98-%EA%B8%B0%EC%B4%88?category=965709
+  - https://gosamy.tistory.com/250
 
 ---
 # 좌표계 변환
