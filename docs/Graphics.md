@@ -38,3 +38,8 @@
 
   - TODO
 
+
+---
+# Class Default Object
+
+  - TODO 리소스 어디까지 가지고 있어야 하나??
