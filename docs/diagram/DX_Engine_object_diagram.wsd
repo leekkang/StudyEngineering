@@ -105,6 +105,9 @@ package Scene <<Rectangle>> {
   class CameraComponent <<(C, Aqua)>>
   class Transform <<(C, Aqua)>>
   class ObjectComponent <<(C, Aqua)>>
+
+  class UIWindow<<(C, Aqua)>>
+  class UIWidget<<(C, Aqua)>>
 }
 
 
@@ -208,6 +211,8 @@ CRef <|--  CGameObject
         SceneComponent *--> " 1 " Transform
           Transform o--> "1" ConstantBufferData
     Scene *--->  " 1 " SceneViewport
+      SceneViewport *---> UIWindow : vector >
+        UIWindow *---> UIWidget : vector >
 
 
 hide hidden
