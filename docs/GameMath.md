@@ -494,7 +494,7 @@ $$
     - 자세한 중심점 찾기는 [여기](https://wizardmania.tistory.com/26?category=610631) 참조
 
 ```cpp
-  bool CCollisionManager::Collision2DOBBToOBB(Vector3& hitPoint, const OBB2DInfo& src, const OBB2DInfo& dest) {
+  bool CCollisionManager::Collision2DOBBToOBB(Vector2& hitPoint, const OBB2DInfo& src, const OBB2DInfo& dest) {
     // 정사영 할 기준이 되는 축을 찾아야 한다.
     // 축은 다각형을 이루는 모서리의 법선 벡터를 사용하지만, 
     // 사각형의 경우 모든 모서리가 직교하기 때문에 각 모서리의 벡터를 그대로 사용해도 된다.
@@ -537,9 +537,7 @@ $$
       return false;
 
     // 히트포인트는 대략적으로 AABB(Axis-Aligned Bounding Box)를 만들어 그 중심점을 사용한다.
-    Vector2 hp = ComputeHitPoint(ConvertBox2DInfo(src), ConvertBox2DInfo(dest));
-    hitPoint.x = hp.x;
-    hitPoint.y = hp.y;
+	  ComputeHitPoint(hitPoint, ConvertBox2DInfo(src), ConvertBox2DInfo(dest));
 
     return true;
   }
