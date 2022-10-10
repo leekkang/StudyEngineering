@@ -365,11 +365,15 @@ $$
   
 ## Dijkstra Algorithm
 
+  - 전체 노드의 최단거리를 알아내는 알고리즘
+
 ## Bellman-Ford Algorithm
 
 ## Floyd-Warshall Algorithm
 
 ## A* Algorithm
+
+  - 특정 노드의 최단거리를 알아내는 알고리즘
 
 
 
