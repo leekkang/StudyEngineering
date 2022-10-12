@@ -14,10 +14,11 @@
 				"${fileDirname}\\${fileBasenameNoExtension}.exe",
 				//"${file}",				// 현재 포커싱 되어있는 코드만 컴파일 하고 싶을 때 사용
 				"${fileDirname}\\**.cpp", 	// 포커싱 된 파일이 있는 폴더를 한꺼번에 컴파일 하고 싶을 때 사용
-				//"${fileDirname}\\**.h",
+				"${fileDirname}\\**.h",
 			],
 			"options": {
-				"cwd": "${workspaceFolder}",
+				"cwd": "${fileDirname}",
+				//"cwd": "${workspaceFolder}",
 				"env": {
 					"PATH": "${env:PATH};C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\Common7\\Tools",
 					"BUILD": "VsDevCmd.bat -arch=x64 && cl.exe"
@@ -34,7 +35,7 @@
 		},
 		
 		{
-			"label": "C/C++: cl.exe build with header",
+			"label": "C/C++: cl.exe build backup",
 			"type": "cppbuild", // "shell"
 			"command": "%BUILD%", //"cl.exe",
 			"args": [
@@ -44,10 +45,11 @@
 				"${fileDirname}\\${fileBasenameNoExtension}.exe",
 				//"${file}",				// 현재 포커싱 되어있는 코드만 컴파일 하고 싶을 때 사용
 				"${fileDirname}\\**.cpp", 	// 포커싱 된 파일이 있는 폴더를 한꺼번에 컴파일 하고 싶을 때 사용
-				"${fileDirname}\\**.h",
+				//"${fileDirname}\\**.h",
 			],
 			"options": {
-				"cwd": "${workspaceFolder}",
+				"cwd": "${fileDirname}",
+				//"cwd": "${workspaceFolder}",
 				"env": {
 					"PATH": "${env:PATH};C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\Common7\\Tools",
 					"BUILD": "VsDevCmd.bat -arch=x64 && cl.exe"
