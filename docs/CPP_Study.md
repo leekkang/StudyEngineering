@@ -49,6 +49,7 @@
   - [constexpr 키워드](#constexpr-키워드)
   - [explicit 키워드](#explicit-키워드)
   - [__declspec 키워드](#__declspec-키워드)
+  - [noexcept 키워드](#noexcept-키워드)
 - [연산자](#연산자)
   - [sizeof 연산자](#sizeof-연산자)
   - [캐스팅 연산자](#캐스팅-연산자)
@@ -1844,6 +1845,22 @@ void (*func3)() = &CTest::foo;        // ok
   - TODO
 
 
+## [noexcept 키워드](https://learn.microsoft.com/en-us/cpp/cpp/noexcept-cpp?view=msvc-170)
+
+  - TODO
+  - [한정자(specifier)](https://en.cppreference.com/w/cpp/language/noexcept_spec) 와 [연산자(operator)](https://en.cppreference.com/w/cpp/language/noexcept) 두 가지 종류가 있다.
+  - 한정자 : 함수가 예외를 던질 수 있는지(false), 없는지(true)를 명시한다.
+    - `noexcept` 또는 `noexcept(const-expression)` 으로 표현된다.
+    - `noexcept` == `noexcept(true)`
+    - `컴파일 타임에 처리되지 않는다!` 해당 함수가 예외를 던지면 바로 `std::terminated`를 호출한다.
+  - 연산자 : 컴파일 타임에 인자로 받은 식을 확인해 예외를 던지지 않으면 true, 예외를 던지면 false를 리턴한다.
+    - `noexcept(std::is_pod<T>)` -> `POD` 타입이면 예외를 던지지 않는다.
+  - `noexcept(noexcept(T()))` 형태를 볼 수 있는데, 안쪽의 `noexcept(T())`는 연산자로, 바깥쪽은 한정자로 사용되었다.
+    - `T()` 생성자가 예외를 던지느냐에 따라 해당 한정자를 사용한 함수의 예외 처리 여부가 결정된다.
+  - 암시적으로 생성되는 모든 `생성자, 소멸자`, `대입/이동 연산자`, `할당해제 함수(delete)`는 기본적으로 `noexcept` 속성을 가진다.
+    - 멤버 변수들의 생성자, 연산자가 `noexcept`여야 해당 클래스의 생성자, 연산자가 `noexcept`를 가질 수 있다.
+ 
+  - 참고 : http://egloos.zum.com/sweeper/v/3148916
 
 
 ---
@@ -2109,7 +2126,38 @@ int main() {
   - SFINAE(Substitution Failure Is Not An Error, 치환 실패는 오류가 아니다)
     - 템플릿 매개변수에 자료형이나 값을 넣을 수 없어도 컴파일 오류가 발생하지 않고 해당 템플릿에 대해서 `코드 생성을 무시`하는 현상
     - 템플릿의 매개변수에 제약을 걸고 프로그래머가 오버로딩될 함수를 제어할 수 있게 만든다.
-    - `std::enable_if_t`가 주로 사용된다.
+    - `std::enable_if`가 주로 사용된다.
+    ```cpp
+    template<bool B, class T = void>
+    struct enable_if {};
+    
+    template<class T>
+    struct enable_if<true, T> { typedef T type; };
+    ```
+    - `C++20` 부터는 `concept` 이라는 `제약 조건`을 추가할 수 있다. 아래 `Constraints and concept` 참조
+  
+  - [std::enable_if](https://en.cppreference.com/w/cpp/types/enable_if)
+    - 두 개의 변수를 받는 템플릿 구조체이다.
+   
+    - `bool` 타입인 첫 번째 인자가 `true` 여야만 `type` 변수를 가지는 템플릿 구조체가 생성된다.
+    - `type` 변수의 생성 유무로 으로 해당 구조체를 사용하는 클래스 또는 함수의 타입을 한정지을 수 있다.
+      - 두 번째 인자에 값을 넣을 수 있냐 없냐로 판단한다. 아래의 예시에서 `type`의 형식은 `bool`이 되고 `true` 값이 디폴트로 들어간다면 함수 `func<T>`를 오버로딩 한다.
+      ```cpp
+	    template<typename T, typename std::enable_if<std::is_class<T>::value, bool>::type = true>
+        void func();
+      ```
+    - `C++14` 부터 `enable_if<>::type`의 별칭을 사용할 수 있다.
+      - `enable_if_t` 에 `typename` 키워드가 붙어있다. 안써도 됨
+      ```cpp
+      template<bool B, class T = void>
+      using enable_if_t = typename enable_if<B,T>::type;
+      ```
+  
+  - [Constraints and concepts](https://en.cppreference.com/w/cpp/language/constraints)
+    - `C++20` 부터 사용 가능한 템플릿 타입 제한 방법
+
+
+
   - [바튼-넥만 트릭](https://wikidocs.net/481)
 
 
