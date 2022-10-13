@@ -1,3 +1,4 @@
+﻿
 #include <iostream>
 #include <string>
 #include <vector>
@@ -7,24 +8,19 @@
 #include <iomanip>      // input output manipulation (std::setw,...)
 #include <functional>   // std::function
 
-template <typename T>   // template<class T> 와 동일
-void Swap(T& left, T& right) {
-	if (left == right) return;
+#include "InsertionSort.h"
+#include "Shell'sSort.h"
+#include "MergeSort.h"
 
-	T tmp = left;
-	left = right;
-	right = tmp;
-}
-
-template <typename T>
-uint32_t SortBubble(T* arr, const size_t length) {   // T& 를 어떻게 쓰지..?
+// arr[begin, end) (end <= length)
+template <typename T, class Func>
+uint32_t SortBubble(T* arr, const int begin, const int end, Func cmp) {
 	uint32_t count = 0;
-
-	for (int i = 0; i < length; ++i) {   // 반복문은 웬만하면 signed 자료형을 사용하자. unsigned는 버그가 발생할 가능성이 높다.
-		for (int j = 1; j < length - i; ++j) {
-			if (arr[j - 1] > arr[j]) {
+	for (int i = begin; i < end; ++i) {   // 반복문은 웬만하면 signed 자료형을 사용하자. unsigned는 버그가 발생할 가능성이 높다.
+		for (int j = begin + 1; j < end - i; ++j) {
+			if (cmp(arr[j], arr[j - 1])) {
 				Swap(arr[j - 1], arr[j]);
-				//std::swap<T>(arr[j - 1], arr[j]);
+				++count; 
 			}
 			++count;   // 전위연산자는 l-value, 후위연산자는 r-value를 리턴한다.
 		}
@@ -32,176 +28,63 @@ uint32_t SortBubble(T* arr, const size_t length) {   // T& 를 어떻게 쓰지.
 
 	return count;   // 자잘한 연산은 제외하고 주가되는 비교, 대입만 측정한다.
 }
+template <class T>
+uint32_t SortBubble(T* arr, int begin, int end) {
+	return SortBubble(arr, begin, end, Ascend<>{});
+}
 
-template <typename T>
-uint32_t SortSelection(T* arr, const size_t length) {
+// arr[begin, end) (end <= length)
+template <typename T, class Func>
+uint32_t SortSelection(T* arr, const int begin, const int end, Func cmp) {
 	uint32_t count = 0;
-
-	for (int i = 0; i < length; ++i) {
+	for (int i = begin; i < end; ++i) {
 		uint32_t index = i;
-		for (int j = i + 1; j < length; ++j) {
-			if (arr[index] > arr[j]) {
+		for (int j = i + 1; j < end; ++j) {
+			if (cmp(arr[j], arr[index]))
 				index = j;
-			}
+				
 			++count;
 		}
 
 		if (i != index) {
 			Swap(arr[i], arr[index]);
-			//std::swap<T>(arr[i], arr[index]);
+			++count;
 		}
 		++count;
 	}
 
 	return count;
 }
-
-template <typename T>
-uint32_t SortInsertion(T* arr, const size_t length) {
-	uint32_t count = 0;
-
-	for (int i = 1; i < length; ++i) {
-		T temp = arr[i];
-		int j = i - 1;
-		for (; j >= 0 && arr[j] > temp; --j) {
-			arr[j + 1] = arr[j];
-			++count;
-		}
-		arr[j + 1] = temp;
-		++count;
-	}
-
-	return count;
+template <class T>
+uint32_t SortSelection(T* arr, int begin, int end) {
+	return SortSelection(arr, begin, end, Ascend<>{});
 }
 
-template <typename T>
-uint32_t SortShell(T* arr, const size_t length) {
-	uint32_t count = 0;
 
-	auto insertionSort = [&arr, &count](const int& begin, const int& end, const int& gap) {
-		for (int i = begin + gap; i < end; i += gap) {
-			T temp = arr[i];
-			int j = i - gap;
-			for (; j >= begin && arr[j] > temp; j -= gap) {
-				arr[j + gap] = arr[j];
-				++count;
-			}
-			arr[j + gap] = temp;
-			++count;
-		}
-	};
-
-	for (int gap = static_cast<int>(length / 2); gap > 0; gap /= 2) {
-		if (gap % 2 == 0) ++gap;   // 간격이 홀수이면 더 빠르다.
-
-		for (int i = 0; i < gap; ++i) {
-			insertionSort(i, length, gap);
-		}
-	}
-
-	return count;
-}
-
-template <typename T>
-uint32_t SortMergeTopDown(T* arr, const size_t length) {
-	uint32_t count = 0;
-	std::vector<T> temp(length);   // resize. not reserve
-
-	// 하향식 2-way merge sort
-	// 재귀함수로 사용하기 때문에 auto 타입으로 정의하지 못한다. -> inline이 아니다.
-	std::function<void(const int&, const int&)> merge = [&](const int& begin, const int& end) {
-		// end 는 인덱스에 포함되지 않는다. -> arr[end] : x, arr[end-1] : o 	-> [begin, end)
-		++count;
-		if (end - begin < 2)
-			return;
-
-		// begin + end 가 홀수면 왼쪽 리스트의 길이가 오른쪽 리스트의 길이보다 짧다.
-		// divide
-		int middle = (begin + end) / 2;
-
-		// conquer
-		merge(begin, middle);
-		merge(middle, end);
-
-		// combine
-		int left = begin, right = middle;
-		for (int i = begin; i < end; ++i) {
-			// 왼쪽 리스트가 끝나지 않은 상황에서, 오른쪽 리스트가 끝났거나 왼쪽의 값이 오른쪽 값보다 작을 경우
-			if (left < middle && (right >= end || arr[left] <= arr[right]))
-				temp[i] = arr[left++];
-			else
-				temp[i] = arr[right++];
-
-			++count;
-		}
-
-		// copy
-		for (int i = begin; i < end; ++i)
-			arr[i] = temp[i];
-	};
-
-	merge(0, length);
-
-	return count;
-}
-
-template <typename T>
-uint32_t SortMergeBottomUp(T* arr, const size_t length) {
-	uint32_t count = 0;
-	std::vector<T> temp(length);   // resize. not reserve
-
-	int left, right, middle, end;
-	// divide
-	for (int width = 1; width < length; width *= 2) {
-		// conquer
-		for (int begin = 0; begin < length; begin += width * 2) {
-			end = std::min(begin + width * 2, static_cast<int>(length));
-			// combine
-			left = begin;
-			right = std::min(begin + width, static_cast<int>(length));
-			middle = right;
-			for (int i = begin; i < end; ++i) {
-				// 왼쪽 리스트가 끝나지 않은 상황에서, 오른쪽 리스트가 끝났거나 왼쪽의 값이 오른쪽 값보다 작을 경우
-				if (left < middle && (right >= end || arr[left] <= arr[right]))
-					temp[i] = arr[left++];
-				else
-					temp[i] = arr[right++];
-
-				++count;
-			}
-		}
-		
-		// copy
-		for (int i = 0; i < length; ++i)
-			arr[i] = temp[i];
-	}
-
-	return count;
-}
-
+// arr[begin, end) (end <= length)
 template <typename T>
 uint32_t SortQuick(T* arr, const size_t length) {
 	uint32_t count = 0;
 
 	// 재귀함수로 사용하기 때문에 auto 타입으로 정의하지 못한다. -> inline이 아니다.
 	std::function<void(const int&, const int&)> quick = [&](const int& begin, const int& end) {
-		// end 도 인덱스에 포함된다. -> arr[end] : o, arr[end-1] : o 	-> [begin, end]
+		// end 도 인덱스에 포함된다. -> arr[end] : o, arr[end-1] : o 	--> [begin, end]
 		if (begin >= end)
 			return;
 
 		// divide
 		int left = begin - 1;
-		int pivot = end;	// pivot 을 오른쪽 끝으로 잡는다.
+		int pivot = end;   // pivot 을 오른쪽 끝으로 잡는다.
 		for (int i = begin; i < end; ++i) {
 			// 리스트 끝까지 순회하면서 피벗보다 작은 값들을 앞으로 옮긴다.
 			if (arr[i] < arr[pivot]) {
 				Swap(arr[++left], arr[i]);
-				//std::swap<T>(arr[++left], arr[i]);
+				// std::swap<T>(arr[++left], arr[i]);
 				++count;
 			}
 		}
 		Swap(arr[++left], arr[pivot]);
-		//std::swap<T>(arr[++left], arr[pivot]);
+		// std::swap<T>(arr[++left], arr[pivot]);
 		++count;
 
 		// conquer
@@ -214,15 +97,16 @@ uint32_t SortQuick(T* arr, const size_t length) {
 	return count;
 }
 
+// arr[begin, end) (end <= length)
 template <typename T>
 uint32_t SortHeap(T* arr, const size_t length) {
 	uint32_t count = 0;
 
 	// 부분 배열을 정렬하려면 `SortIntro` 함수 내부에 정의된 힙 정렬 람다 함수를 참고한다.
 
-	auto siftdown = [&](int root, const int& end) {	// [root, end]
+	auto shiftdown = [&](int root, const int& end) {   // [root, end]
 		// 자식 노드가 없으면 종료
-		for (; root * 2 < end ;) {
+		for (; root * 2 < end;) {
 			++count;
 
 			// 0번 index를 사용하기 위해 약간의 계산을 추가한다.
@@ -232,36 +116,36 @@ uint32_t SortHeap(T* arr, const size_t length) {
 
 			if (arr[left] > arr[current]) current = left;
 			if (right <= end && arr[right] > arr[current]) current = right;
-			
+
 			// 이미 정렬된 노드면 종료
 			if (current == root) {
 				return;
 			} else {
 				Swap(arr[current], arr[root]);
-				//std::swap<T>(arr[current], arr[root]);
+				// std::swap<T>(arr[current], arr[root]);
 				root = current;
 			}
 		}
 	};
 
-
 	// Build Heap (Heapify)
 	for (int parent = (length - 1) / 2; parent >= 0; --parent) {
-		siftdown(parent, length - 1);
+		shiftdown(parent, length - 1);
 	}
 
 	int end = length - 1;
 	for (; end > 0;) {
 		++count;
 		Swap(arr[end], arr[0]);
-		//std::swap<T>(arr[end], arr[0]);
+		// std::swap<T>(arr[end], arr[0]);
 		--end;
-		siftdown(0, end);
+		shiftdown(0, end);
 	}
 
 	return count;
 }
 
+// arr[begin, end) (end <= length)
 template <typename T>
 uint32_t SortCounting(T* arr, const size_t length) {
 	uint32_t count = 0;
@@ -302,6 +186,7 @@ uint32_t SortCounting(T* arr, const size_t length) {
 	return count;
 }
 
+// arr[begin, end) (end <= length)
 template <typename T>
 uint32_t SortRadix(T* arr, const size_t length) {
 	uint32_t count = 0;
@@ -313,7 +198,7 @@ uint32_t SortRadix(T* arr, const size_t length) {
 		++count;
 		if (arr[i] > maxRadix) maxRadix = arr[i];
 	}
-	maxRadix = static_cast<int>(log10(static_cast<double>(maxRadix)) + 1);	// radix에 따라가도록 변경해야함.
+	maxRadix = static_cast<int>(log10(static_cast<double>(maxRadix)) + 1);   // radix에 따라가도록 변경해야함.
 
 	// 카운팅 배열
 	std::vector<T> countArr(radix);
@@ -324,7 +209,7 @@ uint32_t SortRadix(T* arr, const size_t length) {
 
 		// initialize
 		countArr.assign(radix, 0);
-		//for (int i = 0; i < radix; ++i) countArr[i] = 0;
+		// for (int i = 0; i < radix; ++i) countArr[i] = 0;
 
 		// counting sort 를 사용한다.
 		for (i = 0; i < length; ++i) {
@@ -356,10 +241,11 @@ uint32_t SortRadix(T* arr, const size_t length) {
 	return count;
 }
 
+// arr[begin, end) (end <= length)
 template <typename T>
 uint32_t SortBucket(T* arr, const size_t length) {
 	uint32_t count = 0;
-	int bucketNumber = 10;	// 생성되는 버킷의 개수
+	int bucketNumber = 10;   // 생성되는 버킷의 개수
 
 	// 최대값 찾기
 	int max = 0;
@@ -375,9 +261,11 @@ uint32_t SortBucket(T* arr, const size_t length) {
 		++count;
 		// 소수점의 경우 std::floor를 추가로 사용한다.
 		value = static_cast<int>(bucketNumber * arr[i] / max);
-		buckets[(value < 0) ? 0 : (value < bucketNumber - 1) ? value : bucketNumber - 1].push_back(arr[i]);	// == std::clamp (#include<algorithm>)
+		buckets[(value < 0) ? 0 : (value < bucketNumber - 1) ? value
+															 : bucketNumber - 1]
+			.push_back(arr[i]);   // == std::clamp (#include<algorithm>)
 	}
-	
+
 	// 삽입 정렬
 	auto insertion = [&](T* bucket, const int& len) {
 		for (int i = 1; i < len; ++i) {
@@ -407,6 +295,7 @@ uint32_t SortBucket(T* arr, const size_t length) {
 	return count;
 }
 
+// arr[begin, end) (end <= length)
 template <typename T>
 uint32_t SortTim(T* arr, const size_t length) {
 	uint32_t count = 0;
@@ -419,13 +308,14 @@ uint32_t SortTim(T* arr, const size_t length) {
 	int minGallop = 3;
 
 	// 동일한 값일 경우 오른쪽을 우선해서 탐색하는 이진 탐색 (일반적으로 사용됨)
-	auto binarySearchRight = [&arr, &count](const T& value, const int& start, const int& end) -> int {
+	auto binarySearchRight
+		= [&arr, &count](const T& value, const int& start, const int& end) -> int {
 		int s = start, e = end, m;
 		// binary search
 		while (s < e) {
 			++count;
 			m = (s + e) / 2;
-			if (arr[m] > value) 
+			if (arr[m] > value)
 				e = m;
 			else
 				s = m + 1;
@@ -439,7 +329,7 @@ uint32_t SortTim(T* arr, const size_t length) {
 		while (s < e) {
 			++count;
 			m = (s + e) / 2;
-			if (arr[m] >= value) 
+			if (arr[m] >= value)
 				e = m;
 			else
 				s = m + 1;
@@ -473,7 +363,7 @@ uint32_t SortTim(T* arr, const size_t length) {
 			while (s < e) {
 				++count;
 				m = (s + e) / 2;
-				if (arr[m] < temp) 
+				if (arr[m] < temp)
 					e = m;
 				else
 					s = m + 1;
@@ -513,7 +403,7 @@ uint32_t SortTim(T* arr, const size_t length) {
 			i *= 2;
 			++count;
 		}
-		rightEnd = binarySearchLeft(arr[middle - 1], (rightEnd- i) > middle ? (rightEnd - i) : middle, rightEnd);
+		rightEnd = binarySearchLeft(arr[middle - 1], (rightEnd - i) > middle ? (rightEnd - i) : middle, rightEnd);
 
 		// TODO : Galloping Mode 구현
 		int gallopCount;
@@ -536,7 +426,7 @@ uint32_t SortTim(T* arr, const size_t length) {
 				++index;
 			}
 		} else {
-		// Merge High (뒷쪽 run의 길이가 더 짧다)
+			// Merge High (뒷쪽 run의 길이가 더 짧다)
 			tempArr.assign(&arr[middle], &arr[middle] + (rightEnd - middle));
 			int left = middle - 1;
 			int right = rightEnd - middle - 1;
@@ -557,7 +447,7 @@ uint32_t SortTim(T* arr, const size_t length) {
 		// run 길이 변경
 		run.second = end - start;
 	};
-	
+
 	// 데이터 개수가 너무 적은 경우 전체 배열에 대해 binary insertion sort를 사용한다.
 	if (length < 64) {
 		insertionAscend(0, length);
@@ -566,7 +456,7 @@ uint32_t SortTim(T* arr, const size_t length) {
 
 	// computing MinRun (복잡하기 때문에 32로 고정한다.)
 	// 참고 : https://hg.python.org/cpython/file/tip/Objects/listsort.txt
-	int minRun = 32;	// 2의 제곱수. 2^5 ~ 2^6 사이의 값에서 유동적으로 잡는다.
+	int minRun = 32;   // 2의 제곱수. 2^5 ~ 2^6 사이의 값에서 유동적으로 잡는다.
 
 	int startIndex, endIndex = 0;
 	do {
@@ -590,9 +480,9 @@ uint32_t SortTim(T* arr, const size_t length) {
 			}
 			// 증가하는 run이 되도록 뒤집는다.
 			int left = startIndex, right = endIndex - 1;
-			while(left < right) {
+			while (left < right) {
 				Swap(arr[left++], arr[right--]);
-				//std::swap(arr[left++], arr[right--]);
+				// std::swap(arr[left++], arr[right--]);
 				++count;
 			}
 		}
@@ -601,23 +491,23 @@ uint32_t SortTim(T* arr, const size_t length) {
 		if (stack.size() == stackIndex + 1) {
 			stack.emplace_back(startIndex, endIndex - startIndex);
 		} else {
-			//stack[stackIndex].first = startIndex;
-			//stack[stackIndex].second = endIndex - startIndex;
+			// stack[stackIndex].first = startIndex;
+			// stack[stackIndex].second = endIndex - startIndex;
 			stack[stackIndex + 1] = {startIndex, endIndex - startIndex};
 		}
 		++stackIndex;
 
-		// Merge 검사를 한다.
-		CHECK_MERGE:
+	// Merge 검사를 한다.
+	CHECK_MERGE:
 		// 1st rule : Z > X + Y
 		if (stackIndex > 1 && stack[stackIndex - 2].second <= (stack[stackIndex].second + stack[stackIndex - 1].second)) {
 			// Z > X 인 경우 => X, Y 병합
 			if (stack[stackIndex - 2].second > stack[stackIndex].second) {
-				mergeProcess(stack[stackIndex - 1], stack[stackIndex - 1].first, 
-							stack[stackIndex].first, stack[stackIndex].first + stack[stackIndex].second);
-			} else { // Z < X 인 경우 => Y, Z 병합
-				mergeProcess(stack[stackIndex - 2], stack[stackIndex - 2].first, 
-							stack[stackIndex - 1].first, stack[stackIndex - 1].first + stack[stackIndex - 1].second);
+				mergeProcess(stack[stackIndex - 1], stack[stackIndex - 1].first,
+							 stack[stackIndex].first, stack[stackIndex].first + stack[stackIndex].second);
+			} else {   // Z < X 인 경우 => Y, Z 병합
+				mergeProcess(stack[stackIndex - 2], stack[stackIndex - 2].first,
+							 stack[stackIndex - 1].first, stack[stackIndex - 1].first + stack[stackIndex - 1].second);
 				// X를 Y 자리로 옮긴다.
 				stack[stackIndex - 1] = stack[stackIndex];
 			}
@@ -628,8 +518,8 @@ uint32_t SortTim(T* arr, const size_t length) {
 
 		// 2nd rule : Y > X
 		if (stackIndex > 0 && stack[stackIndex - 1].second <= stack[stackIndex].second) {
-			mergeProcess(stack[stackIndex - 1], stack[stackIndex - 1].first, 
-						stack[stackIndex].first, stack[stackIndex].first + stack[stackIndex].second);
+			mergeProcess(stack[stackIndex - 1], stack[stackIndex - 1].first,
+						 stack[stackIndex].first, stack[stackIndex].first + stack[stackIndex].second);
 			--stackIndex;
 			goto CHECK_MERGE;
 		}
@@ -638,20 +528,21 @@ uint32_t SortTim(T* arr, const size_t length) {
 
 	// 스택에 값이 남아있으면 머지한다.
 	while (stackIndex > 0) {
-		mergeProcess(stack[stackIndex - 1], stack[stackIndex - 1].first, 
-					stack[stackIndex].first, stack[stackIndex].first + stack[stackIndex].second);
+		mergeProcess(stack[stackIndex - 1], stack[stackIndex - 1].first,
+					 stack[stackIndex].first, stack[stackIndex].first + stack[stackIndex].second);
 		--stackIndex;
 	}
 
 	return count;
 }
 
+// arr[begin, end) (end <= length)
 template <typename T>
 uint32_t SortIntro(T* arr, const size_t length) {
 	uint32_t count = 0;
 
 	// Heap Sort
-	auto siftdown = [&](int root, const int& end, const int& correction) {	// [root, end]
+	auto shiftdown = [&](int root, const int& end, const int& correction) {   // [root, end]
 		// 자식 노드가 없으면 종료
 		while (root * 2 < end) {
 			++count;
@@ -663,13 +554,13 @@ uint32_t SortIntro(T* arr, const size_t length) {
 
 			if (arr[left + correction] > arr[current + correction]) current = left;
 			if (right <= end && arr[right + correction] > arr[current + correction]) current = right;
-			
+
 			// 이미 정렬된 노드면 종료
 			if (current == root) {
 				return;
 			} else {
 				Swap(arr[current + correction], arr[root + correction]);
-				//std::swap<T>(arr[current + correction], arr[root + correction]);
+				// std::swap<T>(arr[current + correction], arr[root + correction]);
 				root = current;
 			}
 		}
@@ -681,15 +572,15 @@ uint32_t SortIntro(T* arr, const size_t length) {
 
 		// Build Heap (Heapify)
 		for (int parent = end / 2; parent >= 0; --parent) {
-			siftdown(parent, end, correction);
+			shiftdown(parent, end, correction);
 		}
 
 		while (end > 0) {
 			++count;
 			Swap(arr[end], arr[begin]);
-			//std::swap<T>(arr[end], arr[0]);
+			// std::swap<T>(arr[end], arr[0]);
 			--end;
-			siftdown(0, end, correction);
+			shiftdown(0, end, correction);
 		}
 	};
 	auto insertion = [&](const int& begin, const int& end) {
@@ -715,10 +606,10 @@ uint32_t SortIntro(T* arr, const size_t length) {
 			insertion(begin, end + 1);
 			return;
 		} else if (depth == 0) {
-			heap(begin, end - begin + 1);	// length를 인자로 주어야 한다.
+			heap(begin, end - begin + 1);   // length를 인자로 주어야 한다.
 			return;
 		}
-			
+
 		// divide
 		int left = begin - 1;
 		int pivot = end;
@@ -726,17 +617,18 @@ uint32_t SortIntro(T* arr, const size_t length) {
 			// 리스트 끝까지 순회하면서 피벗보다 작은 값들을 앞으로 옮긴다.
 			if (arr[i] < arr[pivot]) {
 				Swap(arr[++left], arr[i]);
-				//std::swap(arr[++left], arr[i]);
+				// std::swap(arr[++left], arr[i]);
 			}
 			++count;
 		}
 		Swap(arr[++left], arr[pivot]);
-		//std::swap(arr[++left], arr[pivot]);
+		// std::swap(arr[++left], arr[pivot]);
 		++count;
 
-		// conquer
-		quick(begin, left - 1, depth- 1);
-		quick(left + 1, end, depth- 1);
+		// depth = (depth >> 1) + (depth >> 2); // allow 1.5 log2(N) divisions
+		//  conquer
+		quick(begin, left - 1, depth - 1);
+		quick(left + 1, end, depth - 1);
 	};
 
 	int maxDepth = 2 * log2(length);
@@ -747,8 +639,8 @@ uint32_t SortIntro(T* arr, const size_t length) {
 }
 
 /// <summary> 대략적인 시간복잡도를 출력하는 함수 </summary>
-void PrintComplexity(const uint32_t count, const uint32_t n) {
-	std::cout << "Loop Count : " << count << ", Sorting Complexity (approximately) : ";
+void PrintComplexity(uint32_t count, uint32_t n) {
+	std::cout << "\nLoop Count : " << count << ", Sorting Complexity (approximately) : ";
 	if (count < n) {
 		std::cout << "1 ~ N (1 ~ " << n << ")\n";
 	} else if (count < n * log2(n)) {
@@ -767,10 +659,10 @@ using namespace std::chrono;
 int main() {
 	// reference : http://egloos.zum.com/sweeper/v/2996847
 	////system_clock::time_point current = system_clock::now(); // 컴퓨터 시스템 시간. system_clock == high_resolution_clock
-	//steady_clock::time_point current = steady_clock::now();   // 물리적 고정 시간
-	//milliseconds millis
+	// steady_clock::time_point current = steady_clock::now();   // 물리적 고정 시간
+	// milliseconds millis
 	//	= duration_cast<milliseconds>(current.time_since_epoch());
-	//std::mt19937 generator(millis.count()); 				   // 메르센 트위스터 엔진 (64비트용 : std::mt19937_64)
+	// std::mt19937 generator(millis.count()); 				   // 메르센 트위스터 엔진 (64비트용 : std::mt19937_64)
 
 	// reference : https://modoocode.com/304
 	std::random_device device;          // 시드값 생성기 (속도 느림)
@@ -778,66 +670,57 @@ int main() {
 
 	std::uniform_int_distribution<int> distribution(1, 999);   // 난수 분포(균등 분포)와 범위
 
-	size_t length{1000};                       // Uniform Initialization (up to C++11)
+	size_t length{100};                       // Uniform Initialization (up to C++11)
 	std::vector<int> unsortedArray(length);   // resize. not reserve
 
-	bool bPrintArray = false;
 
-	if (bPrintArray) {
-		std::cout << "Unsorted Array\n";
-	}
-	for (auto& e : unsortedArray) {
-		e = distribution(generator);
-		if (bPrintArray) {
+	constexpr bool bUseSorted = false;   	// 정렬된 배열을 사용
+	constexpr bool bPrintArray = true;   	// 대상 배열 출력 여부
+#define 		bSortAscend 	true		// true이면 오름차순, false이면 내림차순으로 출력
+
+	if (bUseSorted) {
+		// 정렬된 배열은 굳이 출력하지 않는다.
+		int num = 1;
+		for (auto& e : unsortedArray) {
+			e = num++;
+		}
+	} else {
+		if (bPrintArray)
+			std::cout << "Unsorted Array\n";
+		for (auto& e : unsortedArray) {
+			e = distribution(generator);
+			if (bPrintArray) {
 				std::cout << std::setw(4) << e;
+			}
 		}
 	}
-	// // Sorted array test code
-	// if (bPrintArray) {
-	// 	int num = 1;
-	// 	for (auto& e : unsortedArray) {
-	// 		e = num++;
-	// 		std::cout << std::setw(4) << e;
-	// 	}
-	// }
 	std::cout << std::endl;
 
-	uint32_t loopCount;
+#if bSortAscend
+	using Compare = Ascend<>;
+#else 
+	using Compare = Descend<>;
+#endif
+
+	using funcPointer = uint32_t (*)(int*, int, int, Compare);
+	std::vector<std::pair<std::string, void*>> sortPair {
+		{"Bubble", SortBubble<int, Compare>},
+		{"Selection", SortSelection<int, Compare>},
+		{"Insertion", SortInsertion<int, Compare>},
+		{"InsertionBinary", SortInsertionBinary<int, Compare>},
+		{"Shell", SortShell<int, Compare>},
+		{"Merge", SortMergeBottomUp<int, Compare>},
+		// {"Quick", SortQuick<int, Compare>},
+		// {"Heap", SortHeap<int, Compare>},
+		// {"Counting", SortCounting<int, Compare>},
+		// {"Radix", SortRadix<int, Compare>},
+		// {"Bucket", SortBucket<int, Compare>},
+		// {"Tim", SortTim<int, Compare>},
+		// {"Intro", SortIntro<int, Compare>},
+	};
+
 	steady_clock::time_point start;
 	std::vector<int> sortedArray;
-
-	// std::vector<std::string> name{
-	// 	"Bubble",
-	// 	"Selection",
-	// 	"Insertion",
-	// 	"Shell",
-	// 	"Merge",
-	// 	"Quick",
-	// };
-	using funcPoint = uint32_t (*)(int*, const size_t);   // == typedef uint32_t(*funcPoint)(int*, const size_t)
-	// funcPoint function[]{
-	// 	SortBubble<int>,
-	// 	SortSelection<int>,
-	// 	SortInsertion<int>,
-	// 	SortShell<int>,
-	// 	SortMergeBottomUp<int>,
-	// 	SortQuick<int>,
-	// };
-
-	std::vector<std::pair<std::string, funcPoint>> sortPair{
-		{"Bubble", SortBubble<int>},
-		{"Selection", SortSelection<int>},
-		{"Insertion", SortInsertion<int>},
-		{"Shell", SortShell<int>},
-		{"Merge", SortMergeBottomUp<int>},
-		{"Quick", SortQuick<int>},
-		{"Heap", SortHeap<int>},
-		{"Counting", SortCounting<int>},
-		{"Radix", SortRadix<int>},
-		{"Bucket", SortBucket<int>},
-		{"Tim", SortTim<int>},
-		{"Intro", SortIntro<int>},
-	};
 
 	for (const auto& pair : sortPair) {
 		std::cout << "\n " << pair.first << " Sort Start\n";
@@ -845,18 +728,18 @@ int main() {
 		sortedArray = unsortedArray;   // deep copy
 
 		start = steady_clock::now();
-		loopCount = pair.second(sortedArray.data(), length);
-		PrintComplexity(loopCount, length);
+		uint32_t loopCount = ((funcPointer)pair.second)(sortedArray.data(), 20, (int)length, Compare{});
+		PrintComplexity(loopCount, (uint32_t)length);
 		std::cout << "Sorting Time : " << duration_cast<microseconds>(steady_clock::now() - start).count() << " us\n";
 
 		if (bPrintArray) {
-			std::cout << "Sorted Array\n";
+			std::cout << "\n " << pair.first << " Sort's Sorted Array\n";
 			for (const auto& e : sortedArray) {
 				std::cout << std::setw(4) << e;
 			}
+			std::cout << "\n";
 		}
 
-		std::cout << "\n " << pair.first << " Sort End\n"
-				  << std::endl;
+		std::cout << "\n " << pair.first << " Sort End\n" << std::endl;
 	}
 }
