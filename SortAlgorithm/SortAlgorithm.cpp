@@ -11,6 +11,7 @@
 #include "InsertionSort.h"
 #include "Shell'sSort.h"
 #include "MergeSort.h"
+#include "QuickSort.h"
 
 // arr[begin, end) (end <= length)
 template <typename T, class Func>
@@ -58,43 +59,6 @@ uint32_t SortSelection(T* arr, const int begin, const int end, Func cmp) {
 template <class T>
 uint32_t SortSelection(T* arr, int begin, int end) {
 	return SortSelection(arr, begin, end, Ascend<>{});
-}
-
-
-// arr[begin, end) (end <= length)
-template <typename T>
-uint32_t SortQuick(T* arr, const size_t length) {
-	uint32_t count = 0;
-
-	// 재귀함수로 사용하기 때문에 auto 타입으로 정의하지 못한다. -> inline이 아니다.
-	std::function<void(const int&, const int&)> quick = [&](const int& begin, const int& end) {
-		// end 도 인덱스에 포함된다. -> arr[end] : o, arr[end-1] : o 	--> [begin, end]
-		if (begin >= end)
-			return;
-
-		// divide
-		int left = begin - 1;
-		int pivot = end;   // pivot 을 오른쪽 끝으로 잡는다.
-		for (int i = begin; i < end; ++i) {
-			// 리스트 끝까지 순회하면서 피벗보다 작은 값들을 앞으로 옮긴다.
-			if (arr[i] < arr[pivot]) {
-				Swap(arr[++left], arr[i]);
-				// std::swap<T>(arr[++left], arr[i]);
-				++count;
-			}
-		}
-		Swap(arr[++left], arr[pivot]);
-		// std::swap<T>(arr[++left], arr[pivot]);
-		++count;
-
-		// conquer
-		quick(begin, left - 1);
-		quick(left + 1, end);
-	};
-
-	quick(0, length - 1);
-
-	return count;
 }
 
 // arr[begin, end) (end <= length)
@@ -676,7 +640,7 @@ int main() {
 
 	constexpr bool bUseSorted = false;   	// 정렬된 배열을 사용
 	constexpr bool bPrintArray = true;   	// 대상 배열 출력 여부
-#define 		bSortAscend 	true		// true이면 오름차순, false이면 내림차순으로 출력
+#define 		bSortAscend 	false		// true이면 오름차순, false이면 내림차순으로 출력
 
 	if (bUseSorted) {
 		// 정렬된 배열은 굳이 출력하지 않는다.
@@ -704,13 +668,15 @@ int main() {
 
 	using funcPointer = uint32_t (*)(int*, int, int, Compare);
 	std::vector<std::pair<std::string, void*>> sortPair {
-		{"Bubble", SortBubble<int, Compare>},
-		{"Selection", SortSelection<int, Compare>},
-		{"Insertion", SortInsertion<int, Compare>},
-		{"InsertionBinary", SortInsertionBinary<int, Compare>},
-		{"Shell", SortShell<int, Compare>},
-		{"Merge", SortMergeBottomUp<int, Compare>},
-		// {"Quick", SortQuick<int, Compare>},
+		// {"Bubble", SortBubble<int, Compare>},
+		// {"Selection", SortSelection<int, Compare>},
+		// {"Insertion", SortInsertion<int, Compare>},
+		// {"InsertionBinary", SortInsertionBinary<int, Compare>},
+		// {"Shell", SortShell<int, Compare>},
+		// {"MergeTop", SortMergeTopDown<int, Compare>},
+		{"MergeBottom", SortMergeBottomUp<int, Compare>},
+		{"Quick", SortQuick<int, Compare>},
+		//{"QuickPartition", SortQuickPartition<int, Compare>},
 		// {"Heap", SortHeap<int, Compare>},
 		// {"Counting", SortCounting<int, Compare>},
 		// {"Radix", SortRadix<int, Compare>},

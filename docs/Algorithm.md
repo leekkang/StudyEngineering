@@ -154,9 +154,11 @@
   - `STL` 라이브러리에서 피벗값을 구하는 방법으로 중위법 + [Tukey's ninther](https://www.johndcook.com/blog/2009/06/23/tukey-median-ninther/) 라는 방법을 사용한다.
     - 중위법 : 시작, 중간, 끝 점의 세 원소의 `중앙값(median)` 을 사용하는 방법
     - 길이가 40 미만인 경우 `Tukey's ninther`를, 이보다 크면 중위법을 사용한다.
-  - 중복 키가 많을 때 중복 키에 대해 파티셔닝을 중단하지 않으면 시간 복잡도가 `Worst Case`가 된다. 해당 문제점을 방지하기 위해 `3-way partitioning` 기법을 사용한다.
+  - 중복 키가 많을 때 중복 키에 대해 파티셔닝 하면 시간 복잡도가 `Worst Case`가 된다. 해당 문제점을 방지하기 위해 `3-way partitioning` 기법을 사용한다.
     - 피벗값을 확정지은 후, `중복값, 앞에 오는 값, 뒤에 오는 값` 세 개의 구역으로 분할 하는 것
     - 중복 키가 많을 때 성능이 $N^2$가 되는 것을 방지한다.
+    - `Edsger Dijkstra`가 제안한 [Dutch national flag problem](https://en.wikipedia.org/wiki/Dutch_national_flag_problem)의 해결법으로 파티셔닝 기법의 시간복잡도를 $O(N)$ 으로 만들 수 있다.
+    - 때문에 전체 시간복잡도는 변하지 않는다.
  
   - `Time Complexity`
     - `Best Case` : $O(NlogN)$
