@@ -3,6 +3,7 @@
   - [Lempel-Ziv-Welch algorithm](#lempel-ziv-welch-algorithm)
   - [LZ77 Algorithm](#lz77-algorithm)
 - [Sorting Algorithm](#sorting-algorithm)
+  - [단일 정렬 알고리즘](#단일-정렬-알고리즘)
   - [Bubble Sort](#bubble-sort)
   - [Selection Sort](#selection-sort)
   - [Insertion Sort](#insertion-sort)
@@ -13,6 +14,7 @@
   - [Counting Sort](#counting-sort)
   - [Radix Sort](#radix-sort)
   - [Bucket Sort](#bucket-sort)
+  - [복합 정렬 알고리즘](#복합-정렬-알고리즘)
   - [Tim Sort](#tim-sort)
   - [Intro Sort](#intro-sort)
 - [Graph Algorithm](#graph-algorithm)
@@ -68,15 +70,20 @@
     - `Insertion`, `Merge`, `Bubble`, `Counting` 이 대표적인 `Stable Sort`이다.
     - `Selection`, `Heap`, `Shell`, `Quick` 이 대표적인 `Unstable Sort`이다.
   - `In-place Algorithm (제자리 정렬)`
-    - 추가 메모리 사용량이 정렬 항목 외에 $O(1)$개, 최대 $O(log(N))$개를 넘지 않는 정렬 알고리즘
+    - 추가 메모리 사용량이 정렬 항목 외에 $O(1)$개, 최대 $O(logN)$개를 넘지 않는 정렬 알고리즘
     - `Insertion`, `Selection`, `Bubble`, `Shell`, `Heap`, `Quick` 이 대표적인 `In-place Sort` 이다.
-      - `Quick`은 $O(log(N))$개의 메모리를 사용하기 때문에 엄격한 정의로는 `Not In-place Sort` 이지만, 일반적으로는 `In-place Sort`로 분류한다.
-    - `Merge`, `Counting`, `Radix`, `Bucket` 이 대표적인 `Not In-place Sort` 이다.
+      - `Quick`은 $O(logN)$개의 메모리를 사용하기 때문에 엄격한 정의로는 `Not In-place Sort` 이지만, 일반적으로는 `In-place Sort`로 분류한다.
+    - `Merge`, `Counting`, `Radix`, `Bucket` 이 대표적인 `Not In-place Sort` 이다. (시간을 위해 메모리를 희생)
   - `Comparison Sort (비교 정렬)`
     - 비교 동작을 통해 목록 요소들을 읽어내는 정렬 알고리즘
     - $O(NlogN)$ 보다 더 나은 성능을 낼 수 없다.
-    - `Quick`, `Heap`, `Merge`, `Shell`, `Insertion` 등 대다수의 정렬 알고리즘이 여기에 속한다.
+    - `Quick`, `Heap`, `Merge`, `Shell's`, `Insertion` 등 대다수의 정렬 알고리즘이 여기에 속한다.
     - `Bucket`, `Counting`, `Radix` 등이 `Non-Comparison Sort` 이다.
+
+
+---
+## 단일 정렬 알고리즘
+
 
 ## Bubble Sort
 
@@ -96,15 +103,17 @@
 ## [Insertion Sort](../SortAlgorithm/InsertionSort.h)
 
   - 정렬이 된 앞부분과 비교해서 적절한 위치에 `n`번째 값을 삽입한다. 배열의 앞쪽부터 정렬되는 형태
+  - 적절한 위치를 선형으로 찾는 대신 `이진 탐색(binary search)` 알고리즘을 사용하는 `이진 삽입 정렬`도 있다.
+    - 평균적으로 $O(NlogN)$ 의 복잡도를 가지게 되지만 `Best Case`가 사라진다.
+  - 정렬 대상의 길이가 유의미하게 적은 경우 (보통 `< 8`) 속도가 빠른 편이기 때문에 하위 정렬로 많이 사용한다.
   - `Time Complexity`
     - `Best Case` : $O(N)$ (이미 정렬된 배열)
     - `Average Case` : $O(N^2)$
     - `Worst Case` : $O(N^2)$ (역순으로 정렬된 배열)
   - `Space Complexity` : $O(1)$
-  - 적절한 위치를 선형으로 찾는 대신 `이진 탐색(binary search)` 알고리즘을 사용하는 `이진 삽입 정렬`도 있다.
-    - 평균적으로 $O(NlogN)$ 의 복잡도를 가지게 되지만 `Best Case`가 사라진다.
 
-## Shell's Sort
+
+## [Shell's Sort](../SortAlgorithm/Shell'sSort.h)
 
   - `Insertion Sort`의 `Worst Case`를 개선하기 위해 나온 알고리즘. 삽입 정렬보다 빠르다.
   - 일정 `간격`으로 `부분 리스트`를 만들어 `삽입 정렬`을 시행, `간격`이 1이 될때까지 반복한다.(간격이 1이면 부분 리스트 == 전체 리스트)
@@ -114,12 +123,13 @@
     - `Best Case` : $O(N)$ (이미 정렬된 배열)
     - `Average Case` : $O(N^{1.5})$
     - `Worst Case` : $O(N^2)$ (역순으로 정렬된 배열)
-  - `Space Complexity` : $O(N)$
+  - `Space Complexity` : $O(1)$
 
 
-## Merge Sort
+## [Merge Sort](../SortAlgorithm/MergeSort.h)
 
   - [분할 정복 알고리즘 (Divide and Conquer Algorithm)] 이다.
+
   - 리스트의 길이가 0 또는 1이 될 때까지 리스트를 분할한 다음, 각각을 정렬하면서 합친다.
   - 병합 과정에서 추가적으로 배열 길이만큼의 메모리가 필요하다.
   - `Top-Down`과 `Bottom-Up` 두 가지 방식이 있다.
@@ -127,25 +137,34 @@
     - `Bottom-Up`은 쪼갠 리스트들의 길이가 짧은 순서로 결합을 한다. 재귀를 사용하지 않는 코드가 여기에 속한다.
   - 재귀 함수 호출 시 원본 리스트와 임시 리스트의 인자 전달 순서를 바꿔서 불필요하게 임시 리스트로 복사를 수행하는 오버헤드를 줄이는 방법이 있다.
     - [참고](https://m.blog.naver.com/osw5144/120207767212)
-    - [SortAlgorithm.cpp] 에 구현된 함수는 인자를 넘기지 않기 때문에 사용하지 못한다.
+    - [소스 코드](../SortAlgorithm/MergeSort.h)에 구현된 함수는 인자를 넘기지 않기 때문에 사용하지 못한다.
   - `Time Complexity` : $O(NlogN)$
   - `Space Complexity` : $O(N)$
 
 
-## Quick Sort
+## [Quick Sort](../SortAlgorithm/QuickSort.h)
 
   - 보편적으로 가장 많이 사용되는 정렬 알고리즘이다.
+ 
   - [분할 정복 알고리즘 (Divide and Conquer Algorithm)] 이다.
   - 배열을 일정한 기준(`Pivot`)에 따라 큰 값과 작은 값으로 분할한 다음, 각각을 정렬하면서 합친다.
     - `Merge Sort`와 달리 배열을 임의로 나누지 않기 때문에 효율적이지만, 피벗값이 잘못 선택되면 $O(N^2)$가 될 수 있다.
-    - [SortAlgorithm.cpp] 에 구현된 함수는 리스트의 마지막 값을 피벗으로 한다.
+  - 매 단계에서 피벗의 위치가 확정되기 때문에 이후 정렬할 개수가 1개씩 줄어든다. 때문에 일반적인 경우 $O(NlogN)$ 알고리즘 중 가장 빠르게 동작한다.
+  
+  - `STL` 라이브러리에서 피벗값을 구하는 방법으로 중위법 + [Tukey's ninther](https://www.johndcook.com/blog/2009/06/23/tukey-median-ninther/) 라는 방법을 사용한다.
+    - 중위법 : 시작, 중간, 끝 점의 세 원소의 `중앙값(median)` 을 사용하는 방법
+    - 길이가 40 미만인 경우 `Tukey's ninther`를, 이보다 크면 중위법을 사용한다.
+  - 중복 키가 많을 때 중복 키에 대해 파티셔닝을 중단하지 않으면 시간 복잡도가 `Worst Case`가 된다. 해당 문제점을 방지하기 위해 `3-way partitioning` 기법을 사용한다.
+    - 피벗값을 확정지은 후, `중복값, 앞에 오는 값, 뒤에 오는 값` 세 개의 구역으로 분할 하는 것
+    - 중복 키가 많을 때 성능이 $N^2$가 되는 것을 방지한다.
+ 
   - `Time Complexity`
     - `Best Case` : $O(NlogN)$
     - `Average Case` : $O(NlogN)$
     - `Worst Case` : $O(N^2)$ (이미 정렬된 배열)
-  - `Space Complexity` : $O(1)$
+  - `Space Complexity` : $O(logN)$ (최악의 경우 $O(N)$)
 
-## Heap Sort
+## [Heap Sort](../SortAlgorithm/HeapSort.h)
 
   - 자료구조 `힙(heap)`을 사용하는 정렬 알고리즘
     - `힙(heap)`은 `완전 이진트리(Complete Binary Tree)`의 일종으로 `우선순위 큐`를 위하여 만들어진 자료구조
@@ -157,7 +176,7 @@
   - `Time Complexity` : $O(NlogN)$
   - `Space Complexity` : $O(1)$
 
-## Counting Sort
+## [Counting Sort](../SortAlgorithm/CountingSort.h)
 
   - `비교를 하지 않는 정렬(Non-Comparison)` 알고리즘 이다.
   - 정수 정렬 알고리즘이다.
@@ -167,7 +186,7 @@
   - `Time Complexity` : $O(N + K), K = 최대값$
   - `Space Complexity` : $O(K)$
 
-## Radix Sort
+## [Radix Sort](../SortAlgorithm/RadixSort.h)
 
   - `비교를 하지 않는 정렬(Non-Comparison)` 알고리즘 이다.
   - 정수 정렬 알고리즘이다.
@@ -180,7 +199,7 @@
   - `Time Complexity` : $O(N * W), W = 최대 자리수$
   - `Space Complexity` : $O(N + W)$
 
-## Bucket Sort
+## [Bucket Sort](../SortAlgorithm/BucketSort.h)
 
   - 비교 정렬, 비교를 하지 않는 정렬 모두 구현이 가능한 알고리즘이다.
   - `분산 정렬(Distribution)` 이다.
@@ -194,7 +213,12 @@
     - `Worst Case` : $O(N^2)$ (모든 값이 하나의 버킷으로 들어간 경우)
   - `Space Complexity` : $O(N * K)$
 
-## Tim Sort
+
+---
+## 복합 정렬 알고리즘
+
+
+## [Tim Sort](../SortAlgorithm/TimSort.h)
 
   - `Merge Sort + Insertion Sort`의 하이브리드 안정화 정렬 알고리즘이다.
   - `Java`, `Python`, `Android Platform` 등 다양한 프로그램의 기본 정렬 알고리즘으로 사용된다.
@@ -207,7 +231,7 @@
     - `Worst Case` : $O(NlogN)$
   - `Space Complexity` : $O(N)$ (`Merge Sort`보다 작은 값)
 
-## Intro Sort
+## [Intro Sort](../SortAlgorithm/IntroSort.h)
 
   - `Quick Sort + Heap Sort + Insertion Sort`의 하이브리드 정렬 알고리즘이다.
  

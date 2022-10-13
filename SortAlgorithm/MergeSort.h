@@ -3,6 +3,7 @@
 #include <memory.h>
 #include <type_traits>
 #include <vector>
+#include <functional>
 
 #include "Share.h"
 
@@ -28,6 +29,11 @@ uint32_t SortMergeTopDown(T* arr, int begin, int end, Func cmp) {
 		// conquer
 		merge(s, m);
 		merge(m, e);
+
+		++count;
+		// 왼쪽과 오른쪽이 섞이는 경우에만 결합체크와 복사를 한다. 섞이지 않는다면 이미 정렬되어 들어가 있을 것이다.
+		if (!cmp(arr[m], arr[m - 1]))	// == arr[m - 1] <= arr[m]
+			return;
 
 		// combine
 		int left = s, right = m;
@@ -77,16 +83,21 @@ uint32_t SortMergeBottomUp(T* arr, int begin, int end, Func cmp) {
 		++count;
 		// conquer
 		for (int s = begin; s < end; s += width * 2) {	// s는 나뉘어진 블록들의 시작 인덱스이다.
-			e = std::min(s + width * 2, end);			// e는 다음 블록의 시작 인덱스와 배열의 끝 중 작은 값이다.
 			++count;
-			// combine
+			e = std::min(s + width * 2, end);           // e는 다음 블록의 시작 인덱스와 배열의 끝 중 작은 값이다.
 			left = s;
-			right = std::min(s + width, end);			// 중간값 또한 배열의 끝보다 작은 값이어야 한다.
-			++count;
+			right = std::min(s + width, end);   		// 중간값 또한 배열의 끝보다 작은 값이어야 한다.
 			m = right;
+
+			++count;
+			// 왼쪽과 오른쪽이 섞이는 경우에만 결합체크와 복사를 한다. 섞이지 않는다면 이미 정렬되어 들어가 있을 것이다.
+			if (m == e || !cmp(arr[m], arr[m - 1]))		// == arr[m - 1] <= arr[m]
+				continue;
+
+			// combine
 			for (int i = s - begin; i < e - begin; ++i) {
 				// 왼쪽 리스트가 끝나지 않은 상황에서, 오른쪽 리스트가 끝났거나 왼쪽의 값이 오른쪽 값보다 작을 경우 (left <= right를 표현하기 위해 > 의 역을 취했다.)
-				// 동일한 값인 경우 순서를 보존해야 하기 때문에 왼쪽 값을 우선해서 넣는다. 
+				// 동일한 값인 경우 순서를 보존해야 하기 때문에 왼쪽 값을 우선해서 넣는다.
 				if (left < m && (right >= e || !cmp(arr[right], arr[left])))
 					temp[i] = arr[left++];
 				else
@@ -95,16 +106,16 @@ uint32_t SortMergeBottomUp(T* arr, int begin, int end, Func cmp) {
 				++count;
 				++count;
 			}
-		}
 
-		// copy
-		if constexpr (std::is_trivially_copyable_v<T>) {
-			memcpy(&arr[begin], &temp[0], sizeof(T) * length);
-			++count;
-		} else {
-			for (int i = s; i < e; ++i) {
-				arr[i] = temp[i - begin];
+			// copy
+			if constexpr (std::is_trivially_copyable_v<T>) {
+				memcpy(&arr[s], &temp[s - begin], sizeof(T) * (e - s));
 				++count;
+			} else {
+				for (int i = s; i < e; ++i) {
+					arr[i] = temp[i - begin];
+					++count;
+				}
 			}
 		}
 	}
