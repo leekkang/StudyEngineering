@@ -1,11 +1,12 @@
 - [Encoding Algorithm](#encoding-algorithm)
   - [Huffman Code](#huffman-code)
   - [Lempel-Ziv-Welch algorithm](#lempel-ziv-welch-algorithm)
+  - [LZ77 Algorithm](#lz77-algorithm)
 - [Sorting Algorithm](#sorting-algorithm)
   - [Bubble Sort](#bubble-sort)
   - [Selection Sort](#selection-sort)
   - [Insertion Sort](#insertion-sort)
-  - [Shell Sort](#shell-sort)
+  - [Shell's Sort](#shells-sort)
   - [Merge Sort](#merge-sort)
   - [Quick Sort](#quick-sort)
   - [Heap Sort](#heap-sort)
@@ -22,6 +23,7 @@
   - [Floyd-Warshall Algorithm](#floyd-warshall-algorithm)
   - [A* Algorithm](#a-algorithm)
 - [Hash Algorithm](#hash-algorithm)
+- [Sieve of Eratosthenes (에라토스테네스의 체)](#sieve-of-eratosthenes-에라토스테네스의-체)
 
 ---
 
@@ -30,17 +32,21 @@
 
   - 몰랐거나 까먹기 쉬운 알고리즘들을 기록해놓는 문서
 
+  - TODO 보간 탐색
+    - https://yoongrammer.tistory.com/77?category=987044
+
+
 ---
 # Encoding Algorithm
 
-## [Huffman Code](../Huffman/Huffman.cpp)
+## [Huffman Code](../EncodingAlgorithm/Huffman/Huffman.cpp)
 
   - 빈도 종속 인코딩 알고리즘을 사용한 코드
   - 개발자인 데이비드 허프만 이름을 따서 허프만 코드라고 한다.
     - 빈도 종속 인코딩 : 비트 패턴의 길이를 해당 항목이 사용되는 빈도의 역과 관련시켜 결정하는 무손실 데이터 압축방법
   - [탐욕 알고리즘(greedy algorithm)] 이다.
 
-## [Lempel-Ziv-Welch algorithm](../LZW/LZWAlgorithm.cpp)
+## [Lempel-Ziv-Welch algorithm](../EncodingAlgorithm/LZW/LZWAlgorithm.cpp)
 
   - 적응형 사전 인코딩(adaptive dictionary encoding) 알고리즘을 사용한 코드
     - 적응형 사전 인코딩 : 메시지 항목들의 집합을 사전으로, 메시지는 사전의 참조 표시로 인코딩. 인코딩 과정중에 사전의 항목이 변화한다.
@@ -50,12 +56,15 @@
   - 데이터의 제한된 분석만 수행하기 때문에 최적으로 동작하지는 않는다.
   - [LZW 참조1], [LZW 참조2:위키피디아]
 
+## LZ77 Algorithm
+
 
 ---
 # [Sorting Algorithm](../SortAlgorithm/SortAlgorithm.cpp)
 
   - `Stable Sort (안정 정렬)`
     - 중복된 키의 순서가 변경되지 않게 정렬하는 알고리즘
+      - 보통 맞교환이 없으면 stable 하고, 교환이 있으면 unstable 하다.
     - `Insertion`, `Merge`, `Bubble`, `Counting` 이 대표적인 `Stable Sort`이다.
     - `Selection`, `Heap`, `Shell`, `Quick` 이 대표적인 `Unstable Sort`이다.
   - `In-place Algorithm (제자리 정렬)`
@@ -84,22 +93,23 @@
   - `Space Complexity` : $O(1)$
 
 
-## Insertion Sort
+## [Insertion Sort](../SortAlgorithm/InsertionSort.h)
 
   - 정렬이 된 앞부분과 비교해서 적절한 위치에 `n`번째 값을 삽입한다. 배열의 앞쪽부터 정렬되는 형태
   - `Time Complexity`
     - `Best Case` : $O(N)$ (이미 정렬된 배열)
     - `Average Case` : $O(N^2)$
-    - `Worst Case` : $O(N^2)$ (간격이 잘못 설정된 경우)
+    - `Worst Case` : $O(N^2)$ (역순으로 정렬된 배열)
   - `Space Complexity` : $O(1)$
+  - 적절한 위치를 선형으로 찾는 대신 `이진 탐색(binary search)` 알고리즘을 사용하는 `이진 삽입 정렬`도 있다.
+    - 평균적으로 $O(NlogN)$ 의 복잡도를 가지게 되지만 `Best Case`가 사라진다.
 
-
-## Shell Sort
+## Shell's Sort
 
   - `Insertion Sort`의 `Worst Case`를 개선하기 위해 나온 알고리즘. 삽입 정렬보다 빠르다.
   - 일정 `간격`으로 `부분 리스트`를 만들어 `삽입 정렬`을 시행, `간격`이 1이 될때까지 반복한다.(간격이 1이면 부분 리스트 == 전체 리스트)
     - `부분 리스트`의 길이는 `리스트 / 간격` 과 같다. ex) 배열길이 10인 리스트의 간격이 5일 경우, 부분 리스트의 길이는 2가 된다.
-    - `간격`이 짝수일 때 보다 홀수일 때가 더 빠르다.
+    - `간격`이 짝수일 때 보다 홀수일 때가 더 빠르다. (왜 그런진 모름)
   - `Time Complexity`
     - `Best Case` : $O(N)$ (이미 정렬된 배열)
     - `Average Case` : $O(N^{1.5})$
@@ -200,12 +210,15 @@
 ## Intro Sort
 
   - `Quick Sort + Heap Sort + Insertion Sort`의 하이브리드 정렬 알고리즘이다.
+ 
   - `Quick Sort`의 `Worst Case`를 보완하기 위해 고안되었다.
-  - 재귀 호출의 깊이가 $\left \lfloor 2LogN \right \rfloor$을 넘어가면 아래의 동작을 수행한다.
+  - 현재 `STL` 라이브러리의 `std::sort` 함수가 사용하고 있는 정렬 방법이다.
+  - `Quick Sort` 도중 재귀 호출의 깊이가 $\left \lfloor 2LogN \right \rfloor$을 넘어가면 아래의 동작을 수행한다. (`STL` 라이브러리는 `1.5 logN` 의 근사값을 사용한다.)
     - 현재 부분 리스트의 크기가 16 이상일 경우 `Heap Sort`를 수행한다.
     - 현재 부분 리스트의 크기가 16 미만일 경우 `Insertion Sort`를 수행한다.
     - `ceil`은 올림 처리, `floor`는 내림 처리, `round`는 반올림 처리이다.
   - `16`의 값은 연구 결과를 통해 나온 최적의 값이다. (`Tim Sort`의 `Gallop`과 다르게 고정값이다.)
+    - 현재 `STL` 라이브러리의 삽입 정렬 리스트 최대 크기값(`_ISORT_MAX`)은 `32`이다.
   - `Time Complexity` : $O(NlogN)$
   - `Space Complexity` : $O(1)$
 
@@ -228,7 +241,7 @@
   - `Minimum Spanning Tree`를 찾는 알고리즘이다.
   - [탐욕 알고리즘(greedy algorithm)]이다.
   - 가장 가중치가 작은 간선부터 시작하여, 사이클을 만들지 않으면서 가중치가 작은 간선을 전체 트리가 만들어질 때까지 차례로 선택한다.
-  - $E$를 간선의 개수, $V$를 정점의 개수라고 할 때, `Kruskal Algorithm`은 $O(ElogN)$ 시간안에 동작한다.
+  - $E$를 간선의 개수, $V$를 정점의 개수라고 할 때, `Kruskal Algorithm`은 $O(ElogV)$ 시간안에 동작한다.
     - 간선의 가중치 별 정렬시간($O(ElogE)$) + [서로소 집합(Disjoint Set)](https://ko.wikipedia.org/wiki/%EC%84%9C%EB%A1%9C%EC%86%8C_%EC%A7%91%ED%95%A9_%EC%9E%90%EB%A3%8C_%EA%B5%AC%EC%A1%B0)을 통한 사이클 찾기 동작($O(ElogV)$)
     - $V <= 2E$이기 때문에 $O(logV) == O(logE)$
     - 알고리즘 최종 `Time Complexity`는 $O(ElogN)$이 된다.
@@ -258,6 +271,13 @@
 
 
 
+
+
+---
+# Sieve of Eratosthenes (에라토스테네스의 체)
+
+  - 소수 (`Prime Number`) 판별 알고리즘
+  - TODO https://m.blog.naver.com/ndb796/221233595886
 
 
 
