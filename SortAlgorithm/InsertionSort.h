@@ -20,7 +20,7 @@ uint32_t SortInsertion(T* arr, int begin, int end, Func cmp) {
 	for (int i = end - 1; i >= begin; --i) {
 		++count;
 		T temp = arr[i];
-		// worst case (역순인 경우) 방지용 마지막 값과 비교
+		// worst case (역순인 경우) 방지를 위해 정렬된 부분의 마지막 값과 비교
 		if (cmp(arr[end], temp)) {
         	++count;
 			memcpy(arr + i, arr + i + 1, sizeof(T) * (end - i));

@@ -220,16 +220,19 @@
 
 ## [Bucket Sort](../SortAlgorithm/BucketSort.h)
 
-  - 비교 정렬, 비교를 하지 않는 정렬 모두 구현이 가능한 알고리즘이다.
   - `분산 정렬(Distribution)` 이다.
     - 데이터가 여러 중간 자료구조로 분산된 다음 다시 수집되어 출력되는 정렬 알고리즘을 의미한다.
   - [분할 정복 알고리즘 (Divide and Conquer Algorithm)] 이다.
+  - `비교 정렬`, `비교를 하지 않는 정렬` 모두 구현이 가능한 알고리즘이다.
+    - 버킷 내부의 정렬 시 사용하는 정렬 방법에 따라 달라진다.
   - 배열의 원소를 여러 버킷으로 분산하여 정렬한다. 보통 버킷 내부의 정렬은 [삽입 정렬](#insertion-sort)을 이용한다.
+  - 버킷에 분산하는 과정이 `기수 정렬`에서 `기수`에 분배하는 것과 비슷하다.
   - 버킷의 개수가 $N$개에 가까울 수록, 배열이 균등 분포에 가까울 수록 성능이 올라간다.
+    - 버킷의 개수가 $N$개가 되면 `계수 정렬`과 동일해진다.
  
   - `Time Complexity`
-    - `Best Case` : $O(N)$
-    - `Average Case` : $O(N + N^2/k + k), k = 버킷 수$
+    - `Best Case` : $O(N), K \simeq N$
+    - `Average Case` : $O(N + N^2/K + K), K = 버킷 수$
     - `Worst Case` : $O(N^2)$ (모든 값이 하나의 버킷으로 들어간 경우)
   - `Space Complexity` : $O(N * K)$
 
