@@ -13,6 +13,7 @@
 #include "MergeSort.h"
 #include "QuickSort.h"
 #include "HeapSort.h"
+#include "CountingSort.h"
 
 // arr[begin, end) (end <= length)
 template <typename T, class Func>
@@ -60,47 +61,6 @@ uint32_t SortSelection(T* arr, const int begin, const int end, Func cmp) {
 template <class T>
 uint32_t SortSelection(T* arr, int begin, int end) {
 	return SortSelection(arr, begin, end, Ascend<>{});
-}
-
-// arr[begin, end) (end <= length)
-template <typename T>
-uint32_t SortCounting(T* arr, const size_t length) {
-	uint32_t count = 0;
-
-	// 최대값 찾기
-	int max = 0;
-	for (int i = 0; i < length; ++i) {
-		++count;
-		if (arr[i] > max) max = arr[i];
-	}
-
-	// 카운팅 배열 작성
-	std::vector<T> countArr(max + 1, 0);
-	for (int i = 0; i < length; ++i) {
-		++count;
-		++countArr[arr[i]];
-	}
-	// 누적 합 계산
-	for (int i = 1; i < max + 1; ++i) {
-		++count;
-		countArr[i] += countArr[i - 1];
-	}
-
-	// 카피 배열 작성
-	std::vector<T> temp(length);
-	for (int i = 0; i < length; ++i) {
-		++count;
-		--countArr[arr[i]];
-		temp[countArr[arr[i]]] = arr[i];
-	}
-
-	// 카피 배열 원본에 복사 (소팅 알고리즘에 포함되는 부분은 아님)
-	for (int i = 0; i < length; ++i) {
-		++count;
-		arr[i] = temp[i];
-	}
-
-	return count;
 }
 
 // arr[begin, end) (end <= length)
@@ -631,8 +591,8 @@ int main() {
 		// {"Quick", SortQuick<int, Compare>},
 		// {"QuickPartition", SortQuickPartition<int, Compare>},
 		 {"Heap", SortHeap<int, Compare>},
-		 {"HeapSTL", SortHeapFromSTL<int, Compare>},
-		// {"Counting", SortCounting<int, Compare>},
+		// {"HeapSTL", SortHeapFromSTL<int, Compare>},
+		 {"Counting", SortCounting<int, Compare>},
 		// {"Radix", SortRadix<int, Compare>},
 		// {"Bucket", SortBucket<int, Compare>},
 		// {"Tim", SortTim<int, Compare>},
