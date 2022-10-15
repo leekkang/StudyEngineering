@@ -9,6 +9,19 @@
 
 
 // arr[begin, end) (end <= length)
+template <class T>
+uint32_t SortMergeTopDown(T* arr, int begin, int end) {
+	return SortMergeTopDown(arr, begin, end, Ascend<>{});
+}
+
+// arr[begin, end) (end <= length)
+template <class T>
+uint32_t SortMergeBottomUp(T* arr, int begin, int end) {
+	return SortMergeBottomUp(arr, begin, end, Ascend<>{});
+}
+
+
+// arr[begin, end) (end <= length)
 template <typename T, class Func>
 uint32_t SortMergeTopDown(T* arr, int begin, int end, Func cmp) {
 	uint32_t count = 0;
@@ -65,10 +78,6 @@ uint32_t SortMergeTopDown(T* arr, int begin, int end, Func cmp) {
 
 	return count;
 }
-template <class T>
-uint32_t SortMergeTopDown(T* arr, int begin, int end) {
-	return SortMergeTopDown(arr, begin, end, Ascend<>{});
-}
 
 // arr[begin, end) (end <= length)
 template <typename T, class Func>
@@ -121,8 +130,4 @@ uint32_t SortMergeBottomUp(T* arr, int begin, int end, Func cmp) {
 	}
 
 	return count;
-}
-template <class T>
-uint32_t SortMergeBottomUp(T* arr, int begin, int end) {
-	return SortMergeBottomUp(arr, begin, end, Ascend<>{});
 }

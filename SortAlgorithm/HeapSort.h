@@ -5,6 +5,20 @@
 
 #include "Share.h"
 
+
+// arr[begin, end) (end <= length)
+template <typename T>
+uint32_t SortHeap(T* arr, int begin, int end) {
+	return SortHeap(arr, begin, end, Ascend<>{});
+}
+
+// arr[begin, end) (end <= length)
+template <typename T>
+uint32_t SortHeapFromSTL(T* arr, int begin, int end) {
+	return SortHeapFromSTL(arr, begin, end, Ascend<>{});
+}
+
+
 // arr[begin, end) (end <= length)
 template <typename T, class Func>
 uint32_t SortHeap(T* arr, int begin, int end, Func cmp) {
@@ -58,12 +72,6 @@ uint32_t SortHeap(T* arr, int begin, int end, Func cmp) {
 	
 	return count;
 }
-template <typename T>
-uint32_t SortHeap(T* arr, int begin, int end) {
-	return SortHeap(arr, begin, end, Ascend<>{});
-}
-
-
 
 // STL 내부의 heap sort와 로직을 동일하게 만들어 봄. 코드 흐름 참고용
 // 코드의 재사용성을 위해 기능별로 나눠서 함수가 불필요해 보이는 부분이 있을 수 있다. 
@@ -144,8 +152,4 @@ uint32_t SortHeapFromSTL(T* arr, int begin, int end, Func cmp) {
 	}
 	
 	return count;
-}
-template <typename T>
-uint32_t SortHeapFromSTL(T* arr, int begin, int end) {
-	return SortHeapFromSTL(arr, begin, end, Ascend<>{});
 }

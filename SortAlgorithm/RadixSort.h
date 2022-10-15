@@ -8,6 +8,17 @@
 
 // arr[begin, end) (end <= length)
 #if _HAS_CXX17
+template <class T, std::enable_if_t<std::is_integral_v<T>, bool> = true>
+#else 
+template <class T, std::enable_if_t<std::is_integral<T>::value, bool> = true>
+#endif
+uint32_t SortRadix(T* arr, int begin, int end) {
+	return SortRadix(arr, begin, end, Ascend<>{});
+}
+
+
+// arr[begin, end) (end <= length)
+#if _HAS_CXX17
 template <class T, class Func, std::enable_if_t<std::is_integral_v<T>, bool> = true>
 #else 
 template <class T, class Func, std::enable_if_t<std::is_integral<T>::value, bool> = true>
@@ -70,12 +81,4 @@ uint32_t SortRadix(T* arr, int begin, int end, Func cmp) {
 	delete[] countArr;
 
 	return count;
-}
-#if _HAS_CXX17
-template <class T, std::enable_if_t<std::is_integral_v<T>, bool> = true>
-#else 
-template <class T, std::enable_if_t<std::is_integral<T>::value, bool> = true>
-#endif
-uint32_t SortRadix(T* arr, int begin, int end) {
-	return SortRadix(arr, begin, end, Ascend<>{});
 }

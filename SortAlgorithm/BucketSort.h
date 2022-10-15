@@ -2,6 +2,18 @@
 
 #include "InsertionSort.h"
 
+
+// arr[begin, end) (end <= length)
+template <typename T>
+uint32_t SortBucket(T* arr, int begin, int end) {
+	return SortBucket(arr, begin, end, Ascend<>{});
+}
+// arr[begin, end) (end <= length)
+template <typename T, class Func>
+uint32_t SortBucket(T* arr, int begin, int end, Func cmp) {
+	return SortBucket<10>(arr, begin, end, cmp);
+}
+
 // arr[begin, end) (end <= length)
 #if _HAS_CXX17
 template <int bucketCount, class T, class Func, std::enable_if_t<std::is_integral_v<T>, bool> = true>
@@ -29,7 +41,7 @@ uint32_t SortBucket(T* arr, int begin, int end, Func cmp) {
 	}
 	count += bucketCount;
 
-	int value;
+	int value = 0;
 	for (int i = begin; i < end; ++i) {
 		// 소수점의 경우 std::floor를 추가로 사용한다.
 		value = static_cast<int>(bucketCount * arr[i] / max);
@@ -60,13 +72,4 @@ uint32_t SortBucket(T* arr, int begin, int end, Func cmp) {
 	delete[] arrIndex;
 
 	return count;
-}
-// arr[begin, end) (end <= length)
-template <typename T, class Func>
-uint32_t SortBucket(T* arr, int begin, int end, Func cmp) {
-	return SortBucket<10>(arr, begin, end, cmp);
-}
-template <typename T>
-uint32_t SortBucket(T* arr, int begin, int end) {
-	return SortBucket(arr, begin, end, Ascend<>{});
 }

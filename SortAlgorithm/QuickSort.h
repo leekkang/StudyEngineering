@@ -4,11 +4,72 @@
 #include <type_traits>
 #include <vector>
 #include <functional>
-#include <random>
 
 #include "Share.h"
 
 //! 포함관계를 잘 확인하자
+
+// arr[begin, end] (end < length)
+template <typename T>
+uint32_t SortQuick(T* arr, int begin, int end) {
+	return SortQuick(arr, begin, end, Ascend<>{});
+}
+
+// arr[begin, end] (end < length)
+template <typename T>
+uint32_t SortQuickPartition(T* arr, int begin, int end) {
+	return SortQuickPartition(arr, begin, end, Ascend<>{});
+}
+
+// arr[begin, end] (end < length)
+template <typename T>
+uint32_t SortQuickSinglePivot(T* arr, int begin, int end) {
+	return SortQuickSinglePivot(arr, begin, end, Ascend<>{});
+}
+
+
+
+// 피벗값으로 중앙값 사용, 인덱스 2개 사용, 재귀 호출
+// arr[begin, end) (end <= length)
+template <typename T, class Func>
+uint32_t SortQuick(T* arr, int begin, int end, Func cmp) {
+	if (end - begin < 2)
+		return 0;
+
+	uint32_t count = 0;
+	// devide
+    int mid = (begin + end) / 2;
+	SwapMedian3Index(arr, begin, mid, end - 1, cmp);
+	count += 3;
+
+	T pivot = arr[mid];	//! 인덱스 1개와는 다르게 피벗값을 따로 빼놓지 않으면 정렬이 제대로 안된다. 스왑할 때 위치가 바뀌는 경우가 있기 때문
+	int left = begin;
+	int right = end - 1;
+	for (; left <= right;) {
+		while(cmp(arr[left], pivot)) { // left값이 피벗값보다 왼쪽 값인 경우에만 인덱스 상승
+			++count;
+			++left;
+		}
+		while(cmp(pivot, arr[right])) { // right값이 피벗값보다 오른쪽 값인 경우에만 인덱스 감소
+			++count;
+			--right;
+		}
+
+		if (left <= right) {
+			++count;
+			Swap(arr[left], arr[right]);
+			++left;
+			--right;
+		}
+	}
+
+	// conquer
+	count += SortQuick(arr, begin, right + 1, cmp);
+	count += SortQuick(arr, left, end, cmp);
+
+	return count;
+}
+
 
 // mid의 배열값을 세 배열값의 중앙값으로 변경한다.
 // arr[begin, end] (end < length)
@@ -82,6 +143,7 @@ std::pair<int, int> PartitionWithGuessMedian(T* arr, int begin, int end, Func cm
 
 	return std::make_pair(pStart, pEnd + 1);
 }
+
 
 // algorithm 헤더에 있는 코드 거의 그대로 가져옴. 안정성을 위한 추가 처리 부분이 많아서 여기서 사용하진 않음. 그냥 참고용. 피벗 구역의 범위를 리턴한다.
 // arr[begin, end) (end <= length)
@@ -197,56 +259,6 @@ uint32_t SortQuickPartition(T* arr, int begin, int end, Func cmp) {
 
 	return count;
 }
-template <typename T>
-uint32_t SortQuickPartition(T* arr, int begin, int end) {
-	return SortQuickPartition(arr, begin, end, Ascend<>{});
-}
-
-
-// 피벗값으로 중앙값 사용, 인덱스 2개 사용, 재귀 호출
-// arr[begin, end) (end <= length)
-template <typename T, class Func>
-uint32_t SortQuick(T* arr, int begin, int end, Func cmp) {
-	if (end - begin < 2)
-		return 0;
-
-	uint32_t count = 0;
-	// devide
-    int mid = (begin + end) / 2;
-	SwapMedian3Index(arr, begin, mid, end - 1, cmp);
-	count += 3;
-
-	T pivot = arr[mid];	//! 인덱스 1개와는 다르게 피벗값을 따로 빼놓지 않으면 정렬이 제대로 안된다. 스왑할 때 위치가 바뀌는 경우가 있기 때문
-	int left = begin;
-	int right = end - 1;
-	for (; left <= right;) {
-		while(cmp(arr[left], pivot)) { // left값이 피벗값보다 왼쪽 값인 경우에만 인덱스 상승
-			++count;
-			++left;
-		}
-		while(cmp(pivot, arr[right])) { // right값이 피벗값보다 오른쪽 값인 경우에만 인덱스 감소
-			++count;
-			--right;
-		}
-
-		if (left <= right) {
-			++count;
-			Swap(arr[left], arr[right]);
-			++left;
-			--right;
-		}
-	}
-
-	// conquer
-	count += SortQuick(arr, begin, right + 1, cmp);
-	count += SortQuick(arr, left, end, cmp);
-
-	return count;
-}
-template <typename T>
-uint32_t SortQuick(T* arr, int begin, int end) {
-	return SortQuick(arr, begin, end, Ascend<>{});
-}
 
 
 // 인덱스 1개 사용, 피벗값을 가장 오른쪽 값으로 결정
@@ -275,8 +287,4 @@ uint32_t SortQuickSinglePivot(T* arr, int begin, int end, Func cmp) {
 	count += SortQuickSinglePivot(arr, left + 1, end, cmp);
 
 	return count;
-}
-template <typename T>
-uint32_t SortQuickSinglePivot(T* arr, int begin, int end) {
-	return SortQuickSinglePivot(arr, begin, end, Ascend<>{});
 }
