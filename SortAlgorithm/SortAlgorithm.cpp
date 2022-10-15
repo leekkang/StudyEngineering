@@ -16,6 +16,7 @@
 #include "CountingSort.h"
 #include "RadixSort.h"
 #include "BucketSort.h"
+#include "TimSort.h"
 
 // arr[begin, end) (end <= length)
 template <typename T, class Func>
@@ -247,10 +248,10 @@ int main() {
 		// {"QuickPartition", SortQuickPartition<int, Compare>},
 		// {"Heap", SortHeap<int, Compare>},
 		// {"HeapSTL", SortHeapFromSTL<int, Compare>},
-		 {"Counting", SortCounting<int, Compare>},
-		 {"Radix", SortRadix<int, Compare>},
-		 {"Bucket", SortBucket<int, Compare>},
-		// {"Tim", SortTim<int, Compare>},
+		// {"Counting", SortCounting<int, Compare>},
+		// {"Radix", SortRadix<int, Compare>},
+		// {"Bucket", SortBucket<int, Compare>},
+		 {"Tim", SortTim<int, Compare>},
 		// {"Intro", SortIntro<int, Compare>},
 	};
 
