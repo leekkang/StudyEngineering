@@ -8,7 +8,7 @@
     
     "editor.formatOnType": true,
     "editor.formatOnSave": false,
-    "terminal.integrated.shell.windows": "C:\\WINDOWS\\System32\\cmd.exe", //! deprecated
+    //"terminal.integrated.shell.windows": "C:\\WINDOWS\\System32\\cmd.exe", //! deprecated
     "projectManager.any.ignoredFolders": [
         "node_modules",
         "out",
@@ -46,5 +46,15 @@
     ],
     "C_Cpp.clang_format_fallbackStyle": "Google",//"Visual Studio",
     "C_Cpp.clang_format_style": "file",
+    "python.defaultInterpreterPath": "c:\\users\\kanghyuk\\appdata\\local\\programs\\python\\python37-32\\python.exe",
+    
+    "explorer.confirmDelete": false,
+    "files.encoding": "utf8bom",
+    "editor.snippetSuggestions": "top",
+    "C_Cpp.suggestSnippets": false,
+    "editor.fontFamily": "Consolas, 'Cascadia Code Light', monospace",
+    "editor.fontLigatures": false,
+    "editor.fontSize": 16,
+    "debug.console.fontSize": 16,
     //"C_Cpp.clang_format_path": "", // 이 옵션은 LLVM의 clang-format.exe 파일이 필요하다.
 }

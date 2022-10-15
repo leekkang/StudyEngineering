@@ -1,14 +1,33 @@
 ﻿#pragma once
 
 #include <cstdint>
+#include <type_traits>
 
-template <typename T>   // template<class T> 와 동일
-void Swap(T& left, T& right) {
-	if (left == right) return;
 
-	T tmp = left;
-	left = right;
-	right = tmp;
+
+// template <class T, int _Enabled = 0>
+// void Swap(T& left, T& right) {
+// 	if (left == right) 
+//         return;
+
+// 	T tmp = left;
+// 	left = right;
+// 	right = tmp;
+// }
+
+// utility 헤더의 swap 함수 참고
+#if _HAS_CXX17
+template <class T, std::enable_if_t<std::is_move_constructible_v<T> && std::is_move_assignable_v<T>, int> = 0>
+#else // ^^^ _HAS_CXX17 / !_HAS_CXX17 vvv
+template <class T, int _Enabled = 0>
+#endif // _HAS_CXX17
+void Swap(T& left, T& right) noexcept(std::is_nothrow_move_constructible_v<T> && std::is_nothrow_move_assignable_v<T>) {
+	if (left == right) 
+        return;
+
+	T tmp = std::move(left);
+	left = std::move(right);
+	right = std::move(tmp);
 }
 
 // <xstddef> 헤더에 정의된 구조체를 적당히 긁어옴
@@ -72,6 +91,7 @@ uint32_t BinarySearch(T* arr, const T& value, int begin, int end, Func cmp, uint
             end = middle - 1;
         ++count;
     }
+
     if (counter)
 		*counter += count;
 	return -1;

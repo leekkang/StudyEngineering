@@ -30,5 +30,13 @@
         "args": {
           "snippet": "_"
         }
+    },
+    {
+      "key": "ctrl+alt+home",
+      "command": "workbench.action.keepEditor"
+    },
+    {
+      "key": "ctrl+k enter",
+      "command": "-workbench.action.keepEditor"
     }
 ]
