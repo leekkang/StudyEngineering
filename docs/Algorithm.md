@@ -67,7 +67,7 @@
   - `Stable Sort (안정 정렬)`
     - 중복된 키의 순서가 변경되지 않게 정렬하는 알고리즘
       - 보통 맞교환이 없으면 stable 하고, 교환이 있으면 unstable 하다.
-    - `Insertion`, `Merge`, `Bubble`, `Counting` 이 대표적인 `Stable Sort`이다.
+    - `Insertion`, `Merge`, `Bubble`, `Counting`, `Radix` 가 대표적인 `Stable Sort`이다.
     - `Selection`, `Heap`, `Shell`, `Quick` 이 대표적인 `Unstable Sort`이다.
   - `In-place Algorithm (제자리 정렬)`
     - 추가 메모리 사용량이 정렬 항목 외에 $O(1)$개, 최대 $O(logN)$개를 넘지 않는 정렬 알고리즘
@@ -106,6 +106,7 @@
   - 적절한 위치를 선형으로 찾는 대신 `이진 탐색(binary search)` 알고리즘을 사용하는 `이진 삽입 정렬`도 있다.
     - 평균적으로 $O(NlogN)$ 의 복잡도를 가지게 되지만 `Best Case`가 사라진다.
   - 정렬 대상의 길이가 유의미하게 적은 경우 (보통 `< 8`) 속도가 빠른 편이기 때문에 하위 정렬로 많이 사용한다.
+ 
   - `Time Complexity`
     - `Best Case` : $O(N)$ (이미 정렬된 배열)
     - `Average Case` : $O(N^2)$
@@ -119,6 +120,7 @@
   - 일정 `간격`으로 `부분 리스트`를 만들어 `삽입 정렬`을 시행, `간격`이 1이 될때까지 반복한다.(간격이 1이면 부분 리스트 == 전체 리스트)
     - `부분 리스트`의 길이는 `리스트 / 간격` 과 같다. ex) 배열길이 10인 리스트의 간격이 5일 경우, 부분 리스트의 길이는 2가 된다.
     - `간격`이 짝수일 때 보다 홀수일 때가 더 빠르다. (왜 그런진 모름)
+
   - `Time Complexity`
     - `Best Case` : $O(N)$ (이미 정렬된 배열)
     - `Average Case` : $O(N^{1.5})$
@@ -129,7 +131,6 @@
 ## [Merge Sort](../SortAlgorithm/MergeSort.h)
 
   - [분할 정복 알고리즘 (Divide and Conquer Algorithm)] 이다.
-
   - 리스트의 길이가 0 또는 1이 될 때까지 리스트를 분할한 다음, 각각을 정렬하면서 합친다.
   - 병합 과정에서 추가적으로 배열 길이만큼의 메모리가 필요하다.
   - `Top-Down`과 `Bottom-Up` 두 가지 방식이 있다.
@@ -138,6 +139,7 @@
   - 재귀 함수 호출 시 원본 리스트와 임시 리스트의 인자 전달 순서를 바꿔서 불필요하게 임시 리스트로 복사를 수행하는 오버헤드를 줄이는 방법이 있다.
     - [참고](https://m.blog.naver.com/osw5144/120207767212)
     - [소스 코드](../SortAlgorithm/MergeSort.h)에 구현된 함수는 인자를 넘기지 않기 때문에 사용하지 못한다.
+
   - `Time Complexity` : $O(NlogN)$
   - `Space Complexity` : $O(N)$
 
@@ -145,7 +147,6 @@
 ## [Quick Sort](../SortAlgorithm/QuickSort.h)
 
   - 보편적으로 가장 많이 사용되는 정렬 알고리즘이다.
- 
   - [분할 정복 알고리즘 (Divide and Conquer Algorithm)] 이다.
   - 배열을 일정한 기준(`Pivot`)에 따라 큰 값과 작은 값으로 분할한 다음, 각각을 정렬하면서 합친다.
     - `Merge Sort`와 달리 배열을 임의로 나누지 않기 때문에 효율적이지만, 피벗값이 잘못 선택되면 $O(N^2)$가 될 수 있다.
@@ -178,8 +179,10 @@
       - 최초 전체 배열 heapify ($N/2 * logN$) + 각 노드 heapify ($N * logN$)
     - 이렇게 하는 이유는 대소 관계를 부모 자식 노드만이 특정할 수 있고, 데이터 내 최대 최솟값을 루트 노드만으로 판별할 수 있기 때문이다.
   - `완전 이진트리`를 구현하고, Root값을 제외하도록 index를 변경하면서 나머지 트리를 계속해서 정렬한다.
+
   - $O(NlogN)$ 알고리즘 중에서는 느린 편이지만 중복 값이 많거나 역으로 정렬된 데이터는 매우 빠른 속도로 정렬이 가능하다.
     - 그냥 배열 돌면서 루트를 끝으로 보내기만 하면 되기 때문이다.
+  
   - `Time Complexity` : $O(NlogN)$
   - `Space Complexity` : $O(1)$
   
@@ -193,8 +196,10 @@
     - 내부에서 `최댓값 - 최솟값` 크기의 배열을 생성하기 때문에 메모리 상황도 좋지 않다.
     - 실제 루프 횟수 : 최솟값, 최댓값 계산(N) + 빈도수 세기(N) + 누적 빈도수(K) + 카피 배열 채우기(N) + 카피 배열 원본에 복사(N)
   - 더 큰 키를 효율적으로 처리할 수 있는 `기수 정렬(Radix Sort)`에서 서브 루틴으로 자주 사용된다.
-  - `Time Complexity` : $O(N + K), K = 최댓값$
-  - `Space Complexity` : $O(K)$
+ 
+  - `Time Complexity` : $O(N + K), K = 최댓값 - 최솟값$
+  - `Space Complexity` : $O(N + K)$
+
 
 ## [Radix Sort](../SortAlgorithm/RadixSort.h)
 
@@ -203,11 +208,15 @@
   - 각 자리수에 따라 값들을 해당 버킷에 집어 넣고 순서대로 빼내서 정렬한다. 이 알고리즘을 최대 자리수 만큼 반복한다.
     - `버킷 소트(Bucket Sort)`의 일종으로 보기도 한다.
   - 크기가 유한하고 사전순으로 정렬이 가능해야 한다.
+  - `기수`가 작아질수록 메모리에 읽고 쓰는 비용이 커진다. (`기수`가 `최댓값 - 최솟값` 이 되면 `Counting Sort(계수 정렬)`과 동일해진다.)
   - 기수 정렬은 `최상위 유효숫자(Most Significant Digit, MSD)`나 `최하위 유효숫자(Least Significant Digit, LSD)` 에서 시작하도록 구현할 수 있다.
     - 정렬 순서가 달라진다. [참고](https://ko.wikipedia.org/wiki/%EA%B8%B0%EC%88%98_%EC%A0%95%EB%A0%AC)
-    - [SortAlgorithm.cpp] 에 구현된 함수는 최하위 유효숫자에서 시작한다.
-  - `Time Complexity` : $O(N * W), W = 최대 자리수$
-  - `Space Complexity` : $O(N + W)$
+      - `1, 10, 2, 3 ...` 순으로 정렬된다.
+    - [소스 코드](../SortAlgorithm/RadixSort.h)에 구현된 함수는 `최하위 유효숫자`에서 시작한다.
+ 
+  - `Time Complexity` : $O(W * (N + K)), W = 기수의 크기, K = 진법의 자리수의 개수(기수의 도메인 크기)$
+  - `Space Complexity` : $O(W + N)$
+
 
 ## [Bucket Sort](../SortAlgorithm/BucketSort.h)
 
@@ -217,6 +226,7 @@
   - [분할 정복 알고리즘 (Divide and Conquer Algorithm)] 이다.
   - 배열의 원소를 여러 버킷으로 분산하여 정렬한다. 보통 버킷 내부의 정렬은 [삽입 정렬](#insertion-sort)을 이용한다.
   - 버킷의 개수가 $N$개에 가까울 수록, 배열이 균등 분포에 가까울 수록 성능이 올라간다.
+ 
   - `Time Complexity`
     - `Best Case` : $O(N)$
     - `Average Case` : $O(N + N^2/k + k), k = 버킷 수$

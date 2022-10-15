@@ -164,7 +164,6 @@ uint32_t SortInsertionBinary(T* arr, int begin, int end, Func cmp) {
 
 	return count;
 }
-
 template <class T>
 uint32_t SortInsertionBinary(T* arr, int begin, int end) {
 	return SortInsertionBinary(arr, begin, end, Ascend<>{});

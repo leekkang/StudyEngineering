@@ -14,6 +14,7 @@
 #include "QuickSort.h"
 #include "HeapSort.h"
 #include "CountingSort.h"
+#include "RadixSort.h"
 
 // arr[begin, end) (end <= length)
 template <typename T, class Func>
@@ -63,60 +64,6 @@ uint32_t SortSelection(T* arr, int begin, int end) {
 	return SortSelection(arr, begin, end, Ascend<>{});
 }
 
-// arr[begin, end) (end <= length)
-template <typename T>
-uint32_t SortRadix(T* arr, const size_t length) {
-	uint32_t count = 0;
-	int radix = 10;
-
-	// 최대 자리수 찾기
-	int maxRadix = 0;
-	for (int i = 0; i < length; ++i) {
-		++count;
-		if (arr[i] > maxRadix) maxRadix = arr[i];
-	}
-	maxRadix = static_cast<int>(log10(static_cast<double>(maxRadix)) + 1);   // radix에 따라가도록 변경해야함.
-
-	// 카운팅 배열
-	std::vector<T> countArr(radix);
-
-	int index, pval, i;
-	for (int n = 0; n < maxRadix; ++n) {
-		pval = static_cast<int>(pow(radix, n));
-
-		// initialize
-		countArr.assign(radix, 0);
-		// for (int i = 0; i < radix; ++i) countArr[i] = 0;
-
-		// counting sort 를 사용한다.
-		for (i = 0; i < length; ++i) {
-			++count;
-			++countArr[static_cast<int>(arr[i] / pval) % radix];
-		}
-		// 누적 합 계산
-		for (i = 1; i < radix; ++i) {
-			++count;
-			countArr[i] += countArr[i - 1];
-		}
-
-		// 카피 배열 작성
-		std::vector<T> temp(length);
-		for (i = length - 1; i >= 0; --i) {
-			++count;
-			index = static_cast<int>(arr[i] / pval) % radix;
-			--countArr[index];
-			temp[countArr[index]] = arr[i];
-		}
-
-		// 카피 배열 원본에 복사 (소팅 알고리즘에 포함되는 부분은 아님)
-		for (i = 0; i < length; ++i) {
-			++count;
-			arr[i] = temp[i];
-		}
-	}
-
-	return count;
-}
 
 // arr[begin, end) (end <= length)
 template <typename T>
@@ -590,10 +537,10 @@ int main() {
 		// {"MergeBottom", SortMergeBottomUp<int, Compare>},
 		// {"Quick", SortQuick<int, Compare>},
 		// {"QuickPartition", SortQuickPartition<int, Compare>},
-		 {"Heap", SortHeap<int, Compare>},
+		// {"Heap", SortHeap<int, Compare>},
 		// {"HeapSTL", SortHeapFromSTL<int, Compare>},
 		 {"Counting", SortCounting<int, Compare>},
-		// {"Radix", SortRadix<int, Compare>},
+		 {"Radix", SortRadix<int, Compare>},
 		// {"Bucket", SortBucket<int, Compare>},
 		// {"Tim", SortTim<int, Compare>},
 		// {"Intro", SortIntro<int, Compare>},
