@@ -2,7 +2,6 @@
 
 #include <memory.h>
 #include <type_traits>
-#include <vector>
 #include <functional>
 
 #include "Share.h"
@@ -25,7 +24,7 @@ uint32_t SortMergeBottomUp(T* arr, int begin, int end) {
 template <typename T, class Func>
 uint32_t SortMergeTopDown(T* arr, int begin, int end, Func cmp) {
 	uint32_t count = 0;
-	std::vector<T> temp(end - begin);   // resize. not reserve
+	T* temp = new T[end - begin];
 
 	// 하향식 2-way merge sort
 	// 재귀함수로 사용하기 때문에 auto 타입으로 정의하지 못한다. -> inline이 아니다.
@@ -76,6 +75,7 @@ uint32_t SortMergeTopDown(T* arr, int begin, int end, Func cmp) {
 
 	merge(begin, end);
 
+	delete[] temp;
 	return count;
 }
 
@@ -84,7 +84,7 @@ template <typename T, class Func>
 uint32_t SortMergeBottomUp(T* arr, int begin, int end, Func cmp) {
 	uint32_t count = 0;
 	int length = end - begin;
-	std::vector<T> temp(length);   // resize. not reserve
+	T* temp = new T[length];
 
 	int left, right, m, e;
 	// divide
@@ -129,5 +129,6 @@ uint32_t SortMergeBottomUp(T* arr, int begin, int end, Func cmp) {
 		}
 	}
 
+	delete[] temp;
 	return count;
 }

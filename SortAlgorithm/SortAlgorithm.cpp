@@ -17,6 +17,14 @@
 #include "RadixSort.h"
 #include "BucketSort.h"
 #include "TimSort.h"
+#include "IntroSort.h"
+
+
+// arr[begin, end) (end <= length)
+template <class T>
+uint32_t SortBubble(T* arr, int begin, int end) {
+	return SortBubble(arr, begin, end, Ascend<>{});
+}
 
 // arr[begin, end) (end <= length)
 template <typename T, class Func>
@@ -34,9 +42,11 @@ uint32_t SortBubble(T* arr, const int begin, const int end, Func cmp) {
 
 	return count;   // 자잘한 연산은 제외하고 주가되는 비교, 대입만 측정한다.
 }
+
+// arr[begin, end) (end <= length)
 template <class T>
-uint32_t SortBubble(T* arr, int begin, int end) {
-	return SortBubble(arr, begin, end, Ascend<>{});
+uint32_t SortSelection(T* arr, int begin, int end) {
+	return SortSelection(arr, begin, end, Ascend<>{});
 }
 
 // arr[begin, end) (end <= length)
@@ -61,115 +71,8 @@ uint32_t SortSelection(T* arr, const int begin, const int end, Func cmp) {
 
 	return count;
 }
-template <class T>
-uint32_t SortSelection(T* arr, int begin, int end) {
-	return SortSelection(arr, begin, end, Ascend<>{});
-}
 
 
-
-
-// arr[begin, end) (end <= length)
-template <typename T>
-uint32_t SortIntro(T* arr, const size_t length) {
-	uint32_t count = 0;
-
-	// Heap Sort
-	auto shiftdown = [&](int root, const int& end, const int& correction) {   // [root, end]
-		// 자식 노드가 없으면 종료
-		while (root * 2 < end) {
-			++count;
-
-			// 0번 index를 사용하기 위해 약간의 계산을 추가한다.
-			int current = root;
-			int left = (root + 1) * 2 - 1;
-			int right = (root + 1) * 2;
-
-			if (arr[left + correction] > arr[current + correction]) current = left;
-			if (right <= end && arr[right + correction] > arr[current + correction]) current = right;
-
-			// 이미 정렬된 노드면 종료
-			if (current == root) {
-				return;
-			} else {
-				Swap(arr[current + correction], arr[root + correction]);
-				// std::swap<T>(arr[current + correction], arr[root + correction]);
-				root = current;
-			}
-		}
-	};
-	auto heap = [&](const int& begin, const int& len) {
-		// 부분 배열의 heap sort는 root 값을 0으로 맞추기 위해서 보정값을 사용한다.
-		int correction = begin;
-		int end = len - 1;
-
-		// Build Heap (Heapify)
-		for (int parent = end / 2; parent >= 0; --parent) {
-			shiftdown(parent, end, correction);
-		}
-
-		while (end > 0) {
-			++count;
-			Swap(arr[end], arr[begin]);
-			// std::swap<T>(arr[end], arr[0]);
-			--end;
-			shiftdown(0, end, correction);
-		}
-	};
-	auto insertion = [&](const int& begin, const int& end) {
-		T temp;
-		for (int i = begin + 1; i < end; ++i) {
-			temp = arr[i];
-			int j = i - 1;
-			for (; j >= 0 && arr[j] > temp; --j) {
-				++count;
-				arr[j + 1] = arr[j];
-			}
-
-			arr[j + 1] = temp;
-			++count;
-		}
-	};
-
-	// Quick Sort
-	std::function<void(const int&, const int&, const int&)> quick = [&](const int& begin, const int& end, const int& depth) {
-		// end 도 인덱스에 포함된다. -> arr[end] : o, arr[end-1] : o 	-> [begin, end]
-		++count;
-		if (end - begin + 1 < 16) {
-			insertion(begin, end + 1);
-			return;
-		} else if (depth == 0) {
-			heap(begin, end - begin + 1);   // length를 인자로 주어야 한다.
-			return;
-		}
-
-		// divide
-		int left = begin - 1;
-		int pivot = end;
-		for (int i = begin; i < end; ++i) {
-			// 리스트 끝까지 순회하면서 피벗보다 작은 값들을 앞으로 옮긴다.
-			if (arr[i] < arr[pivot]) {
-				Swap(arr[++left], arr[i]);
-				// std::swap(arr[++left], arr[i]);
-			}
-			++count;
-		}
-		Swap(arr[++left], arr[pivot]);
-		// std::swap(arr[++left], arr[pivot]);
-		++count;
-
-		// depth = (depth >> 1) + (depth >> 2); // allow 1.5 log2(N) divisions
-		//  conquer
-		quick(begin, left - 1, depth - 1);
-		quick(left + 1, end, depth - 1);
-	};
-
-	int maxDepth = 2 * log2(length);
-
-	quick(0, length - 1, maxDepth);
-
-	return count;
-}
 
 /// <summary> 대략적인 시간복잡도를 출력하는 함수 </summary>
 void PrintComplexity(uint32_t count, uint32_t n) {
@@ -208,7 +111,7 @@ int main() {
 
 
 	constexpr bool bUseSorted = false;   	// 정렬된 배열을 사용
-	constexpr bool bPrintArray = true;   	// 대상 배열 출력 여부
+	constexpr bool bPrintArray = false;   	// 대상 배열 출력 여부
 #define 		bSortAscend 	true		// true이면 오름차순, false이면 내림차순으로 출력
 
 	if (bUseSorted) {
@@ -239,20 +142,20 @@ int main() {
 	std::vector<std::pair<std::string, void*>> sortPair {
 		// {"Bubble", SortBubble<int, Compare>},
 		// {"Selection", SortSelection<int, Compare>},
-		// {"Insertion", SortInsertion<int, Compare>},
+		 {"Insertion", SortInsertion<int, Compare>},
 		// {"InsertionBinary", SortInsertionBinary<int, Compare>},
-		// {"Shell", SortShell<int, Compare>},
-		// {"MergeTop", SortMergeTopDown<int, Compare>},
-		// {"MergeBottom", SortMergeBottomUp<int, Compare>},
-		// {"Quick", SortQuick<int, Compare>},
+		 {"Shell", SortShell<int, Compare>},
+		 {"MergeTop", SortMergeTopDown<int, Compare>},
+		 {"MergeBottom", SortMergeBottomUp<int, Compare>},
+		 {"Quick", SortQuick<int, Compare>},
 		// {"QuickPartition", SortQuickPartition<int, Compare>},
-		// {"Heap", SortHeap<int, Compare>},
+		 {"Heap", SortHeap<int, Compare>},
 		// {"HeapSTL", SortHeapFromSTL<int, Compare>},
-		// {"Counting", SortCounting<int, Compare>},
-		// {"Radix", SortRadix<int, Compare>},
-		// {"Bucket", SortBucket<int, Compare>},
+		 {"Counting", SortCounting<int, Compare>},
+		 {"Radix", SortRadix<int, Compare>},
+		 {"Bucket", SortBucket<int, Compare>},
 		 {"Tim", SortTim<int, Compare>},
-		// {"Intro", SortIntro<int, Compare>},
+		 {"Intro", SortIntro<int, Compare>},
 	};
 
 	steady_clock::time_point start;
@@ -264,7 +167,7 @@ int main() {
 		sortedArray = unsortedArray;   // deep copy
 
 		start = steady_clock::now();
-		uint32_t loopCount = ((funcPointer)pair.second)(sortedArray.data(), 30, (int)length, Compare{});
+		uint32_t loopCount = ((funcPointer)pair.second)(sortedArray.data(), 0, (int)length, Compare{});
 		PrintComplexity(loopCount, (uint32_t)length);
 		std::cout << "Sorting Time : " << duration_cast<microseconds>(steady_clock::now() - start).count() << " us\n";
 
