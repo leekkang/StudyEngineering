@@ -12,6 +12,7 @@
 #include "Shell'sSort.h"
 #include "MergeSort.h"
 #include "QuickSort.h"
+#include "HeapSort.h"
 
 // arr[begin, end) (end <= length)
 template <typename T, class Func>
@@ -59,54 +60,6 @@ uint32_t SortSelection(T* arr, const int begin, const int end, Func cmp) {
 template <class T>
 uint32_t SortSelection(T* arr, int begin, int end) {
 	return SortSelection(arr, begin, end, Ascend<>{});
-}
-
-// arr[begin, end) (end <= length)
-template <typename T>
-uint32_t SortHeap(T* arr, const size_t length) {
-	uint32_t count = 0;
-
-	// 부분 배열을 정렬하려면 `SortIntro` 함수 내부에 정의된 힙 정렬 람다 함수를 참고한다.
-
-	auto shiftdown = [&](int root, const int& end) {   // [root, end]
-		// 자식 노드가 없으면 종료
-		for (; root * 2 < end;) {
-			++count;
-
-			// 0번 index를 사용하기 위해 약간의 계산을 추가한다.
-			int current = root;
-			int left = (root + 1) * 2 - 1;
-			int right = (root + 1) * 2;
-
-			if (arr[left] > arr[current]) current = left;
-			if (right <= end && arr[right] > arr[current]) current = right;
-
-			// 이미 정렬된 노드면 종료
-			if (current == root) {
-				return;
-			} else {
-				Swap(arr[current], arr[root]);
-				// std::swap<T>(arr[current], arr[root]);
-				root = current;
-			}
-		}
-	};
-
-	// Build Heap (Heapify)
-	for (int parent = (length - 1) / 2; parent >= 0; --parent) {
-		shiftdown(parent, length - 1);
-	}
-
-	int end = length - 1;
-	for (; end > 0;) {
-		++count;
-		Swap(arr[end], arr[0]);
-		// std::swap<T>(arr[end], arr[0]);
-		--end;
-		shiftdown(0, end);
-	}
-
-	return count;
 }
 
 // arr[begin, end) (end <= length)
@@ -640,7 +593,7 @@ int main() {
 
 	constexpr bool bUseSorted = false;   	// 정렬된 배열을 사용
 	constexpr bool bPrintArray = true;   	// 대상 배열 출력 여부
-#define 		bSortAscend 	false		// true이면 오름차순, false이면 내림차순으로 출력
+#define 		bSortAscend 	true		// true이면 오름차순, false이면 내림차순으로 출력
 
 	if (bUseSorted) {
 		// 정렬된 배열은 굳이 출력하지 않는다.
@@ -674,10 +627,11 @@ int main() {
 		// {"InsertionBinary", SortInsertionBinary<int, Compare>},
 		// {"Shell", SortShell<int, Compare>},
 		// {"MergeTop", SortMergeTopDown<int, Compare>},
-		{"MergeBottom", SortMergeBottomUp<int, Compare>},
-		{"Quick", SortQuick<int, Compare>},
-		//{"QuickPartition", SortQuickPartition<int, Compare>},
-		// {"Heap", SortHeap<int, Compare>},
+		// {"MergeBottom", SortMergeBottomUp<int, Compare>},
+		// {"Quick", SortQuick<int, Compare>},
+		// {"QuickPartition", SortQuickPartition<int, Compare>},
+		 {"Heap", SortHeap<int, Compare>},
+		 {"HeapSTL", SortHeapFromSTL<int, Compare>},
 		// {"Counting", SortCounting<int, Compare>},
 		// {"Radix", SortRadix<int, Compare>},
 		// {"Bucket", SortBucket<int, Compare>},
@@ -694,7 +648,7 @@ int main() {
 		sortedArray = unsortedArray;   // deep copy
 
 		start = steady_clock::now();
-		uint32_t loopCount = ((funcPointer)pair.second)(sortedArray.data(), 20, (int)length, Compare{});
+		uint32_t loopCount = ((funcPointer)pair.second)(sortedArray.data(), 30, (int)length, Compare{});
 		PrintComplexity(loopCount, (uint32_t)length);
 		std::cout << "Sorting Time : " << duration_cast<microseconds>(steady_clock::now() - start).count() << " us\n";
 

@@ -202,6 +202,7 @@ uint32_t SortQuickPartition(T* arr, int begin, int end) {
 	return SortQuickPartition(arr, begin, end, Ascend<>{});
 }
 
+
 // 피벗값으로 중앙값 사용, 인덱스 2개 사용, 재귀 호출
 // arr[begin, end) (end <= length)
 template <typename T, class Func>
