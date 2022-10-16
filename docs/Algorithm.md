@@ -39,16 +39,19 @@
 
 
 ---
-# Encoding Algorithm
+# [Encoding Algorithm](../EncodingAlgorithm/EncodingAlgorithm.cpp)
 
-## [Huffman Code](../EncodingAlgorithm/Huffman/Huffman.cpp)
+
+## [Huffman Code](../EncodingAlgorithm/Huffman.h)
 
   - 빈도 종속 인코딩 알고리즘을 사용한 코드
   - 개발자인 데이비드 허프만 이름을 따서 허프만 코드라고 한다.
     - 빈도 종속 인코딩 : 비트 패턴의 길이를 해당 항목이 사용되는 빈도의 역과 관련시켜 결정하는 무손실 데이터 압축방법
+  - 이진 트리 자료구조를 만들어 빈도수와 해당 노드의 위치를 이진수로 저장한다.
+    - 디코딩 시 노드의 위치를 찾아가서 문자를 읽어온다.
   - [탐욕 알고리즘(greedy algorithm)] 이다.
 
-## [Lempel-Ziv-Welch algorithm](../EncodingAlgorithm/LZW/LZWAlgorithm.cpp)
+## [Lempel-Ziv-Welch algorithm](../EncodingAlgorithm/LZWAlgorithm.h)
 
   - 적응형 사전 인코딩(adaptive dictionary encoding) 알고리즘을 사용한 코드
     - 적응형 사전 인코딩 : 메시지 항목들의 집합을 사전으로, 메시지는 사전의 참조 표시로 인코딩. 인코딩 과정중에 사전의 항목이 변화한다.
@@ -56,9 +59,15 @@
   - 텍스트 파일과 같이 반복되는 문자열이 있는 파일에서 압축률이 가장 높다.
   - 사전은 무한히 수정되지 않고 최대 항목 수를 지정한다. 결국 자주 발생하는 하위 문자열이 사전에 들어가게 된다.
   - 데이터의 제한된 분석만 수행하기 때문에 최적으로 동작하지는 않는다.
-  - [LZW 참조1], [LZW 참조2:위키피디아]
+
+  - 참고
+    - https://www2.cs.duke.edu/csed/curious/compression/lzw.html
+    - https://ko.wikipedia.org/wiki/LZW
 
 ## LZ77 Algorithm
+
+  - TODO
+
 
 
 ---
@@ -276,6 +285,7 @@
     - `Worst Case` : $O(NlogN)$
   - `Space Complexity` : $O(N)$ (`Merge Sort`보다 작은 값)
 
+
 ## [Intro Sort](../SortAlgorithm/IntroSort.h)
 
   - `Quick Sort + Heap Sort + Insertion Sort`의 하이브리드 정렬 알고리즘이다.
@@ -294,7 +304,7 @@
 
 
 ---
-# [Graph Algorithm](GraphAlgorithm/GraphAlgorithm.cpp)
+# [Graph Algorithm](../GraphAlgorithm/GraphAlgorithm.cpp)
 
   - `Spanning Tree`
     - 그래프 내의 모든 정점을 최소 간선의 수로 연결하는 부분 그래프
@@ -306,19 +316,29 @@
     - 간선들의 가중치가 동일하지 않을 경우, 간선들의 가중치 합이 최소가 되는 `Spanning Tree`
     - `Spanning Tree`의 성질을 모두 갖고 있다.
 
-## Kruskal's Algorithm
+## [Kruskal's Algorithm](../GraphAlgorithm/Kruskal.h)
 
   - `Minimum Spanning Tree`를 찾는 알고리즘이다.
   - [탐욕 알고리즘(greedy algorithm)]이다.
-  - 가장 가중치가 작은 간선부터 시작하여, 사이클을 만들지 않으면서 가중치가 작은 간선을 전체 트리가 만들어질 때까지 차례로 선택한다.
+  - `가장 가중치가 작은 간선`부터 시작하여, 사이클을 만들지 않으면서 가중치가 작은 간선을 전체 트리가 만들어질 때까지 차례로 선택한다.
   - $E$를 간선의 개수, $V$를 정점의 개수라고 할 때, `Kruskal Algorithm`은 $O(ElogV)$ 시간안에 동작한다.
-    - 간선의 가중치 별 정렬시간($O(ElogE)$) + [서로소 집합(Disjoint Set)](https://ko.wikipedia.org/wiki/%EC%84%9C%EB%A1%9C%EC%86%8C_%EC%A7%91%ED%95%A9_%EC%9E%90%EB%A3%8C_%EA%B5%AC%EC%A1%B0)을 통한 사이클 찾기 동작($O(ElogV)$)
-    - $V <= 2E$이기 때문에 $O(logV) == O(logE)$
-    - 알고리즘 최종 `Time Complexity`는 $O(ElogN)$이 된다.
+    - 간선의 가중치 별 정렬시간($O(ElogE)$) + [서로소 집합(Disjoint Set)](DataStructure.md#disjoint-set)을 통한 사이클 찾기 동작($O(ElogV)$)
+    - $V <= 2E$이기 때문에 $logV == O(logE)$
+    - 알고리즘 최종 `Time Complexity`는 $O(ElogE)$이 된다.
+  - **노드가 많고 간선이 적은 그래프**에서 `MST`를 찾을 때 유용하다.
 
-## Prim's Algorithm
+## [Prim's Algorithm](../GraphAlgorithm/Prim.h)
 
   - `Minimum Spanning Tree`를 찾는 알고리즘이다.
+  - [탐욕 알고리즘(greedy algorithm)]이다.
+  - 동작방식은 아래와 같다.
+  - 임의의 한 노드를 선택하여 해당 노드와 연결된 `가장 가중치가 작은 간선`을 선택하여 노드를 연결한다.
+  - 연결된 간선의 노드를 선택해서 간선을 찾고 이를 모든 노드가 연결될 때 까지 반복한다.
+  - 시간 복잡도가 주어지는 그래프의 형태와 `최소 비용 간선`을 찾는 알고리즘에 따라 달라진다.
+    - 인접 행렬 그래프 : $O(V^2)   (V = 정점의 개수)$
+    - 인접 리스트 + 이진 힙 : $O(ElogV)$
+    - 인접 리스트 + 피보나치 힙 : $O(E + VlogV)$
+  - **노드가 적고 간선이 많은 그래프**에서 `MST`를 찾을 때 유용하다.
   
 ## Dijkstra Algorithm
 
@@ -353,8 +373,5 @@
 
 
 
-[SortAlgorithm.cpp]: ../SortAlgorithm/SortAlgorithm.cpp
 [탐욕 알고리즘(greedy algorithm)]: https://ko.wikipedia.org/wiki/%ED%83%90%EC%9A%95_%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98
-[LZW 참조1]: https://www2.cs.duke.edu/csed/curious/compression/lzw.html
-[LZW 참조2:위키피디아]: https://ko.wikipedia.org/wiki/LZW
 [분할 정복 알고리즘 (Divide and Conquer Algorithm)]: https://ko.wikipedia.org/wiki/%EB%B6%84%ED%95%A0_%EC%A0%95%EB%B3%B5_%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98

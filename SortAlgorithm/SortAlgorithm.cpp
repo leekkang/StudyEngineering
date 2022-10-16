@@ -169,7 +169,6 @@ int main() {
 		start = steady_clock::now();
 		uint32_t loopCount = ((funcPointer)pair.second)(sortedArray.data(), 0, (int)length, Compare{});
 		PrintComplexity(loopCount, (uint32_t)length);
-		std::cout << "Sorting Time : " << duration_cast<microseconds>(steady_clock::now() - start).count() << " us\n";
 
 		if (bPrintArray) {
 			std::cout << "\n " << pair.first << " Sort's Sorted Array\n";
@@ -178,7 +177,8 @@ int main() {
 			}
 			std::cout << "\n";
 		}
-
+		
+		std::cout << "Sorting Time : " << duration_cast<microseconds>(steady_clock::now() - start).count() << " us\n";
 		std::cout << "\n " << pair.first << " Sort End\n" << std::endl;
 	}
 }

@@ -1,4 +1,15 @@
-﻿
+﻿- [STL의 Allocator 분석](#stl의-allocator-분석)
+- [Hash table](#hash-table)
+  - [해시 충돌 해결방법](#해시-충돌-해결방법)
+  - [`unordered_map` 동적 할당 메모리 사용량 (64비트 기준)](#unordered_map-동적-할당-메모리-사용량-64비트-기준)
+- [Tree](#tree)
+  - [Binary Tree](#binary-tree)
+  - [Heap](#heap)
+- [Disjoint Set (서로소 집합)](#disjoint-set-서로소-집합)
+
+---
+
+
 ## Data Structure
   - 자료구조 관련 정보들을 저장해놓는 문서
 
@@ -153,3 +164,19 @@
     - 가장 높은(혹은 가장 낮은) 우선순위를 가지는 노드가 항상 `뿌리 노드`에 오게 되는 특징이 있다.
  
     - 이를 응용하면 `우선순위 큐`와 같은 추상적 자료형을 구현할 수 있다.
+
+
+
+---
+# Disjoint Set (서로소 집합)
+
+  - `서로 중복되지 않는 부분 집합들`로 나누어진 원소들에 대한 정보를 조작하는 자료구조
+  - `Union–find (합집합-찾기)` , `Merge–find set (병합-찾기 집합)` 이라고도 한다.
+  - `Union`, `Find`, `MakeSet` 등의 기능을 제공한다.
+    - `Union` : 두 개의 집합을 하나로 합친다.
+    - `Find` : 어떤 원소가 주어졌을 때 이 원소가 속한 집합을 반환한다. 보통 집합을 대표하는 원소를 반환한다.
+    - `MakeSet` : 특정 한 원소만을 가지는 집합을 생성한다.
+  - 보통 `트리 구조`로 구현하여 `그래프` 에서 두 노드가 같은 집합에 속하는지 판단하는 데 사용한다.
+
+  - 참고
+    - https://ko.wikipedia.org/wiki/%EC%84%9C%EB%A1%9C%EC%86%8C_%EC%A7%91%ED%95%A9_%EC%9E%90%EB%A3%8C_%EA%B5%AC%EC%A1%B0
