@@ -74,7 +74,8 @@ int main() {
 
 	std::vector<std::pair<std::string, std::function<void()>>> algorithmPair{
 		{"Kruskal", [&]() { Kruskal(vecResult, vecEdge); }},
-		{"Prim", [&]() { Prim(vecResult, vecEdge); }},
+		{"Prim", [&]() { Prim(vecResult, vecNode); }},
+		{"PrimQueue", [&]() { PrimWithQueue(vecResult, vecNode); }},
 	};
 
 	std::chrono::steady_clock::time_point start;
