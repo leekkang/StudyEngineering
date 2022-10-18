@@ -8,6 +8,7 @@
 
 #include "Kruskal.h"
 #include "Prim.h"
+#include "Dijkstra.h"
 
 void ConvertMatrixToEdges(std::vector<GraphEdge>& edges, const std::vector<std::vector<int>>& matrix);
 void ConvertMatrixToEdges(std::vector<GraphEdge>& edges, const std::vector<std::vector<int>>& matrix, const std::vector<std::string>& nodeNames);
@@ -22,6 +23,28 @@ void PrintResult(const std::vector<GraphEdge>& result, const std::string& name, 
 	for (int i = 0; i < size; ++i) {
         std::cout << "  Connected Node : " << nodeNames[result[i].startNode] << 
 									   "-" << nodeNames[result[i].endNode] << ", cost : " << result[i].cost << std::endl;
+	}
+	std::cout << std::endl;
+}
+void PrintShortestResult(const std::vector<std::vector<GraphEdge>>& result, const std::string& name, const std::vector<std::string>& nodeNames) {
+	std::cout << "\n " << name << " Algorithm Result\n";
+	int size = result.size();
+	for (int i = 0; i < size; ++i) {
+		int cost = 0;
+		int dest = -1;
+		for (const auto& edge : result[i]) {
+			dest = edge.endNode;
+			cost += edge.cost;
+		}
+		if (dest == -1)
+			continue;
+
+		int src = result[i][0].startNode;
+		std::cout << "  Shortest Path : " << nodeNames[src] << "-" << nodeNames[dest] << ", cost : " << cost << std::endl;
+		for (const auto& edge : result[i]) {
+			std::cout << "    Connected Node : " << nodeNames[edge.startNode] << 
+											 "-" << nodeNames[edge.endNode] << ", cost : " << edge.cost << std::endl;
+		}
 	}
 	std::cout << std::endl;
 }
@@ -70,23 +93,31 @@ int main() {
 	}
 	std::cout << std::endl;
 	
-	std::vector<GraphEdge> vecResult;
+	std::vector<GraphEdge> vecSpanningTree;
+	std::vector<std::vector<GraphEdge>> vecShortestPath;
 
 	std::vector<std::pair<std::string, std::function<void()>>> algorithmPair{
-		{"Kruskal", [&]() { Kruskal(vecResult, vecEdge); }},
-		{"Prim", [&]() { Prim(vecResult, vecNode); }},
-		{"PrimQueue", [&]() { PrimWithQueue(vecResult, vecNode); }},
+		{"Kruskal", [&]() { Kruskal(vecSpanningTree, vecEdge); }},
+		{"Prim", [&]() { Prim(vecSpanningTree, vecNode); }},
+		{"PrimQueue", [&]() { PrimWithQueue(vecSpanningTree, vecNode); }},
+		{"Dijkstra", [&]() { Dijkstra(vecShortestPath, vecNode, 0); }},
+		{"DijkstraQueue", [&]() { DijkstraWithQueue(vecShortestPath, vecNode, 0); }},
 	};
 
 	std::chrono::steady_clock::time_point start;
 	for (const auto& pair : algorithmPair) {
-		vecResult.clear();
+		vecSpanningTree.clear();
+		vecShortestPath.clear();
 
 		std::cout << "\n " << pair.first << " Algorithm Start\n";
 		start = std::chrono::steady_clock::now();
 
 		pair.second();
-		PrintResult(vecResult, pair.first, nodeName);
+		if (vecSpanningTree.size())
+			PrintResult(vecSpanningTree, pair.first, nodeName);
+		else
+			PrintShortestResult(vecShortestPath, pair.first, nodeName);
+			
 
 		std::cout << "  Find Time : " << 
 			std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - start).count() << " us\n";
