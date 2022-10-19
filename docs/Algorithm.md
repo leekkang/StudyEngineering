@@ -1,3 +1,4 @@
+- [Time Complexity](#time-complexity)
 - [Encoding Algorithm](#encoding-algorithm)
   - [Huffman Code](#huffman-code)
   - [Lempel-Ziv-Welch algorithm](#lempel-ziv-welch-algorithm)
@@ -20,9 +21,9 @@
 - [Graph Algorithm](#graph-algorithm)
   - [Kruskal's Algorithm](#kruskals-algorithm)
   - [Prim's Algorithm](#prims-algorithm)
+  - [Floyd-Warshall Algorithm](#floyd-warshall-algorithm)
   - [Dijkstra Algorithm](#dijkstra-algorithm)
   - [Bellman-Ford Algorithm](#bellman-ford-algorithm)
-  - [Floyd-Warshall Algorithm](#floyd-warshall-algorithm)
   - [A* Algorithm](#a-algorithm)
 - [Hash Algorithm](#hash-algorithm)
 - [Sieve of Eratosthenes (에라토스테네스의 체)](#sieve-of-eratosthenes-에라토스테네스의-체)
@@ -36,6 +37,20 @@
 
   - TODO 보간 탐색
     - https://yoongrammer.tistory.com/77?category=987044
+
+
+# [Time Complexity](https://app.codility.com/programmers/lessons/3-time_complexity/)
+
+  - 개략적으로 프로그램의 러닝타임을 표기하는 방법 (정확한 시간 측정은 노동-집약적(labour-intensive)이다.)
+  - [Big-O notation](https://en.wikipedia.org/wiki/Big_O_notation)을 사용한다.
+  	- 점근 표기법(Asymptotic notation), 함수의 증가 양상을 다른 함수와의 비교로 사용하는 방법.
+$$
+\left | f(x) \right | = O(g(x)) \quad as \; x  \rightarrow \infty
+$$
+  - 컴퓨팅 파워와 프로그램 실행 시간, 반복 횟수로 대략적인 복잡도를 유추할 수 있다.
+  	- 파워 / 시간 이 클 수록, 반복 횟수가 높을 수록 복잡도가 낮다.
+  - `공간 복잡도(Space complexity)` 또한 시간 복잡도와 표기법이 같다.
+  	- 전역 변수, 지역 변수 및 동적 포인터 자료구조와 재귀 함수의 스택 내용, 입력 데이터까지 전부 포함해야 하기 때문에 계산이 좀 더 까다롭다.
 
 
 ---
@@ -315,11 +330,17 @@
   - `Minimum Spanning Tree (MST)`
     - 간선들의 가중치가 동일하지 않을 경우, 간선들의 가중치 합이 최소가 되는 `Spanning Tree`
     - `Spanning Tree`의 성질을 모두 갖고 있다.
+  - 보통 `최소 가중치`를 구하는 알고리즘들은 거의 [탐욕 알고리즘(greedy algorithm)]이다.
+  - `그래프`를 표현하는 방법
+    1. `Adjacency Matrix (인접 행렬)` : 버텍스 x 버텍스 크기의 `이중 배열` 사용, 간선 수가 많을 때 효율적임
+    2. `Adjacency List (인접 리스트)` : 각 버텍스를 `연결 리스트` 형태로 사용, 메모리 상 효율적이나 `간선 존재여부` 탐색 시간이 $O(V)$ 이다. (간선이 많으면 비효율적)
+    3. `Edge List (간선 리스트)` : `시작 노드`, `도착 노드`, `가중치` 를 갖는 자료형 배열을 사용, 모든 간선을 반복하는 알고리즘의 경우 효율적이다.
+
 
 ## [Kruskal's Algorithm](../GraphAlgorithm/Kruskal.h)
 
   - `Minimum Spanning Tree`를 찾는 알고리즘이다.
-  - [탐욕 알고리즘(greedy algorithm)]이다.
+  - `Edge List (간선 리스트)` 형태의 그래프가 구현이 편하다.
   - 동작 순서
     1. 그래프의 모든 간선들을 가중치 별로 정렬한다. (오름차순)
     2. 사이클 확인용 테이블을 생성한다. (길이: 버텍스 개수)
@@ -331,10 +352,10 @@
     - 알고리즘 최종 `Time Complexity`는 $O(ElogE)$이 된다.
   - **노드가 많고 간선이 적은 그래프**에서 `MST`를 찾을 때 유용하다.
 
+
 ## [Prim's Algorithm](../GraphAlgorithm/Prim.h)
 
   - `Minimum Spanning Tree`를 찾는 알고리즘이다.
-  - [탐욕 알고리즘(greedy algorithm)]이다.
   - 동작 순서
     1. 임의의 한 노드를 선택한다.
     2. 해당 노드와 연결된 간선들을 저장한다. (큐 또는 배열)
@@ -346,8 +367,28 @@
     - 인접 리스트 + 이진 힙 : $O(ElogV)$
     - 인접 리스트 + 피보나치 힙 : $O(E + VlogV)$
   - **노드가 적고 간선이 많은 그래프**에서 `MST`를 찾을 때 유용하다.
+
+
+## [Floyd-Warshall Algorithm](../GraphAlgorithm/FloydWarshall.h)
+
+  - 모든 노드 사이의 최단 거리를 알아내는 [전체-쌍 최단 경로 문제] 알고리즘이다.
+  - 이름이 많다 (Floyd, Roy–Warshall, Roy–Floyd, WFI)
+  - 두 버텍스 간의 `추정 최단 경로`를 최적이 될 때까지 반복해서 최단 경로로 갱신한다.
+  - 한 노드에서 다른 노드로 가는 최단 경로를 계산할 때, `중간에 거쳐가는 노드`를 바꿔가면서 반복한다.
+    - 사실 방법만 다를뿐이지 모든 그래프 알고리즘은 이 공식을 사용한다.
+    $$
+      shortestPath (i,j,0) = w(i,j) \quad (w(i,j) = 간선의 가중치) \\
+      shortestPath (i,j,k)= 
+      min \Big( shortestPath (i,j,k-1)+ shortestPath (k,j,k-1)\Big)
+    $$
+    - $k == 1$ 일 때, 각 노드 사이의 최단 거리는 간선의 가중치와 같다.
+
+  - `Time Complexity`가 $\Omega(|V|^3)$ 이다.
+    - 그래프에서는 최대 $\Omega(|V|^{2})$의 변이 있을 수 있고, 모든 변의 조합을 확인하기 때문이다. 
+    - 노드의 수가 많아질수록 기하급수적으로 느려진다.
   
-## Dijkstra Algorithm
+
+## [Dijkstra Algorithm](../GraphAlgorithm/Dijkstra.h)
 
   - 특정 노드와 전체 노드간의 최단거리를 알아내는 [단일-출발 최단 경로 문제] 알고리즘이다.
   - `음이 아닌 가중치가 있는 그래프`에서만 사용이 가능하다.
@@ -372,9 +413,17 @@
     - https://www.secmem.org/blog/2019/01/09/wrong-dijkstra/
     - https://ko.wikipedia.org/wiki/%EB%8D%B0%EC%9D%B4%ED%81%AC%EC%8A%A4%ED%8A%B8%EB%9D%BC_%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98
 
-## Bellman-Ford Algorithm
 
-## Floyd-Warshall Algorithm
+## [Bellman-Ford Algorithm](../GraphAlgorithm/BellmanFord.h)
+
+  - 특정 노드와 전체 노드간의 최단거리를 알아내는 [단일-출발 최단 경로 문제] 알고리즘이다.
+  - `음수 가중치`를 처리할 수 있다. (`음수 가중치 사이클`을 발견할 수 있다.)
+  - `Edge List (간선 리스트)` 형태의 그래프가 구현이 편하다.
+  - 노드 개수만큼 반복문을 돌면서 최단 경로를 발견하는데, 마지막에 한번 더 반복할 때 최단 경로가 또 갱신된다면, `음수 가중치 사이클`이 존재한다.
+    - 최단 경로를 구성하는 간선의 개수는 `노드의 개수 - 1`을 넘을 수 없기 때문이다.
+  - 기본적으로 `Dijkstra` 알고리즘과 원리는 동일하지만 음수 가중치를 처리할 수 있기 때문에 더 느리다.
+  - `Time Complexity`는 $\Theta(|V||E|)$ 이다.
+
 
 ## A* Algorithm
 
@@ -404,3 +453,4 @@
 [탐욕 알고리즘(greedy algorithm)]: https://ko.wikipedia.org/wiki/%ED%83%90%EC%9A%95_%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98
 [분할 정복 알고리즘 (Divide and Conquer Algorithm)]: https://ko.wikipedia.org/wiki/%EB%B6%84%ED%95%A0_%EC%A0%95%EB%B3%B5_%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98
 [단일-쌍 최단 경로 문제]: https://ko.wikipedia.org/wiki/%EC%B5%9C%EB%8B%A8_%EA%B2%BD%EB%A1%9C_%EB%AC%B8%EC%A0%9C
+[전체-쌍 최단 경로 문제]: https://ko.wikipedia.org/wiki/%EC%B5%9C%EB%8B%A8_%EA%B2%BD%EB%A1%9C_%EB%AC%B8%EC%A0%9C

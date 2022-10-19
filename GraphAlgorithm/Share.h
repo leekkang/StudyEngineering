@@ -2,6 +2,8 @@
 
 #include <vector>
 
+constexpr int Infinity = (int)(1 << (sizeof(int) * 8 - 2)) - 1;
+
 struct GraphNode {
 	int index = -1;
 	std::vector<std::pair<int, int>> vecEdge;

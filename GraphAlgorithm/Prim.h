@@ -1,7 +1,5 @@
 ﻿#pragma once
 
-#include <algorithm>
-#include <unordered_map>
 #include <queue>
 
 #include "Share.h"
@@ -9,18 +7,18 @@
 
 void Prim(std::vector<GraphEdge>& result, const std::vector<GraphNode>& graph, int startNode = 0) {
 	// 노드 개수 확인 == MakeSet
-	int size = graph.size();
+	int nodeCount = graph.size();
 
 	// 트리에 포함된 버텍스 테이블. 트리에 포함되면 해당 인덱스 값이 true가 된다.
-	std::vector<bool> vertexTable(size, false);
+	std::vector<bool> vertexTable(nodeCount, false);
 	vertexTable[startNode] = true; // 최초 트리 생성
 	int visitCount = 1;
 
-	while(visitCount < size) {
+	while(visitCount < nodeCount) {
 		int minCost = INT_MAX;
 		int endNode = -1;
 		// 현재 만들어진 트리에 있는 버텍스와 연결된 모든 간선중 가장 비용이 낮은 간선을 체크
-		for (int j = 0; j < size; ++j) {
+		for (int j = 0; j < nodeCount; ++j) {
 			// 연결되지 않은 버텍스임
 			if (!vertexTable[j])
 				continue;
@@ -50,7 +48,7 @@ void Prim(std::vector<GraphEdge>& result, const std::vector<GraphNode>& graph, i
 		}
 	}
 
-	if (visitCount != size) {
+	if (visitCount != nodeCount) {
 		// 간선이 없는 버텍스가 존재함 -> 연결 그래프가 아니다
 	}
 }
@@ -58,10 +56,10 @@ void Prim(std::vector<GraphEdge>& result, const std::vector<GraphNode>& graph, i
 
 void PrimWithQueue(std::vector<GraphEdge>& result, const std::vector<GraphNode>& graph, int startNode = 0) {
 	// 노드 개수 확인 == MakeSet
-	int size = graph.size();
+	int nodeCount = graph.size();
 
 	// 트리에 포함된 버텍스 테이블. 트리에 포함되면 해당 인덱스 값이 true가 된다.
-	std::vector<bool> vertexTable(size, false);
+	std::vector<bool> vertexTable(nodeCount, false);
 	vertexTable[startNode] = true; // 최초 트리 생성
 	int visitCount = 1;
 
@@ -73,9 +71,9 @@ void PrimWithQueue(std::vector<GraphEdge>& result, const std::vector<GraphNode>&
 		queue.push(GraphEdge(startNode, edges[i].first, edges[i].second));
 	GraphEdge edge;
 
-	while(visitCount < size) {
+	while(visitCount < nodeCount) {
 		// 현재 만들어진 트리에 있는 버텍스와 연결된 모든 간선중 가장 비용이 낮은 간선을 체크
-		while(queue.size() > 0) {
+		while(!queue.empty()) {
 			edge = queue.top();
 			// 트리에 없는 버텍스가 나올때까지 큐에서 빼냄
 			if (vertexTable[edge.startNode] && vertexTable[edge.endNode])
@@ -85,7 +83,7 @@ void PrimWithQueue(std::vector<GraphEdge>& result, const std::vector<GraphNode>&
 				break;
 			}
 		}
-		if (queue.size() == 0) {
+		if (queue.empty()) {
 			// 간선이 없는 버텍스가 존재함 -> 연결 그래프가 아니다
 			break;
 		}
@@ -105,7 +103,7 @@ void PrimWithQueue(std::vector<GraphEdge>& result, const std::vector<GraphNode>&
 		}
 	}
 
-	if (visitCount != size) {
+	if (visitCount != nodeCount) {
 		// 간선이 없는 버텍스가 존재함 -> 연결 그래프가 아니다
 	}
 }

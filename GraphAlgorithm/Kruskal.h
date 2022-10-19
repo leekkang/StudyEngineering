@@ -1,7 +1,6 @@
 ﻿#pragma once
 
 #include <algorithm>
-#include <unordered_map>
 
 #include "Share.h"
 
@@ -11,18 +10,18 @@ void Kruskal(std::vector<GraphEdge>& result, const std::vector<GraphEdge>& graph
 	std::sort(edges.begin(), edges.end());
 
 	// 노드 개수 확인 == MakeSet
-	int count = 0;
+	int nodeCount = 0;
 	for (const auto& edge : edges) {
-		if (count < edge.startNode)
-			count = edge.startNode;
-		if (count < edge.endNode)
-			count = edge.endNode;
+		if (nodeCount < edge.startNode)
+			nodeCount = edge.startNode;
+		if (nodeCount < edge.endNode)
+			nodeCount = edge.endNode;
 	}
-	++count;
+	++nodeCount;
 
 	// 사이클 테이블
-	std::vector<int> cycleTable(count);
-	for (int i = 0; i < count; ++i) {
+	std::vector<int> cycleTable(nodeCount);
+	for (int i = 0; i < nodeCount; ++i) {
 		cycleTable[i] = i;
 	}
 

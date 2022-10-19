@@ -3,8 +3,6 @@
 - [VSCode Setting](#vscode-setting)
 - [Visual Studio Setting](#visual-studio-setting)
 - [Unicode, ANSI, UTF](#unicode-ansi-utf)
-- [Codility](#codility)
-  - [Time Complexity](#time-complexity)
 
 ---
 ## StudyEngineering
@@ -115,24 +113,3 @@
   - 참고 
     - https://sacstory.tistory.com/entry/%EC%9C%A0%EB%8B%88%EC%BD%94%EB%93%9C%EC%99%80-ANSI-%EA%B7%B8%EB%A6%AC%EA%B3%A0-UTF
     - https://www.joelonsoftware.com/2003/10/08/the-absolute-minimum-every-software-developer-absolutely-positively-must-know-about-unicode-and-character-sets-no-excuses/
-
----
-# Codility
-
-## [Time Complexity](https://app.codility.com/programmers/lessons/3-time_complexity/)
-
-  - 개략적으로 프로그램의 러닝타임을 표기하는 방법 (정확한 시간 측정은 노동-집약적(labour-intensive)이다.)
-  - [Big-O notation]을 사용한다.
-  	- 점근 표기법(Asymptotic notation), 함수의 증가 양상을 다른 함수와의 비교로 사용하는 방법.
-$$
-\left | f(x) \right | = O(g(x)) \quad as \; x  \rightarrow \infty
-$$
-  - 컴퓨팅 파워와 프로그램 실행 시간, 반복 횟수로 대략적인 복잡도를 유추할 수 있다.
-  	- 파워 / 시간 이 클 수록, 반복 횟수가 높을 수록 복잡도가 낮다.
-  - `공간 복잡도(Space complexity)` 또한 시간 복잡도와 표기법이 같다.
-  	- 전역 변수, 지역 변수 및 동적 포인터 자료구조와 재귀 함수의 스택 내용, 입력 데이터까지 전부 포함해야 하기 때문에 계산이 좀 더 까다롭다.
-
-
-
-
-[Big-O notation]: https://en.wikipedia.org/wiki/Big_O_notation

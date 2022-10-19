@@ -9,6 +9,8 @@
 #include "Kruskal.h"
 #include "Prim.h"
 #include "Dijkstra.h"
+#include "FloydWarshall.h"
+#include "BellmanFord.h"
 
 void ConvertMatrixToEdges(std::vector<GraphEdge>& edges, const std::vector<std::vector<int>>& matrix);
 void ConvertMatrixToEdges(std::vector<GraphEdge>& edges, const std::vector<std::vector<int>>& matrix, const std::vector<std::string>& nodeNames);
@@ -26,24 +28,57 @@ void PrintResult(const std::vector<GraphEdge>& result, const std::string& name, 
 	}
 	std::cout << std::endl;
 }
-void PrintShortestResult(const std::vector<std::vector<GraphEdge>>& result, const std::string& name, const std::vector<std::string>& nodeNames) {
+void PrintSinglePairResult(const std::vector<int>& dist, const std::vector<int>& prev, 
+						   const std::string& name, const std::vector<std::string>& nodeNames, int src) {
 	std::cout << "\n " << name << " Algorithm Result\n";
-	int size = result.size();
-	for (int i = 0; i < size; ++i) {
-		int cost = 0;
-		int dest = -1;
-		for (const auto& edge : result[i]) {
-			dest = edge.endNode;
-			cost += edge.cost;
-		}
-		if (dest == -1)
+	int size = dist.size();
+	for (int dest = 0; dest < size; ++dest) {
+		if (dest == src || dist[dest] == INT_MAX)
 			continue;
 
-		int src = result[i][0].startNode;
-		std::cout << "  Shortest Path : " << nodeNames[src] << "-" << nodeNames[dest] << ", cost : " << cost << std::endl;
-		for (const auto& edge : result[i]) {
-			std::cout << "    Connected Node : " << nodeNames[edge.startNode] << 
-											 "-" << nodeNames[edge.endNode] << ", cost : " << edge.cost << std::endl;
+		std::cout << "  Shortest Path : " << nodeNames[src] << "-" << nodeNames[dest] << ", cost : " << dist[dest] << std::endl;
+
+		// 경로 복원
+		int mid = prev[dest];
+		std::vector<int> path;
+		while (mid != -1) {
+			path.push_back(mid);
+			mid = prev[mid];
+		}
+
+		std::cout << "    Connected Node : ";
+		for (int j = path.size() - 1; j >= 0; --j)
+			std::cout << nodeNames[path[j]] << "-";
+		std::cout << nodeNames[dest] << std::endl;
+	}
+	std::cout << std::endl;
+}
+void PrintAllPairsResult(const std::vector<std::vector<int>>& dist, const std::vector<std::vector<int>>& next, 
+						 const std::string& name, const std::vector<std::string>& nodeNames) {
+	std::cout << "\n " << name << " Algorithm Result\n";
+	int size = dist.size();
+	for (int src = 0; src < size; ++src) {
+		for (int dest = 0; dest < size; ++dest) {
+			if (dest == src || dist[src][dest] == INT_MAX)
+				continue;
+
+			std::cout << "  Shortest Path : " << nodeNames[src] << "-" << nodeNames[dest] << ", cost : " << dist[src][dest] << std::endl;
+
+			// 경로 복원
+			int mid = next[src][dest];
+			if (mid == -1)	// 위에서 체크하고 있지만(dest == src) 한번 더 체크
+				continue;
+			std::vector<int> path;
+			path.push_back(src);
+			while (mid != dest) {
+				path.push_back(mid);
+				mid = next[mid][dest];
+			}
+
+			std::cout << "    Connected Node : ";
+			for (int j = 0; j < path.size(); ++j)
+				std::cout << nodeNames[path[j]] << "-";
+			std::cout << nodeNames[dest] << std::endl;
 		}
 	}
 	std::cout << std::endl;
@@ -74,7 +109,7 @@ int main() {
 
 	// 간선 배열 (Edge list)
 	std::vector<GraphEdge> vecEdge;
-	ConvertMatrixToEdges(vecEdge, matrix, nodeName);
+	ConvertMatrixToEdgesDirected(vecEdge, matrix, nodeName);
 
 	// matrix 의 인접 리스트 (Adjacency List)
 	std::vector<GraphNode> vecNode;
@@ -93,30 +128,49 @@ int main() {
 	}
 	std::cout << std::endl;
 	
-	std::vector<GraphEdge> vecSpanningTree;
-	std::vector<std::vector<GraphEdge>> vecShortestPath;
+	std::vector<GraphEdge> vecResult;
+	// 단일-쌍 최단 경로 문제의 결과
+	std::vector<int> vecSinglePairDist;
+	std::vector<int> vecSinglePairPrevNode;				// 최단 경로 추적을 위한 중간 노드 배열 (최단 경로의 간선 중 마지막 간선의 시작 노드)
+	// 전체-쌍 최단 경로 문제의 결과
+	std::vector<std::vector<int>> vecAllPairsDist;
+	std::vector<std::vector<int>> vecAllPairsNextNode;	// 최단 경로 추적을 위한 중간 노드 배열 (최단 경로의 간선 중 최초 간선의 도착 노드)
+
+	int startNode = 0;
 
 	std::vector<std::pair<std::string, std::function<void()>>> algorithmPair{
-		{"Kruskal", [&]() { Kruskal(vecSpanningTree, vecEdge); }},
-		{"Prim", [&]() { Prim(vecSpanningTree, vecNode); }},
-		{"PrimQueue", [&]() { PrimWithQueue(vecSpanningTree, vecNode); }},
-		{"Dijkstra", [&]() { Dijkstra(vecShortestPath, vecNode, 0); }},
-		{"DijkstraQueue", [&]() { DijkstraWithQueue(vecShortestPath, vecNode, 0); }},
+		{"Kruskal", [&]() { Kruskal(vecResult, vecEdge); }},
+		{"Prim", [&]() { Prim(vecResult, vecNode); }},
+		{"PrimQueue", [&]() { PrimWithQueue(vecResult, vecNode); }},
+		{"Dijkstra", [&]() { Dijkstra(vecSinglePairDist, vecSinglePairPrevNode, vecNode, startNode); }},
+		{"DijkstraQueue", [&]() { DijkstraWithQueue(vecSinglePairDist, vecSinglePairPrevNode, vecNode, startNode); }},
+		{"FloydWarshall", [&]() { FloydWarshall(vecAllPairsDist, vecAllPairsNextNode, vecNode); }},
+		{"BellmanFord", [&]() { 
+			if (!BellmanFord(vecSinglePairDist, vecSinglePairPrevNode, vecEdge))
+				std::cout << "Error occured. Negative Edge Weight Cycles detected" << std::endl;
+			}},
 	};
 
 	std::chrono::steady_clock::time_point start;
 	for (const auto& pair : algorithmPair) {
-		vecSpanningTree.clear();
-		vecShortestPath.clear();
 
 		std::cout << "\n " << pair.first << " Algorithm Start\n";
 		start = std::chrono::steady_clock::now();
 
 		pair.second();
-		if (vecSpanningTree.size())
-			PrintResult(vecSpanningTree, pair.first, nodeName);
-		else
-			PrintShortestResult(vecShortestPath, pair.first, nodeName);
+
+		if (vecResult.size()) {
+			PrintResult(vecResult, pair.first, nodeName);
+			vecResult.clear();
+		} else if (vecSinglePairDist.size()) {
+			PrintSinglePairResult(vecSinglePairDist, vecSinglePairPrevNode, pair.first, nodeName, startNode);
+			vecSinglePairDist.clear();
+			vecSinglePairPrevNode.clear();
+		} else {
+			PrintAllPairsResult(vecAllPairsDist, vecAllPairsNextNode, pair.first, nodeName);
+			vecAllPairsDist.clear();
+			vecAllPairsNextNode.clear();
+		}
 			
 
 		std::cout << "  Find Time : " << 
@@ -171,14 +225,7 @@ void ConvertMatrixToEdgesDirected(std::vector<GraphEdge>& edges, const std::vect
 		for(int j = 0; j < size; ++j) {
 			if (vecCost[j] == INT_MAX)
 				continue;
-
-			bool found = false;
-			for(auto& edge : edges) {
-				if (found = (edge.endNode == i && edge.startNode == j))
-					break;
-			}
-			if (!found)
-				edges.push_back(GraphEdge(i, j, vecCost[j]));
+			edges.push_back(GraphEdge(i, j, vecCost[j]));
 		}
 	}
 }

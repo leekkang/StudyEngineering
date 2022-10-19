@@ -484,8 +484,8 @@ $$
   - 분리축에 정사영한 결과값은 `분리축과 정사영할 벡터의 내적 / 분리축의 벡터 길이`값과 같다.
   $$
     \begin{align*}
-      Proj_{U}V &= \frac{V \cdot U}{\left| U^{2} \right|} U \quad (U = Separating Axis) \\
-      Comp_{U}V &= \left| Proj_{U}V \right| = \frac{\left| V \cdot U\right|}{\left| U \right|} 
+      Proj_{U}V &= \frac{V \cdot U}{|U^{2}|} U \quad (U = Separating Axis) \\
+      Comp_{U}V &= |Proj_{U}V| = \frac{|V \cdot U|}{|U|} 
     \end{align*}
   $$
 
