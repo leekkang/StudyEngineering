@@ -1,4 +1,5 @@
 - [용어 정리](#용어-정리)
+- [함수 호출 규약](#함수-호출-규약)
 - [객체 지향 프로그래밍](#객체-지향-프로그래밍)
 - [Enum, Enum class 차이](#enum-enum-class-차이)
 - [const pointer](#const-pointer)
@@ -36,7 +37,7 @@
   - [Virtual Inheritance (가상 상속)](#virtual-inheritance-가상-상속)
   - [Virtual Base Table (가상 베이스 테이블, vbtable)](#virtual-base-table-가상-베이스-테이블-vbtable)
 - [변수 범위, 주기, 링크](#변수-범위-주기-링크)
-- [리터럴](#리터럴)
+- [리터럴 (Literal)](#리터럴-literal)
   - [문자열 리터럴](#문자열-리터럴)
 - [키워드](#키워드)
   - [this 키워드](#this-키워드)
@@ -191,6 +192,13 @@
     - [Data Type Ranges](https://docs.microsoft.com/en-us/cpp/cpp/data-type-ranges?view=msvc-170)
     - [What is a "translation unit" in C++](https://stackoverflow.com/questions/1106149/what-is-a-translation-unit-in-c)
 
+
+---
+# 함수 호출 규약
+
+  - TODO
+  - 참고
+    - https://blog.kimtae.xyz/7
 
 ---
 # 객체 지향 프로그래밍
@@ -411,6 +419,7 @@
      
       - `data` : 읽기, 쓰기가 가능한, 0이 아닌 값으로 초기화된 전역변수 또는 정적변수를 저장한다.
       - `bss(block stated symbol)` : 초기화되지 않았거나 0으로 초기화하는 `전역변수` 또는 `정적변수`를 저장한다.
+        - 실행 파일 내부에서 데이터 없이 `해당 섹션의 길이`만 저장해 놓는다.
         - `startup()` 함수가 메인 함수 실행 전 `Zero Initialization`를 진행한다.
     - 프로그램이 종료될 때 메모리에서 정리가 된다.
   - ## **힙** : 동적할당된 메모리가 할당되는 영역
@@ -1483,15 +1492,16 @@ auto list = {"a"s, "b"s, "c"s}; // initializer_list<std::string>
 
 
 ---
-# 리터럴
+# 리터럴 (Literal)
 
-  - `소스 코드` 상에서 고정된 `값`을 가지는 것. 숫자, 문자, 단어
+  - `소스 코드` 상에서 고정된 `값`을 가지는 데이터. 숫자, 문자, 단어
   - `constant` 와는 범주가 다르다! 혼동하지 말자.
-  - `constant` 는 변수에 붙는 속성이고, `literal`은 프로그램에 등장하는 `값`이다.
+  - `constant` 는 변수에 붙는 속성이고, `literal`은 프로그램에 등장하는 데이터, `값`이다.
   - 보통 리터럴은 값을 의미하지만 메모리에 저장되진 않고, 레지스터에서 바로 계산된다. -> 문자열 제외하고 코드 영역에 같이 저장된다.
   - https://m.blog.naver.com/rhkdals1206/221519863419
   - https://kant0116.tistory.com/17
   - 흔히 코드에서 숫자나 문자 또는 문장으로 표현되는 이름과 타입이 특정되지 않은 변수들이 리터럴이다.
+  - 리터럴 값을 가지는 변수 또는 객체를 [리터럴 형식](#용어-정리) 이라고 한다.
 
 ## 문자열 리터럴
 

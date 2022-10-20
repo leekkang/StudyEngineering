@@ -8,6 +8,7 @@
   - https://goodmilktea.tistory.com/30?category=816729
 - 윈도우 실행파일 구조 (PE 파일)
   - https://rninche01.tistory.com/entry/%EC%9C%88%EB%8F%84%EC%9A%B0-%EC%8B%A4%ED%96%89%ED%8C%8C%EC%9D%BC-%EA%B5%AC%EC%A1%B0PE%ED%8C%8C%EC%9D%BC
+  - https://rninche01.tistory.com/84
   
   - 참고
 
@@ -54,3 +55,6 @@
     - 요새는 물리적 코어의 개수가 많기 때문에 말 그대로 `병렬 처리`를 `동시 처리`로 변경했다
     - 태스크 개수가 코어 수보다 많으면 남는 태스크를 잘게 쪼개서 처리한다. (병렬 + 동시)
   - 
+
+  - 참고 
+    - https://freemmer.tistory.com/36
