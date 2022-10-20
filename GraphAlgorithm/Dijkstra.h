@@ -49,7 +49,7 @@ void Dijkstra(std::vector<int>& dist, std::vector<int>& prev, const std::vector<
 }
 
 
-void DijkstraWithQueue(std::vector<int>& dist, std::vector<int>& prev, const std::vector<GraphNode>& graph, int startNode = 0) {
+void DijkstraWithQueue(std::vector<int>& dist, std::vector<int>& prev, const std::vector<GraphNode>& graph, int srcNode = 0) {
 	// 노드 개수 확인 == MakeSet
 	int nodeCount = graph.size();
 
@@ -60,12 +60,12 @@ void DijkstraWithQueue(std::vector<int>& dist, std::vector<int>& prev, const std
 	dist.resize(nodeCount, INT_MAX);
 	prev.resize(nodeCount, -1);				// 최적 경로의 이전 버텍스 (경로 추적에 사용)
 	
-	dist[startNode] = 0;	// 시작 노드에서 시작 노드로 가는 거리는 0이다.
+	dist[srcNode] = 0;	// 시작 노드에서 시작 노드로 가는 거리는 0이다.
 
 	// 우선순위 큐 초기화
-	using pair = std::pair<int, int>;	// 도착 노드, 가중치
+	using pair = std::pair<int, int>;	// 가중치, 도착 노드
 	std::priority_queue<pair, std::vector<pair>, std::greater<pair>> queue;
-	queue.push(pair(startNode, 0));		// 최초 반복문 시작을 위해 추가
+	queue.push(pair(0, srcNode));		// 최초 반복문 시작을 위해 추가
 
 
 	// 모든 간선이 확인될 때 까지 출력
@@ -73,9 +73,9 @@ void DijkstraWithQueue(std::vector<int>& dist, std::vector<int>& prev, const std
 		pair cur = queue.top();
 		queue.pop();
 		
-		// 중간 노드 까지의 거리가 이전에 계산된 최단 거리보다 크면 스킵
-		const int& midNode = cur.first;
-		if (cur.second > dist[midNode])
+		// 중간 노드 까지의 거리가 이전에 계산된 최단 거리보다 크면 스킵 (느긋한 삭제)
+		const int& midNode = cur.second;
+		if (cur.first > dist[midNode])
 			continue;
 
 		// 중간 노드와 연결된 모든 버텍스들의 최단 거리 비교
@@ -88,7 +88,7 @@ void DijkstraWithQueue(std::vector<int>& dist, std::vector<int>& prev, const std
 				// 중간 노드 저장
 				prev[endNode] = midNode;
 				// 우선순위 큐에 갱신된 최단 경로 추가
-				queue.push(pair(endNode, dist[endNode]));
+				queue.push(pair(dist[endNode], endNode));
 			}
 		}
 	}

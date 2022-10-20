@@ -11,6 +11,7 @@
 #include "Dijkstra.h"
 #include "FloydWarshall.h"
 #include "BellmanFord.h"
+#include "AStar.h"
 
 void ConvertMatrixToEdges(std::vector<GraphEdge>& edges, const std::vector<std::vector<int>>& matrix);
 void ConvertMatrixToEdges(std::vector<GraphEdge>& edges, const std::vector<std::vector<int>>& matrix, const std::vector<std::string>& nodeNames);
@@ -19,7 +20,7 @@ void ConvertMatrixToList(std::vector<GraphNode>& nodes, const std::vector<std::v
 void ConvertMatrixToList(std::vector<GraphNode>& nodes, const std::vector<std::vector<int>>& matrix, const std::vector<std::string>& nodeNames);
 
 
-void PrintResult(const std::vector<GraphEdge>& result, const std::string& name, const std::vector<std::string>& nodeNames) {
+void PrintSpanningTree(const std::vector<GraphEdge>& result, const std::string& name, const std::vector<std::string>& nodeNames) {
 	std::cout << "\n " << name << " Algorithm Result\n";
 	int size = result.size();
 	for (int i = 0; i < size; ++i) {
@@ -27,6 +28,25 @@ void PrintResult(const std::vector<GraphEdge>& result, const std::string& name, 
 									   "-" << nodeNames[result[i].endNode] << ", cost : " << result[i].cost << std::endl;
 	}
 	std::cout << std::endl;
+}
+// 경로 복원 후 전체 노드를 출력
+void PrintTrailedPath(int dest, const std::vector<int>& prev, const std::vector<std::string>& nodeNames) {
+	int mid = prev[dest];
+	std::vector<int> path;
+	while (mid != -1) {
+		path.push_back(mid);
+		mid = prev[mid];
+	}
+
+	std::cout << "    Connected Node : ";
+	for (int j = path.size() - 1; j >= 0; --j)
+		std::cout << nodeNames[path[j]] << "-";
+	std::cout << nodeNames[dest] << std::endl;
+}
+void PrintSingleResult(const std::vector<int>& prev, int src, int dest, int cost, const std::string& name, const std::vector<std::string>& nodeNames) {			
+	std::cout << "  Shortest Path : " << nodeNames[src] << "-" << nodeNames[dest] << ", cost : " << cost << std::endl;
+	// 경로 복원
+	PrintTrailedPath(dest, prev, nodeNames);
 }
 void PrintSinglePairResult(const std::vector<int>& dist, const std::vector<int>& prev, 
 						   const std::string& name, const std::vector<std::string>& nodeNames, int src) {
@@ -37,19 +57,8 @@ void PrintSinglePairResult(const std::vector<int>& dist, const std::vector<int>&
 			continue;
 
 		std::cout << "  Shortest Path : " << nodeNames[src] << "-" << nodeNames[dest] << ", cost : " << dist[dest] << std::endl;
-
 		// 경로 복원
-		int mid = prev[dest];
-		std::vector<int> path;
-		while (mid != -1) {
-			path.push_back(mid);
-			mid = prev[mid];
-		}
-
-		std::cout << "    Connected Node : ";
-		for (int j = path.size() - 1; j >= 0; --j)
-			std::cout << nodeNames[path[j]] << "-";
-		std::cout << nodeNames[dest] << std::endl;
+		PrintTrailedPath(dest, prev, nodeNames);
 	}
 	std::cout << std::endl;
 }
@@ -92,7 +101,7 @@ int main() {
 
 	// 그래프 모양은 링크 참조 : https://en.wikipedia.org/wiki/Kruskal%27s_algorithm
 
-	std::vector<std::string> nodeName {"A", "B", "C", "D", "E", "F", "G"};
+	std::vector<std::string> vecName {"A", "B", "C", "D", "E", "F", "G"};
 
 	// 그래프 표현 방식 3가지 : Adjacency Matrix, Adjacency List, Edge List
 
@@ -109,11 +118,11 @@ int main() {
 
 	// 간선 배열 (Edge list)
 	std::vector<GraphEdge> vecEdge;
-	ConvertMatrixToEdgesDirected(vecEdge, matrix, nodeName);
+	ConvertMatrixToEdgesDirected(vecEdge, matrix, vecName);
 
 	// matrix 의 인접 리스트 (Adjacency List)
 	std::vector<GraphNode> vecNode;
-	ConvertMatrixToList(vecNode, matrix, nodeName);
+	ConvertMatrixToList(vecNode, matrix, vecName);
 
 	constexpr bool bPrintGraph = false;
 
@@ -128,7 +137,7 @@ int main() {
 	}
 	std::cout << std::endl;
 	
-	std::vector<GraphEdge> vecResult;
+	std::vector<GraphEdge> vecSpanningTree;
 	// 단일-쌍 최단 경로 문제의 결과
 	std::vector<int> vecSinglePairDist;
 	std::vector<int> vecSinglePairPrevNode;				// 최단 경로 추적을 위한 중간 노드 배열 (최단 경로의 간선 중 마지막 간선의 시작 노드)
@@ -139,16 +148,21 @@ int main() {
 	int startNode = 0;
 
 	std::vector<std::pair<std::string, std::function<void()>>> algorithmPair{
-		{"Kruskal", [&]() { Kruskal(vecResult, vecEdge); }},
-		{"Prim", [&]() { Prim(vecResult, vecNode); }},
-		{"PrimQueue", [&]() { PrimWithQueue(vecResult, vecNode); }},
+		{"Kruskal", [&]() { Kruskal(vecSpanningTree, vecEdge); }},
+		{"Prim", [&]() { Prim(vecSpanningTree, vecNode); }},
+		{"PrimQueue", [&]() { PrimWithQueue(vecSpanningTree, vecNode); }},
 		{"Dijkstra", [&]() { Dijkstra(vecSinglePairDist, vecSinglePairPrevNode, vecNode, startNode); }},
 		{"DijkstraQueue", [&]() { DijkstraWithQueue(vecSinglePairDist, vecSinglePairPrevNode, vecNode, startNode); }},
 		{"FloydWarshall", [&]() { FloydWarshall(vecAllPairsDist, vecAllPairsNextNode, vecNode); }},
 		{"BellmanFord", [&]() { 
 			if (!BellmanFord(vecSinglePairDist, vecSinglePairPrevNode, vecEdge))
 				std::cout << "Error occured. Negative Edge Weight Cycles detected" << std::endl;
-			}},
+		}},
+		{"AStarGraph", [&]() { 
+			int start = 0, end = 5;
+			int cost = AStarGraph(vecSinglePairPrevNode, vecNode, start, end);
+			PrintSingleResult(vecSinglePairPrevNode, start, end, cost, "AStarGraph", vecName);
+		}},
 	};
 
 	std::chrono::steady_clock::time_point start;
@@ -159,15 +173,15 @@ int main() {
 
 		pair.second();
 
-		if (vecResult.size()) {
-			PrintResult(vecResult, pair.first, nodeName);
-			vecResult.clear();
+		if (vecSpanningTree.size()) {
+			PrintSpanningTree(vecSpanningTree, pair.first, vecName);
+			vecSpanningTree.clear();
 		} else if (vecSinglePairDist.size()) {
-			PrintSinglePairResult(vecSinglePairDist, vecSinglePairPrevNode, pair.first, nodeName, startNode);
+			PrintSinglePairResult(vecSinglePairDist, vecSinglePairPrevNode, pair.first, vecName, startNode);
 			vecSinglePairDist.clear();
 			vecSinglePairPrevNode.clear();
-		} else {
-			PrintAllPairsResult(vecAllPairsDist, vecAllPairsNextNode, pair.first, nodeName);
+		} else if (vecAllPairsDist.size()) {
+			PrintAllPairsResult(vecAllPairsDist, vecAllPairsNextNode, pair.first, vecName);
 			vecAllPairsDist.clear();
 			vecAllPairsNextNode.clear();
 		}

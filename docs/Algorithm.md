@@ -18,7 +18,7 @@
   - [복합 정렬 알고리즘](#복합-정렬-알고리즘)
   - [Tim Sort](#tim-sort)
   - [Intro Sort](#intro-sort)
-- [Graph Algorithm](#graph-algorithm)
+- [Graph Algorithm (Graph Traversal)](#graph-algorithm-graph-traversal)
   - [Kruskal's Algorithm](#kruskals-algorithm)
   - [Prim's Algorithm](#prims-algorithm)
   - [Floyd-Warshall Algorithm](#floyd-warshall-algorithm)
@@ -319,7 +319,7 @@ $$
 
 
 ---
-# [Graph Algorithm](../GraphAlgorithm/GraphAlgorithm.cpp)
+# [Graph Algorithm (Graph Traversal)](../GraphAlgorithm/GraphAlgorithm.cpp)
 
   - `Spanning Tree`
     - 그래프 내의 모든 정점을 최소 간선의 수로 연결하는 부분 그래프
@@ -350,6 +350,7 @@ $$
     - 간선의 가중치 별 정렬시간($O(ElogE)$) + [서로소 집합(Disjoint Set)](DataStructure.md#disjoint-set)을 통한 사이클 찾기 동작($O(ElogV)$)
     - $V <= 2E$이기 때문에 $logV == O(logE)$
     - 알고리즘 최종 `Time Complexity`는 $O(ElogE)$이 된다.
+ 
   - **노드가 많고 간선이 적은 그래프**에서 `MST`를 찾을 때 유용하다.
 
 
@@ -366,6 +367,7 @@ $$
     - 인접 행렬 그래프 : $O(V^2)   (V = 정점의 개수)$
     - 인접 리스트 + 이진 힙 : $O(ElogV)$
     - 인접 리스트 + 피보나치 힙 : $O(E + VlogV)$
+ 
   - **노드가 적고 간선이 많은 그래프**에서 `MST`를 찾을 때 유용하다.
 
 
@@ -421,14 +423,37 @@ $$
   - `Edge List (간선 리스트)` 형태의 그래프가 구현이 편하다.
   - 노드 개수만큼 반복문을 돌면서 최단 경로를 발견하는데, 마지막에 한번 더 반복할 때 최단 경로가 또 갱신된다면, `음수 가중치 사이클`이 존재한다.
     - 최단 경로를 구성하는 간선의 개수는 `노드의 개수 - 1`을 넘을 수 없기 때문이다.
-  - 기본적으로 `Dijkstra` 알고리즘과 원리는 동일하지만 음수 가중치를 처리할 수 있기 때문에 더 느리다.
+  - 기본적으로 `Dijkstra Algorithm` 과 원리는 동일하지만 음수 가중치를 처리할 수 있기 때문에 더 느리다.
+ 
   - `Time Complexity`는 $\Theta(|V||E|)$ 이다.
 
 
-## A* Algorithm
+## [A* Algorithm](../GraphAlgorithm/AStar.h)
 
-  - 특정 노드의 최단거리를 알아내는 알고리즘
+  - 특정 노드 사이의 최단거리를 알아내는 알고리즘
+  - 최적 경로를 찾기 위해 각각의 노드에 대한 `평가 함수`를 정의한다.
+    - $f(n) = g(n) + h(n)$
+    - g(n) : 시작 노드에서 노드 n 까지의 경로 가중치
+    - h(n) : 노드 n ~ 도착 노드 까지의 추정 경로 가중치
+ 
+  - `Dijkstra Algorithm`과 유사하다.
+  - 차이점은 각 노드에 대해 해당 노드를 통과하는 최상의 경로를 추정하는 순위값인 `휴리스틱 추정값`($h(n)$)을 기존 가중치($g(n)$)에 더해서 비용 계산을 한다는 것이다.
+    - 비교할 때 `간선 가중치`만 쓰는 것이 아니라 `노드들이 가진 추정값`까지 더해서 비교한다는 것이다.
+    - `Dijkstra Algorithm` 은 모든 노드 $n$에 대해 항상 $h(n) = 0$ 인 `A* Algorithm`의 특수 케이스이다.
+    - `너비 우선 탐색(Breadth-first search, BFS)` 으로 볼 수 있다.
+  - 휴리스틱 함수의 구현에 따라 최적 경로가 결정되기 때문에 **최단 경로가 아닐 수 있다.**
+    - 정확한 정보를 포기한 대신 `Dijkstra Algorithm` 보다 빠르다.
+  - 일반화하면 경로 대신 횟수같은 값으로도 변경해서 적용할 수 있다. 값을 비교할 수만 있으면 된다.
+ 
+  - `데카르트 좌표계` 내에서 특정 좌표까지의 최단거리를 알아낼 때 사용할 수 있다.
+    - $g(n)$ 은 `현재 좌표 - 시작 좌표`, $h(n)$ 은 `목적지 좌표 - 현재 좌표`
+    - 타일맵 게임의 경우, [Manhatten Distance(맨해튼 거리)](https://ko.wikipedia.org/wiki/%EB%A7%A8%ED%95%B4%ED%8A%BC_%EA%B1%B0%EB%A6%AC)를 $h(n)$ 으로 사용한다.
+      - 대각선 거리는 근사값으로 `1.4`를 사용한다. 대각선의 각도가 45도가 되도록 만들어 주는게 핵심
 
+  - 참고
+    - https://www.secmem.org/blog/2020/04/19/astar/
+    - http://buildnewgames.com/astar/
+    - https://terms.naver.com/entry.naver?docId=3567439&cid=58944&categoryId=58970
 
 
 ---
