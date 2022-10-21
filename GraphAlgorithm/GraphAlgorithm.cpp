@@ -112,9 +112,9 @@ int main() {
 			int cost = IDAStarGraph(path, vecNode, src, dest);
 			std::cout << "  Shortest Path : " << vecName[src] << "-" << vecName[dest] << ", cost : " << cost << std::endl;
 			std::cout << "    Connected Node : ";
-			for (int i = 0; i < path.size(); ++i)
+			for (int i = 0; i < path.size() - 1; ++i)
 				std::cout << vecName[path[i]] << "-";
-			std::cout << std::endl;
+			std::cout << vecName[path[path.size() - 1]] << std::endl;
 		}},
 	};
 

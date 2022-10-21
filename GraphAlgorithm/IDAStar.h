@@ -38,14 +38,15 @@ int IDAStarGraph(std::vector<int>& path, const std::vector<GraphNode>& graph, in
 		return 0;
 	};
 
-	int result = 0;
 	// DFS 를 하는 함수. 재귀형태이기 때문에 auto 타입은 사용하지 못한다.
-	std::function<int(int, int, int)> search = [&](int curNode, int gScore, int threshold) -> int {
+	std::function<bool(int&, int, int, int)> search = [&](int& min, int curNode, int gScore, int threshold) -> bool {
 		int f = gScore + heuristic(curNode);
-		if (f > threshold)			// 한계치보다 비용이 크면 바로 리턴
-			return f;
+		if (f > threshold) {		// 한계치보다 비용이 크면 바로 리턴
+			min = f;
+			return false;
+		}	
 		if (curNode == destNode)	// 찾았을 경우 알려주기 위해 0을 리턴
-			return 0;
+			return true;
 
 		int minCost = Infinity;
 		// 자식 노드들을 돌면서 목적지 노드가 있는지 확인. 없으면 threshold를 변경하기 위해 최소값 (추정 최단 거리)을 리턴
@@ -64,28 +65,30 @@ int IDAStarGraph(std::vector<int>& path, const std::vector<GraphNode>& graph, in
 
 			// 경로에 집어넣고 확인한다.
 			push(endNode);
-			int cost = search(endNode, gScore + edge.second, threshold);
+			int cost = 0;
 			// 찾았으면 0을 리턴
-			if (cost == 0)
-				return 0;
+			if (search(cost, endNode, gScore + edge.second, threshold))
+				return true;
 			if (cost < minCost)
 				minCost = cost;
 			pop();
 		}
-		return minCost;
+
+		min = minCost;
+		return false;
 	};
 
-	// 결과 값을 찾을 때까지 반복
 	int threshold = heuristic(srcNode);
 	push(srcNode);
-	while(true) {
-		result = search(srcNode, 0, threshold);
-		if (result == 0)
+	int minCost = 0;
+
+	// 결과 값을 찾을 때까지 반복
+	while(!search(minCost, srcNode, 0, threshold)) {
+		// 경로를 찾지 못했다.
+		if (minCost >= Infinity)
 			break;
-		if (result >= Infinity)
-			break;
-		threshold = result;
+		threshold = minCost;
 	}
 
-	return result;
+	return minCost;
 }
