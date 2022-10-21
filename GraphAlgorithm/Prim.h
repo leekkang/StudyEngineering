@@ -76,10 +76,10 @@ void PrimWithQueue(std::vector<GraphEdge>& result, const std::vector<GraphNode>&
 		while(!queue.empty()) {
 			edge = queue.top();
 			// 트리에 없는 버텍스가 나올때까지 큐에서 빼냄
-			if (vertexTable[edge.startNode] && vertexTable[edge.endNode])
+			if (vertexTable[edge.srcNode] && vertexTable[edge.destNode])
 				queue.pop();
 			else {
-				srcNode = vertexTable[edge.startNode] ? edge.endNode : edge.startNode;
+				srcNode = vertexTable[edge.srcNode] ? edge.destNode : edge.srcNode;
 				break;
 			}
 		}
@@ -90,8 +90,8 @@ void PrimWithQueue(std::vector<GraphEdge>& result, const std::vector<GraphNode>&
 
 		// 확인된 간선이 있을 경우 트리에 추가
 		++visitCount;
-		vertexTable[edge.startNode] = true;
-		vertexTable[edge.endNode] = true;
+		vertexTable[edge.srcNode] = true;
+		vertexTable[edge.destNode] = true;
 		result.push_back(edge);
 		
 		// 새로 추가한 버텍스에 연결된 간선을 큐에 추가

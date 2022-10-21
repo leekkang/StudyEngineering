@@ -52,9 +52,6 @@ void Dijkstra(std::vector<int>& dist, std::vector<int>& prev, const std::vector<
 void DijkstraWithQueue(std::vector<int>& dist, std::vector<int>& prev, const std::vector<GraphNode>& graph, int srcNode = 0) {
 	// 노드 개수 확인 == MakeSet
 	int nodeCount = graph.size();
-
-	// 버텍스 방문 확인용 배열
-	std::vector<bool> visit(nodeCount, false);
 	
 	// 최초 시작 버텍스에서 각 버텍스 까지의 거리 초기화
 	dist.resize(nodeCount, INT_MAX);
@@ -87,7 +84,7 @@ void DijkstraWithQueue(std::vector<int>& dist, std::vector<int>& prev, const std
 				dist[endNode] = dist[midNode] + cost;
 				// 중간 노드 저장
 				prev[endNode] = midNode;
-				// 우선순위 큐에 갱신된 최단 경로 추가
+				// 우선순위 큐에 갱신된 최단 경로 추가 (겹쳐도 그냥 넣음. 위에서 삭제함)
 				queue.push(pair(dist[endNode], endNode));
 			}
 		}

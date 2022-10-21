@@ -7,7 +7,9 @@
 
 
 // 일반화한 A* 알고리즘 함수
-
+int AStar(std::vector<int>& prev, const std::vector<GraphNode>& graph, std::function<void()> heuristic, int srcNode, int destNode) {
+	return 0;
+}
 
 
 // 그래프 경로 찾기 특화 함수
@@ -21,13 +23,14 @@ int AStarGraph(std::vector<int>& prev, const std::vector<GraphNode>& graph, int 
 	
 	g[srcNode] = 0;	// 시작 노드에서 시작 노드로 가는 거리는 0이다.
 
-	// 휴리스틱 함수. 그래프 경로의 경우 항상 0을 리턴한다.
+	// 휴리스틱 함수. 그래프 경로의 경우 목적지 까지의 거리를 모르기 때문에 항상 0을 리턴한다.
 	auto heuristic = [&](int index) -> int {
 		return 0;
 	};
 
 	// 우선순위 큐 초기화
-	using pair = std::pair<int, int>;	// 현재 가중치 값 + 추정 가중치 값, 다음 노드
+	// f score 의 크기를 기준으로 정렬된다. f(n) = 현재 가중치 값 + 목적지 까지 추정 가중치 값
+	using pair = std::pair<int, int>;	// 총 비용, 비용이 확정된 경로의 마지막 노드   (f(n), n)
 	std::priority_queue<pair, std::vector<pair>, std::greater<pair>> queue;
 	queue.push(pair(heuristic(srcNode), srcNode));		// 최초 반복문 시작을 위해 추가
 
@@ -52,7 +55,7 @@ int AStarGraph(std::vector<int>& prev, const std::vector<GraphNode>& graph, int 
 			const int& endNode = edge.first;
 			const int& cost = edge.second;
 			// 중간 노드를 경유해서 가는 경로가 저장된 최단 경로보다 짧다면 갱신
-			if (g[endNode] > g[curNode] + cost + heuristic(endNode)) {
+			if (g[endNode] > g[curNode] + cost) {
 				g[endNode] = g[curNode] + cost;
 				// 중간 노드 저장
 				prev[endNode] = curNode;

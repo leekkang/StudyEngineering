@@ -7,10 +7,10 @@ bool BellmanFord(std::vector<int>& dist, std::vector<int>& prev, const std::vect
 	// 노드 개수 확인 == MakeSet
 	int nodeCount = 0;
 	for (const auto& edge : graph) {
-		if (nodeCount < edge.startNode)
-			nodeCount = edge.startNode;
-		if (nodeCount < edge.endNode)
-			nodeCount = edge.endNode;
+		if (nodeCount < edge.srcNode)
+			nodeCount = edge.srcNode;
+		if (nodeCount < edge.destNode)
+			nodeCount = edge.destNode;
 	}
 	++nodeCount;
 	
@@ -25,13 +25,13 @@ bool BellmanFord(std::vector<int>& dist, std::vector<int>& prev, const std::vect
 		for (int j = 0; j < edgeCount; ++j) {
 			const auto& edge = graph[j];
 			//! 값의 범위를 벗어날 수 있어서 추가함. INT_MAX 대신 Share.h의 Infinity를 사용하면 해당 조건문을 지워도 된다.
-			if (dist[edge.startNode] == INT_MAX)	
+			if (dist[edge.srcNode] == INT_MAX)	
 				continue;
 
-			if (dist[edge.endNode] > dist[edge.startNode] + edge.cost) {
-				dist[edge.endNode] = dist[edge.startNode] + edge.cost;
+			if (dist[edge.destNode] > dist[edge.srcNode] + edge.cost) {
+				dist[edge.destNode] = dist[edge.srcNode] + edge.cost;
 				// 중간 노드 저장
-				prev[edge.endNode] = edge.startNode;
+				prev[edge.destNode] = edge.srcNode;
 			}
 		}
 	}
@@ -40,10 +40,10 @@ bool BellmanFord(std::vector<int>& dist, std::vector<int>& prev, const std::vect
 	for (int j = 0; j < edgeCount; ++j) {
 		const auto& edge = graph[j];
 		//! 값의 범위를 벗어날 수 있어서 추가함. INT_MAX 대신 Share.h의 Infinity를 사용하면 해당 조건문을 지워도 된다.
-		if (dist[edge.startNode] == INT_MAX)	
+		if (dist[edge.srcNode] == INT_MAX)	
 			continue;
 			
-		if (dist[edge.endNode] > dist[edge.startNode] + edge.cost) {
+		if (dist[edge.destNode] > dist[edge.srcNode] + edge.cost) {
 			return false;
 		}
 	}

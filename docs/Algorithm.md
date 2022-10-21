@@ -25,6 +25,7 @@
   - [Dijkstra Algorithm](#dijkstra-algorithm)
   - [Bellman-Ford Algorithm](#bellman-ford-algorithm)
   - [A* Algorithm](#a-algorithm)
+  - [IDA* Algorithm (Iterative Deepening A*)](#ida-algorithm-iterative-deepening-a)
 - [Hash Algorithm](#hash-algorithm)
 - [Sieve of Eratosthenes (에라토스테네스의 체)](#sieve-of-eratosthenes-에라토스테네스의-체)
 
@@ -437,9 +438,9 @@ $$
     - h(n) : 노드 n ~ 도착 노드 까지의 추정 경로 가중치
  
   - `Dijkstra Algorithm`과 유사하다.
-  - 차이점은 각 노드에 대해 해당 노드를 통과하는 최상의 경로를 추정하는 순위값인 `휴리스틱 추정값`($h(n)$)을 기존 가중치($g(n)$)에 더해서 비용 계산을 한다는 것이다.
-    - 비교할 때 `간선 가중치`만 쓰는 것이 아니라 `노드들이 가진 추정값`까지 더해서 비교한다는 것이다.
-    - `Dijkstra Algorithm` 은 모든 노드 $n$에 대해 항상 $h(n) = 0$ 인 `A* Algorithm`의 특수 케이스이다.
+  - 차이점은 각 노드에서 목적지 까지의 추정 비용 순위값인 `휴리스틱 추정값`($h(n)$)을 기존 가중치($g(n)$)에 더해서 우선 순위 계산을 한다는 것이다.
+    - 비교할 때 `간선 가중치`만 쓰는 것이 아니라 `목적지 까지의 예상 비용`까지 더해서 비교한다는 것이다.
+    - `Dijkstra Algorithm` 은 모든 노드 $n$에 대해 항상 $h(n) = 0$ 인 `A* Algorithm`의 특수 케이스이다. (목적지 까지의 거리를 모른다)
     - `너비 우선 탐색(Breadth-first search, BFS)` 으로 볼 수 있다.
   - 휴리스틱 함수의 구현에 따라 최적 경로가 결정되기 때문에 **최단 경로가 아닐 수 있다.**
     - 정확한 정보를 포기한 대신 `Dijkstra Algorithm` 보다 빠르다.
@@ -454,6 +455,31 @@ $$
     - https://www.secmem.org/blog/2020/04/19/astar/
     - http://buildnewgames.com/astar/
     - https://terms.naver.com/entry.naver?docId=3567439&cid=58944&categoryId=58970
+
+
+## [IDA* Algorithm (Iterative Deepening A*)](../GraphAlgorithm/IDAStar.h)
+
+  - 특정 노드 사이의 최단거리를 알아내는 알고리즘
+  - [반복적 깊이심화 탐색](https://en.wikipedia.org/wiki/Iterative_deepening_depth-first_search)에 `A* Algorithm` 에서 사용하는 `heuristic` 함수를 사용하는 아이디어를 더한 것이다.
+    - `반복적 깊이심화 탐색`은 최초 `최대 탐색 깊이`를 제한한 후, 해당 깊이를 점차 늘리면서 `Depth First Search(DFS)` 를 반복하는 `트리, 그래프 검색 알고리즘`이다.
+    - `depth`를 0부터 `leaf node`의 `depth`값까지 반복하면서 `DFS`를 진행한다.
+      - 깊이는 `threshold` 를 통해서 조절한다. 이 값은 `탐색하지 못한 노드들의 경로 비용 중 최솟값`이다.
+      - 최초 `threshold`는 목적지까지의 `직선 거리값`이 되고, 목적지를 찾을때 까지 점차 증가한다.
+      - 같은 깊이에서는 가장 가까운 노드부터 가장 먼 노드까지 `BFS` 순서로 확인하게 된다.
+    - `DFS`와 다르게 `BFS`의 특징인 `최단 경로 탐색`이 가능하다. (깊이별로 반복하기 때문에)
+    - 깊이가 달라질 때 마다 방문했던 노드를 다시 검색한다. -> `depth = 1` 일 때 확인했던 노드를 `depth = 2`에서도 확인한다. `DFS`이기 때문에 어쩔 수 없다.
+  - `A* Algorithm`과 마찬가지로 목적지 까지의 `예상 비용`을 알 수 없는 그래프의 경우 항상 $h(n) = 0$이 된다. 이 경우 `DFS`와 탐색 순서가 완전히 동일해진다.
+    - `threshold`로 깊이 조절을 할 수 없기 때문이다.
+  - 비교 횟수가 약간 더 많아지지만 메모리 사용량을 낮출 수 있다.(함수 콜이 많아지면 그것도 아님) `DFS`이기 때문에.
+
+  - 참고
+    - https://en.wikipedia.org/wiki/Iterative_deepening_A*
+    - https://www.algorithms-and-technologies.com/iterative_deepening_a_star
+
+
+
+
+
 
 
 ---

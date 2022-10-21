@@ -12,10 +12,10 @@ void Kruskal(std::vector<GraphEdge>& result, const std::vector<GraphEdge>& graph
 	// 노드 개수 확인 == MakeSet
 	int nodeCount = 0;
 	for (const auto& edge : edges) {
-		if (nodeCount < edge.startNode)
-			nodeCount = edge.startNode;
-		if (nodeCount < edge.endNode)
-			nodeCount = edge.endNode;
+		if (nodeCount < edge.srcNode)
+			nodeCount = edge.srcNode;
+		if (nodeCount < edge.destNode)
+			nodeCount = edge.destNode;
 	}
 	++nodeCount;
 
@@ -50,8 +50,8 @@ void Kruskal(std::vector<GraphEdge>& result, const std::vector<GraphEdge>& graph
 	// 최소 신장 트리 찾기
 	int size = edges.size();
 	for (int i = 0; i < size; ++i) {
-		int src = edges[i].startNode;
-		int dest = edges[i].endNode;
+		int src = edges[i].srcNode;
+		int dest = edges[i].destNode;
 
 		if (!Find(src, dest)) {
 			Union(src, dest);

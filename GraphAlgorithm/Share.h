@@ -19,19 +19,19 @@ struct GraphNode {
 };
 
 struct GraphEdge {
-	int startNode = -1;     // tail
-	int endNode = -1;       // head
+	int srcNode = -1;     // tail
+	int destNode = -1;       // head
 	int cost = INT_MAX;
 
 	GraphEdge() {}
     GraphEdge(const GraphEdge& edge) : 
-        startNode(edge.startNode),
-        endNode(edge.endNode),
+        srcNode(edge.srcNode),
+        destNode(edge.destNode),
         cost(edge.cost) {
 	}
     GraphEdge(int start, int end, int distance) : 
-        startNode(start),
-        endNode(end),
+        srcNode(start),
+        destNode(end),
         cost(distance) {
 	}
     // GraphEdge& operator = (const GraphEdge& edge) {

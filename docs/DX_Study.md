@@ -60,3 +60,10 @@ dwrite로 폰트를 사용하려면 iDWriteFactory를 만들어
 
 입력 시스템 IME(Input Method Editor)
   - https://learn.microsoft.com/ko-kr/windows/win32/dxtecharts/using-an-input-method-editor-in-a-game
+
+
+
+---
+# Immediate Context, Deferred Context
+
+  - 
