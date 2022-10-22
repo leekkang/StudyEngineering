@@ -14,9 +14,6 @@ int IDAStar(std::vector<int>& prev, const std::vector<GraphNode>& graph, std::fu
 
 // 그래프 경로 찾기 특화 함수
 int IDAStarGraph(std::vector<int>& path, const std::vector<GraphNode>& graph, int srcNode, int destNode) {
-	// 노드 개수 확인 == MakeSet
-	int nodeCount = graph.size();
-
 	// 저장할 최단 경로 초기화. 스택처럼 사용한다.
 	path.clear();
 	int index = 0;		// 인덱스로 배열을 스택처럼 사용
