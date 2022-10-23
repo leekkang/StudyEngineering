@@ -26,6 +26,7 @@
   - [Bellman-Ford Algorithm](#bellman-ford-algorithm)
   - [A* Algorithm](#a-algorithm)
   - [IDA* Algorithm (Iterative Deepening A*)](#ida-algorithm-iterative-deepening-a)
+  - [Jump Point Search](#jump-point-search)
 - [Hash Algorithm](#hash-algorithm)
 - [Sieve of Eratosthenes (에라토스테네스의 체)](#sieve-of-eratosthenes-에라토스테네스의-체)
 
@@ -445,6 +446,12 @@ $$
   - 휴리스틱 함수의 구현에 따라 최적 경로가 결정되기 때문에 **최단 경로가 아닐 수 있다.**
     - 정확한 정보를 포기한 대신 `Dijkstra Algorithm` 보다 빠르다.
   - 일반화하면 경로 대신 횟수같은 값으로도 변경해서 적용할 수 있다. 값을 비교할 수만 있으면 된다.
+  
+  - `휴리스틱 함수의 상수값`이 커질수록 방문하는 노드의 수가 적어진다.
+    - `가중치 x 상수값`을 비교할 때, 비교 범위가 넓어져서 더 많은 다른 경로의 노드들이 큐에 추가되지 않기 때문이다.
+    - 이를 **Bounded Relaxation(경계 완화)** 이라고 한다.
+    - 대신, 결과로 나오는 경로가 최적 경로가 아닐 수 있다.
+    - 상수값은 1보다 커야한다. 이를 `ε-admissible` 이라고 한다. (상수값 보증)
  
   - `데카르트 좌표계` 내에서 특정 좌표까지의 최단거리를 알아낼 때 사용할 수 있다.
     - $g(n)$ 은 `현재 좌표 - 시작 좌표`, $h(n)$ 은 `목적지 좌표 - 현재 좌표`
@@ -477,7 +484,7 @@ $$
     - https://www.algorithms-and-technologies.com/iterative_deepening_a_star
 
 
-
+## Jump Point Search
 
 
 

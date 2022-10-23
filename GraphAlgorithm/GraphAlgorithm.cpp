@@ -66,6 +66,25 @@ int main() {
 	std::vector<GraphNode> vecNode;
 	ConvertMatrixToList(vecNode, matrix, vecName);
 
+	// 버텍스의 이차원 좌표 (필요한 알고리즘의 경우 사용)
+	std::vector<std::pair<int, int>> vecCoordinate {
+		{0, 4},  // A
+		{3, 3},  // B
+		{6, 4},  // C
+		{1, 0},  // D
+		{5, 1},  // E
+		{3, -1}, // F
+		{6, -3}, // G
+	};
+	// 맨해튼 거리 + 유클리드 거리 휴리스틱 함수 (필요한 알고리즘의 경우 사용)
+	auto heuristic = [&](int cur, int dest) -> int {
+		if (cur == dest)
+			return 0;
+		int width = abs(vecCoordinate[cur].first - vecCoordinate[dest].first);
+		int height = abs(vecCoordinate[cur].second - vecCoordinate[dest].second);
+		return abs(width - height) * 10 + (width < height ? width : height) * 14;
+	};
+
 	constexpr bool bPrintGraph = false;
 
 	if (bPrintGraph) {
@@ -88,7 +107,7 @@ int main() {
 	std::vector<std::vector<int>> vecAllPairsNextNode;	// 최단 경로 추적을 위한 중간 노드 배열 (최단 경로의 간선 중 최초 간선의 도착 노드)
 
 	int srcNode = 0;
-
+	int destNode = 5;
 	std::vector<std::pair<std::string, std::function<void()>>> algorithmPair{
 		{"Kruskal", 		[&]() { Kruskal(vecSpanningTree, vecEdge); }},
 		{"Prim", 			[&]() { Prim(vecSpanningTree, vecNode); }},
@@ -101,16 +120,28 @@ int main() {
 				std::cout << "Error occured. Negative Edge Weight Cycles detected" << std::endl;
 		}},
 		{"AStarGraph", [&]() { 
-			int src = 0, dest = 5;
-			int cost = AStarGraph(vecSinglePairPrevNode, vecNode, src, dest);
-			PrintSingleResult(vecSinglePairPrevNode, src, dest, cost, "AStarGraph", vecName);
+			int cost = AStarGraph(vecSinglePairPrevNode, vecNode, srcNode, destNode);
+			PrintSingleResult(vecSinglePairPrevNode, srcNode, destNode, cost, "AStarGraph", vecName);
 			vecSinglePairPrevNode.clear();
 		}},
-		{"IDAStarGraph", [&]() { 
-			int src = 0, dest = 5;
+		{"AStarCoordinate", [&]() { 
+			int cost = AStarCoordinate(vecSinglePairPrevNode, vecNode, heuristic, srcNode, destNode);
+			PrintSingleResult(vecSinglePairPrevNode, srcNode, destNode, cost, "AStarCoordinate", vecName);
+			vecSinglePairPrevNode.clear();
+		}},
+		{"IDAStarGraph", [&]() {
 			std::vector<int> path;
-			int cost = IDAStarGraph(path, vecNode, src, dest);
-			std::cout << "  Shortest Path : " << vecName[src] << "-" << vecName[dest] << ", cost : " << cost << std::endl;
+			int cost = IDAStarGraph(path, vecNode, srcNode, destNode);
+			std::cout << "  Shortest Path : " << vecName[srcNode] << "-" << vecName[destNode] << ", cost : " << cost << std::endl;
+			std::cout << "    Connected Node : ";
+			for (int i = 0; i < path.size() - 1; ++i)
+				std::cout << vecName[path[i]] << "-";
+			std::cout << vecName[path[path.size() - 1]] << std::endl;
+		}},
+		{"IDAStarCoordinate", [&]() {
+			std::vector<int> path;
+			int cost = IDAStarCoordinate(path, vecNode, heuristic, srcNode, destNode);
+			std::cout << "  Shortest Path : " << vecName[srcNode] << "-" << vecName[destNode] << ", cost : " << cost << std::endl;
 			std::cout << "    Connected Node : ";
 			for (int i = 0; i < path.size() - 1; ++i)
 				std::cout << vecName[path[i]] << "-";
