@@ -58,7 +58,7 @@
 
 서피스는 내부적으로 레퍼런스 카운트를 가지고 있기 때문에 렌더타겟을 생성하고난 후에는 무조건 릴리즈 해줘야 한다.
 
-dwrite로 폰트를 사용하려면 iDWriteFactory를 만들어
+dwrite로 폰트를 사용하려면 iDWriteFactory를 만들어야 한다.
 
 입력 시스템 IME(Input Method Editor)
   - https://learn.microsoft.com/ko-kr/windows/win32/dxtecharts/using-an-input-method-editor-in-a-game
