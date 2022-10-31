@@ -21,7 +21,7 @@
 
 
 ---
-# SIMD 레지스터, SSE2 연산
+# SIMD(Single Instruction Multiple Data) 레지스터, SSE2 연산
 
   - DX가 연산할 때 사용하는 레지스터와 연산법
   
@@ -68,4 +68,5 @@ dwrite로 폰트를 사용하려면 iDWriteFactory를 만들어야 한다.
 ---
 # Immediate Context, Deferred Context
 
-  - 
+
+  - https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=masca140&logNo=220719096462
