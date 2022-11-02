@@ -68,5 +68,7 @@ dwrite로 폰트를 사용하려면 iDWriteFactory를 만들어야 한다.
 ---
 # Immediate Context, Deferred Context
 
-
+  - 멀티 스레드 대응을 위해 `동일한 타입`의 컨텍스트를 두 가지 방법으로 사용한다.
+  - `Immediate Context`
+  - `Deferred Context`
   - https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=masca140&logNo=220719096462
