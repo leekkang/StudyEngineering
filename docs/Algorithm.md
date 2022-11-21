@@ -24,8 +24,8 @@
   - [Floyd-Warshall Algorithm](#floyd-warshall-algorithm)
   - [Dijkstra Algorithm](#dijkstra-algorithm)
   - [Bellman-Ford Algorithm](#bellman-ford-algorithm)
-  - [A* Algorithm](#a-algorithm)
-  - [IDA* Algorithm (Iterative Deepening A*)](#ida-algorithm-iterative-deepening-a)
+  - [A\* Algorithm](#a-algorithm)
+  - [IDA\* Algorithm (Iterative Deepening A\*)](#ida-algorithm-iterative-deepening-a)
   - [Jump Point Search](#jump-point-search)
 - [Hash Algorithm](#hash-algorithm)
 - [Sieve of Eratosthenes (에라토스테네스의 체)](#sieve-of-eratosthenes-에라토스테네스의-체)
@@ -509,7 +509,7 @@ $$
 ---
 # Hash Algorithm
 
-  - TODO 
+  - TODO
 
 
 
