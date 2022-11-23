@@ -508,6 +508,7 @@ $$
 
   - 참고
     - https://game-dev.tistory.com/13
+    - 알고리즘 비주얼라이저 : http://qiao.github.io/PathFinding.js/visual/
 
 
 ---
