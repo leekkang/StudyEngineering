@@ -16,6 +16,7 @@
   - 참고
     - https://wjs7347.tistory.com/17
   - Easing Function
+    - https://easings.net/ko
     - https://github.com/nicolausYes/easing-functions/blob/master/src/easing.cpp
 
 ![](img/easing.png)
