@@ -76,7 +76,7 @@ dwrite로 폰트를 사용하려면 iDWriteFactory를 만들어야 한다.
 
 
 ---
-# FBX
+# [FBX](https://help.autodesk.com/view/FBX/2016/ENU/?guid=__files_GUID_4F644045_380D_4B75_A2A3_D39DDE53BEDD_htm)
 
   - FBX SDK -> Manager, Scene 두 가지 기능으로 나뉜다.
   - FBX Manager
