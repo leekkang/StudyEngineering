@@ -72,3 +72,19 @@ dwrite로 폰트를 사용하려면 iDWriteFactory를 만들어야 한다.
   - `Immediate Context`
   - `Deferred Context`
   - https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=masca140&logNo=220719096462
+
+
+
+---
+# FBX
+
+  - FBX SDK -> Manager, Scene 두 가지 기능으로 나뉜다.
+  - FBX Manager
+    - .fbx파일을 불러올 수 있는 `Importer`, FBX scene 들을 생성할 수 있다.
+    - FBX Scene이 가지고 있는 모든 노드, 메쉬 또는 기타 FBX 객체에 대한 메모리 할당을 담당한다.
+  - FBX Scene
+    - Scene Graph System : 정보들(fbx node)을 트리구조로 가지고 있음.
+    - Importer를 통해 .fbx파일을 읽으면(Import()) 노드들로 채워진다.
+    - dx 좌표계와 autodesk sdk가 사용하는 좌표계가 다르기 때문에 조정이 필요하다. (컨버터 함수가 있지만 동작하지 않는다.)
+    - 3dsMax좌표계는 x가 오른쪽, y가 앞쪽, z가 위쪽이다. dx좌표계는 x가 오른쪽, y가 위쪽, z가 앞쪽이다.
+    - 
