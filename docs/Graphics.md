@@ -33,7 +33,7 @@
     - `좌표계 A로 표현한 좌표계 B의 기저벡터` 로 만든 행렬의 역행렬
       - 위치 변환 행렬의 역행렬 * 회전, 크기변환 행렬의 역행렬
       - ex: `월드 좌표계`의 카메라 위치, 회전축 벡터로 만든 행렬의 `역행렬`으로 `월드 좌표계`의 물체를 `뷰 좌표계`로 변환한다.
-      - [자세한 내용: 좌표계 변환](Transformation/transformations.md#좌표계의-변환)
+    - [자세한 내용: 좌표계 변환](Transformation/transformations.md#좌표계의-변환)
   - 어떤 물체의 `월드 변환 행렬`은 기준 좌표계가 이미 월드이기 때문에 현재 물체의 요소를 그대로 사용하게 된다.
     - 메쉬의 꼭짓점들이 대상이 되며, 모두 `0,0,0`을 기준점으로 가지도록 설계한다.
     - `DirectX::XMMatrixScaling`, `DirectX::XMQuaternionRotationRollPitchYaw`, `DirectX::XMMatrixTranslation`
