@@ -373,9 +373,8 @@ $$
   \begin{aligned}
 (\overline{AB} \times \overline{AC})^2 &= (\left\| \overline{AB} \right\| \left\|  \overline{AC} \right\| sin \theta)^2 \\
 &= \left\| \overline{AB} \right\|^2 \left\|  \overline{CD} \right\|^2 \\
-
-(\frac{\overline{AB} \times \overline{AC}}{\overline{AB}})^2 &=  \overline{CD} ^2 \\
- 
+(\frac{\overline{AB} \times \overline{AC}}{\overline{AB}})^2 &=  \overline{CD} ^2 
+\\
 \therefore (\frac{\overline{AB} \times \overline{AC}}{\overline{AB}})^2 &\le  r^2 \quad \Rightarrow collision
   \end{aligned}
 $$
@@ -389,8 +388,7 @@ $$
   \overrightarrow{AB} \cdot \overrightarrow{AC} = &
   \left\| \overline{AB} \right\| \left\| \overline{AC} \right\| \cos \theta \\ 
   =& \left\| \overline{AB} \right\| \left\| \overline{AD} \right\| \\
-  \end{aligned} 
-
+  \end{aligned}
   \begin{aligned}
   \therefore D &= A + \overrightarrow{AD} \\
   &= A + \overrightarrow{AB} \frac{\left\| \overline{AD}\right\|}{\left\|\overline{AB} \right\|}  \\
