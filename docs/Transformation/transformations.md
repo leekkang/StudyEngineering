@@ -399,7 +399,7 @@ S(\textbf u + \textbf v)
   &= (s_{x}u_{x},\ s_{y}u_{y},\ s_{z}u_{z}) + (s_{x}v_{x},\ s_{y}v_{y},\ s_{z}v_{z}) \\
   &= S(\textbf u) + S(\textbf v) \\
 \\
-S(k\textbf u) &= (s_{x}k\, u_{x},\ s_{y}k\, u_{y},\ s_{z}k\, u_{z}) \\
+S(k\textbf u) &= (s_{x}k u_{x},\ s_{y}k u_{y},\ s_{z}k u_{z}) \\
       &= k(s_{x}u_{x},\ s_{y}u_{y},\ s_{z}u_{z}) \\
       &= kS(\textbf u) \\
 \end{aligned}
@@ -457,7 +457,7 @@ $$
 [//]: ![](rotequ_mid.png)
 
 $$
-R_{n}(\textbf v_{\perp}) = cos\theta \, \textbf v_{\perp} + sin\theta \, (\textbf n \times \textbf v)
+R_{n}(\textbf v_{\perp}) = cos\theta \textbf v_{\perp} + sin\theta (\textbf n \times \textbf v)
 $$
 
   - 이를 통해 다음과 같은 공식을 이끌어낼 수 있다.
@@ -468,9 +468,9 @@ $$
 \begin {aligned} 
 R_{n}(\textbf v) 
   &= proj_{n}(\textbf v) + R_{n}(\textbf v_{\perp}) \\
-  &= (\textbf n\cdot \textbf v)n + cos\theta \, \textbf v_{\perp} + sin\theta \, (\textbf n\times \textbf v) \\
-  &= (\textbf n\cdot \textbf v)\textbf n + cos\theta(\textbf v-(\textbf n\cdot \textbf v)\textbf n) + sin\theta \, (\textbf n\times \textbf v) \\
-  &= cos\theta \, \textbf v +(1-cos\theta)(\textbf n\cdot \textbf v)\textbf n + sin\theta(\textbf n\times \textbf v)
+  &= (\textbf n\cdot \textbf v)n + cos\theta \textbf v_{\perp} + sin\theta (\textbf n\times \textbf v) \\
+  &= (\textbf n\cdot \textbf v)\textbf n + cos\theta(\textbf v-(\textbf n\cdot \textbf v)\textbf n) + sin\theta (\textbf n\times \textbf v) \\
+  &= cos\theta \textbf v +(1-cos\theta)(\textbf n\cdot \textbf v)\textbf n + sin\theta(\textbf n\times \textbf v)
 \end{aligned}
 $$
 
