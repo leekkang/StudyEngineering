@@ -5,12 +5,16 @@
 - [좌표변환과 좌표계의 변환](#좌표변환과-좌표계의-변환)
 - [비례 선형변환 증명](#비례-선형변환-증명)
 - [회전 선형변환 증명](#회전-선형변환-증명)
+- [Latex 소스코드](#latex-소스코드)
+  - [coor\_vector.png](#coor_vectorpng)
+  - [coor\_dot.png](#coor_dotpng)
 
 
 
 # 선형변환
 
-  - 변환을 의미하는 함수를 $\tau$ 라고 했을 때 그 함수가 다음과 같은 두가지 성질을 만족하면 선형변환이라고 한다. $u$, $v$ 는 벡터이고 $k$ 는 스칼라이다.
+  - ### 변환을 의미하는 함수를 $\tau$ 라고 했을 때 그 함수가 다음과 같은 두가지 성질을 만족하면 `선형변환`이라고 한다. 
+    - $u$, $v$ 는 벡터이고 $k$ 는 스칼라이다.
 
     [//]: ![](definition.png)
 
@@ -23,20 +27,20 @@ $$
 
   - 컴퓨터로 선형변환을 구현하기 위해서는 행렬의 곱연산이 필요하다. 그리고 그 행렬은 다음과 같이 제작한다.
 
-  - $u = (x, y, z)$ 라 할 때 좌표축을 나타내는 벡터 $i, j, k$ 를 이용하여 벡터를 분해할 수 있다. 
-  - 벡터 $i, j, k$ 는 삼차원 공간에서 $x, y, z$ 축과 같은 방향의 단위벡터로 **표준기저벡터(standard basis vector)** 라고 부른다.
+  1. $u = (x,\ y,\ z)$ 라 할 때 좌표축을 나타내는 벡터 $i,\ j,\ k$ 를 이용하여 벡터를 분해할 수 있다.
+  2. 벡터 $i,\ j,\ k$ 는 삼차원 공간에서 $x,\ y,\ z$ 축과 같은 방향의 단위벡터로 **표준기저벡터(standard basis vector)** 라고 부른다.
 
-    [//]: ![](standard_vector.png)
+  [//]: ![](standard_vector.png)
 
 $$
 \begin{aligned}
-u &= (x, y, z) \\
+u &= (x,\ y,\ z) \\
   &= xi + yj + zk \\
-  &= x(1,0,0) + y(0,1,0) + z(0,0,1)
+  &= x(1,\ 0,\ 0) + y(0,\ 1,\ 0) + z(0,\ 0,\ 1)
 \end{aligned}
 $$
 
-  - 선형변환 $\tau$ 에 벡터 $u$ 를 입력으로 하면 다음과 같이 식을 전개할 수 있다. 결국 선형변환은 행렬 $A$ 의 곱셈연산으로 표현 가능하다.
+  3. 선형변환 $\tau$ 에 벡터 $u$ 를 입력으로 하면 다음과 같이 식을 전개할 수 있다. 결국 선형변환은 행렬 $A$ 의 곱셈연산으로 표현 가능하다.
 
 [//]: ![](matrix_representation.png)
 
@@ -45,12 +49,12 @@ $$
 \tau(u) &= \tau(xi + yj + zk) \\
         &= x\tau(i) + y\tau(j) + z\tau(k) \\
         &= uA \\
-        &= [x,y,z] \begin{bmatrix} 
+        &= [x,\ y,\ z] \begin{bmatrix} 
                     \leftarrow \tau(i) \rightarrow \\
                     \leftarrow \tau(j) \rightarrow \\
                     \leftarrow \tau(k) \rightarrow 
                    \end{bmatrix} \\
-        &= [x,y,z] \begin{bmatrix} 
+        &= [x,\ y,\ z] \begin{bmatrix} 
                     A_{11} & A_{12} & A_{13} \\
                     A_{21} & A_{22} & A_{23} \\
                     A_{31} & A_{32} & A_{33}
@@ -67,12 +71,12 @@ $$
 $$
 \begin{aligned} 
 \tau (u) &= uS \\
-         &= [x, y, z] \begin{bmatrix}
+         &= [x,\ y,\ z] \begin{bmatrix}
                        s_{x} & 0 & 0 \\ 
                        0 & s_{y} & 0 \\ 
                        0 & 0 & s_{z}
                       \end{bmatrix} \\
-         &= (s_{x}x,s_{y}y,s_{z}z) \\
+         &= (s_{x}x,\ s_{y}y,\ s_{z}z) \\
 \end{aligned}
 $$
 
@@ -104,323 +108,207 @@ $$
 
 # 아핀변환
 
-`아핀변환(Affine Transformation)`은 선형변환(Linear Transformation)에 위치변환(Translation)을 추가한 변환이다.
+  - ### `아핀변환(Affine Transformation)`은 선형변환(Linear Transformation)에 위치변환(Translation)을 추가한 변환이다.
+    - `선형변환`으로 표현하지 못하는 것들을 동일한 방법으로 처리하기 위해서 나온 변환이다.
 
-그러나 벡터는 위치변환의 영향을 받지 않는다. 벡터는 크기와 방향만으로 표현되기 때문이다. 따라서 위치변환은 점만 해당된다.
-한편 구현을 위해서는 벡터와 점을 동일하게 취급해야 할 필요가 있다.
-그래서 동차좌표(homogeneous coordinates)가 고안되었다.
+  - 위치와 무관하게 방향과 크기만을 가지는 `벡터`는 위치변환의 영향을 받지 않는다. 따라서 위치변환은 `점`만 해당된다.
+  - `벡터`와 `점`을 동일한 형태로 다루기 위해 **동차좌표(homogeneous coordinates)** 라는 것을 사용한다.
+    - 3D 공간에서 동차좌표는 하나의 원소를 추가하여 표현한다.
+    - $(x, y, z, 0)$ 은 `벡터`를 의미하고 $(x, y, z, 1)$ 은 `점`을 의미한다.
 
-3D 공간에서 동차좌표는 하나의 원소를 추가하여 표현한다. 마지막 원소가 0 이면 벡터를 의미하고 1이면 점을 의미한다. 예를 들어 `(x, y, z, 0)` 은 벡터를 의미하고 `(x, y, z, 1)` 은 점을 의미한다.
-
-아핀변환을 `\alpha` 와 선형변환행렬 `A`, 이동변환벡터 `b` 를 이용하여 다음과 같이 표현해 보자.
+  - 아핀변환 $\alpha$는 선형변환행렬 $A$, 이동변환벡터 $b$ 를 이용하여 표현할 수 있다.
 
 [//]: ![](affine_definition.png)
 
-```latex
+$$
 \begin{aligned} 
-\\\alpha(u) &= uA+b \\
-            &= [x,y,z]\begin{bmatrix} A_{11} & A_{12} & A_{13}
-                      \\ A_{21} & A_{22} & A_{23} 
-                      \\ A_{31} & A_{32} & A_{33}
-                      \end{bmatrix}+[b_{x},b_{y},b_{z}] \\
-            &=[x',y',z'] \\
-            
+\alpha(u) &= \tau(u) + b \\
+\alpha(u) &= uA+b \\
+          &= [x,\ y,\ z] \begin{bmatrix} 
+                       A_{11} & A_{12} & A_{13} \\
+                       A_{21} & A_{22} & A_{23} \\
+                       A_{31} & A_{32} & A_{33} \\
+                      \end{bmatrix}
+                      + [b_{x},\ b_{y},\ b_{z}] \\
+          &= [x',\ y',\ z'] \\
 \end{aligned} 
-```
+$$
 
-앞서 언급한 수식에 동차좌표가 도입되면 `u` 는 벡터 혹은 점이 가능하다.
+  - 앞서 언급한 수식에 동차좌표가 도입되면 $u$ 는 `벡터`와 `점` 모두 표현이 가능하다.
+  
+  - 아래 식의 4 x 4 행렬을 **아핀변환 $\alpha$ 의 행렬 표현**이라고 부른다.
 
 [//]: ![](affine_matrix.png)
 
-```latex
-\left[ x,y,z,1 \right]\begin{bmatrix}
-                      A_{11} & A_{12} & A_{13} & 0\\ 
-                      A_{21} & A_{22} & A_{23} & 0\\ 
-                      A_{31} & A_{32} & A_{33} & 0\\ 
-                      b_{x} & b_{y} & b_{z} & 1
-                      \end{bmatrix} = [x',y',z',1]
-```
+$$
+\left[ x,\ y,\ z,\ 1 \right] 
+  \begin{bmatrix}
+   A_{11} & A_{12} & A_{13} & 0 \\ 
+   A_{21} & A_{22} & A_{23} & 0 \\ 
+   A_{31} & A_{32} & A_{33} & 0 \\ 
+   b_{x} & b_{y} & b_{z} & 1
+  \end{bmatrix}  = [x',\ y',\ z',\ 1]
+$$
 
-아핀변환 `\alpha` 는 선형변환 `\tau` 와 벡터 `b` 를 이용하여 다음과 같이 표현할 수 있다.
+  - $\therefore$ 아핀변환 $\alpha$를 선형변환 $\tau$ 와 벡터 $b$ 를 이용하여 다음과 같이 표현할 수 있다.
+    - 아핀변환 $\alpha$ 는 `기저벡터` $i,\ j,\ k$ 를 선형변환하고 `벡터` $b$ 를 덧셈연산한 것과 같음을 알 수 있다.
 
 [//]: ![](affine_definition2.png)
 
-```latex
+$$
 \begin{aligned}
-\alpha(x, y, z) &= \tau(x, y, z) + \bold b \\
-                &= x \tau(\bold i) + y \tau(\bold j) + z \tau(\bold k) + \bold b \\
-                &= \begin{bmatrix}
-                     x & y & z & w
-                   \end{bmatrix} 
-                   \begin{bmatrix}
-                     \leftarrow \tau(\bold i) \rightarrow \\
-                     \leftarrow \tau(\bold i) \rightarrow \\
-                     \leftarrow \tau(\bold i) \rightarrow \\
-                     \leftarrow \bold b \rightarrow \\
-                   \end{bmatrix} \\
-                &= \begin{bmatrix}
-                     {x}' & {y}' & {z}' & {w}'
-                   \end{bmatrix} 
+\alpha(x,\ y,\ z) 
+  &= \tau(x,\ y,\ z) + \bold b \\
+  &= x\tau(\bold i) + y\tau(\bold j) + z\tau(\bold k) + \bold b \\
+  &= \begin{bmatrix}
+      x, & y, & z, & w
+     \end{bmatrix} 
+     \begin{bmatrix}
+      \leftarrow \tau(\bold i) \rightarrow \\
+      \leftarrow \tau(\bold i) \rightarrow \\
+      \leftarrow \tau(\bold i) \rightarrow \\
+      \leftarrow \bold b \rightarrow \\
+     \end{bmatrix} \\
+  &= \begin{bmatrix}
+       {x}', & {y}', & {z}', & {w}'
+     \end{bmatrix} 
 \end{aligned}
-```
-
-위의 식을 잘 살펴 보면 아핀변환 `\alpha` 는 기저벡터 `i, j, k` 를 선형변환하고 벡터 `b` 를 덧셈연산한 것과 같음을 알 수 있다.
+$$
 
 # 변환의 합성
 
-행렬 `S` 는 스케일링변환, 행렬 `R` 는 회전변환, 행렬 `T` 는 이동변환을 의미한다고 하자. 8개의 버텍스로 구성된 큐브를 앞서 언급한 세가지 행렬을 곱셈연산하여 변환을 다음과 같이 구현할 수 있다. `(for i = 0, 1,..., 7)`
+  - 행렬 $S$ 는 스케일링변환, 행렬 $R$ 는 회전변환, 행렬 $T$ 는 이동변환을 의미한다고 하자. 
+  - 8개의 버텍스로 구성된 큐브를 앞서 언급한 세가지 행렬을 곱셈연산하여 변환을 다음과 같이 구현할 수 있다.
 
 [//]: ![](matrix_mul.png)
 
-```latex
+$$
 \begin{aligned}
 ((v_{i}S)R)T &= ({v_{i}}'R)T \\
              &= {v_{i}}''T \\
              &= {v_{i}}'''
 \end{aligned}
-```
+$$
 
-위의 식을 잘 살펴보면 `SRT` 를 미리 구해놓고 이것을 행렬 `C` 라고 하면 행렬의 곱셈연산이 줄어들기 때문에 성능을 향상시킬 수 있다.
+  - 위의 식을 잘 살펴보면 $SRT$ 를 미리 구해놓고 이것을 행렬 $C$ 라고 하면 행렬의 곱셈연산이 줄어들기 때문에 성능을 향상시킬 수 있다.
 
 [//]: ![](matrix_mul2.png)
 
-```latex
+$$
 \begin{aligned}
 v_{i}(SRT) &= v_{i}C \\
            &= {v_{i}}'''
 \end{aligned}
-```
+$$
 
 # 좌표계의 변환
 
-우리는 주로 섭씨 온도를 사용한다. 예를 들어 섭씨 온도 `100` 을 화씨 온도로 변환 하려면 어떻게 해야할까? 바로 다음과 같은 식을 이용하면 된다.
+  - 우리는 주로 섭씨 온도를 사용한다. 예를 들어 섭씨 온도 $100^{\circ}$ 를 화씨 온도로 변환 하려면 어떻게 해야할까? 바로 다음과 같은 식을 이용하면 된다.
 
 [//]: ![](coordi_system_ex.png)
 
-```latex
+$$
 \begin {aligned} 
 T_{F} &= \frac{9}{5} T_{c} + 32^{\circ} \\
       &= \frac{9}{5} (100^{\circ}) + 32^{\circ}
       &= 212^{\circ}F
 \end{aligned}
-```
+$$
 
-유사한 방법으로 3D 공간의 벡터 혹은 점을 다른 좌표계에서 표현하는 방법을 알아보자.
+  - 유사한 방법으로 3D 공간의 벡터 혹은 점을 다른 좌표계에서 표현할 수 있다.
+  - 한 좌표계의 좌표를 다른 좌표계의 좌표로 변환하는 것을 `좌표계의 변환(change of coordinate transformation)`이라고 한다.
+  - 기하구조 자체를 변경하는 것이 아니기 때문에 **기존 변환과 대조적**이다.
 
-먼저 벡터의 경우를 살펴보자. 예를 들어 2D 공간에서 A 좌표계를 기준으로 한 좌표 `P_A(x, y)` 를 B 좌표계를 기준으로 한 좌표 `P_B({x}',{y}')` 으로 표현해보자.
+  - $\therefore$ $A$ 좌표계의 점을 $B$ 좌표계로 변경하기 위해서는 **$B$ 좌표계로 표현한 $A$ 좌표계**의 기저벡터가 필요하다.
+  
+  - 증명
 
-[//]: ![](coor_vector.png)
+    - 예를 들어 2D 공간에서 A 좌표계를 기준으로 한 좌표 $P_A(x,\ y)$ 를 B 좌표계를 기준으로 한 좌표 $P_B({x}',\ {y}')$ 으로 표현해보자.
 
-```latex
-\documentclass[tikz,border=10pt]{standalone}
+    ![](coor_vector.png)
 
-\usepackage{tikz}
-\usepackage{rotating}
+    - 위의 그림은 두 좌표계 $A$와 $B$, 그리고 벡터 $p$가 있을 때 좌표계 $B$에 상대적인 $p$의 좌표를 도식으로 보여주고 있다. 
 
-\usetikzlibrary{scopes}
-\usetikzlibrary{intersections}
-\usetikzlibrary{calc}
+    - $P_{A}$ 를 A 좌표계의 기저벡터 $\bold u_{A},\ \bold v_{A}$ 를 이용하여 다음과 같이 표현할 수 있다.
 
-\begin{document}
+    [//]: ![](coordi_system_ex_a.png)
 
-\begin{tikzpicture}
-    \def\rotangle{30}
-    \def\angvalue{30}
-    %\def\rad{3}
-    %\def\x{2} \def\y{1.5}
-	\tikzset{arrow_style/.style={>=latex,very thick}}
-	
-	\matrix[column sep=1cm] {
-        \begin{turn}{\rotangle}
-            \coordinate(PA) at (\angvalue:2.5 cm);
-            \draw[densely dashed,blue!40]let \p{PA}=(PA) in (PA) -- (\x{PA},0) node [black,below,rotate=360-\rotangle] {\large$x$};
-            \draw[densely dashed,blue!40]let \p{PA}=(PA) in (PA) -- (0,\y{PA})node [black,left,rotate=360-\rotangle] {\large$y$};
-            \draw [arrow_style,black!50,<->] (0,-3)--(0,3) node [black,above] {$+Y$};
-            \draw [arrow_style,black!50,<->] (-3,0)--(3,0) node [black,right] {$+X$};
-            \draw [arrow_style,blue,->] (0,0)--(PA) node [black,above,rotate=360-\rotangle] {\Large$p_{A}=(x,y)$};
-        \end{turn}
-        \coordinate [label=left:\large$FrameA$] (t) at (1,-3);
-        
-        &
-            
-        \coordinate(PB) at (\angvalue+\rotangle:2.5 cm);
-        \path[name path=lineYV,shift={(PB)}] (0,0)--(\angvalue+180:2.5 cm);
-        \path[name path=lineXU,shift={(PB)}] (0,0)--(\angvalue+270:2.5 cm);
-        \path[name path=lineOV] (0,0)--(\angvalue+90:2.5 cm);
-        \path[name path=lineOU] (0,0)--(\angvalue:2.5 cm);
-	    \path [name intersections={of = lineYV and lineOV}];
-        \coordinate(yv) at (intersection-1);
-	    \path [name intersections={of = lineXU and lineOU}];
-        \coordinate(xu) at (intersection-1);
-        
-        \draw[densely dashed,black]let \p{PB}=(PB) in (PB) -- (\x{PB},0) node [black,below] {\large$x'$};
-        \draw[densely dashed,black]let \p{PB}=(PB) in (PB) -- (0,\y{PB})node [black,left] {\large$y'$};
-        {[arrow_style]
-            \draw [black!50,<->] (0,-1.5)--(0,3) node [black,above] {$+Y$};
-            \draw [black!50,<->] (-3,0)--(3,0) node [black,right] {$+X$};
-            \draw [blue,->] (0,0)--(PB) node [black,right] {\Large$p_{B}=(x',y')$};
-          
-            \draw[densely dashed,blue!40] (PB)--(yv);
-            \draw[densely dashed,blue!40] (PB)--(xu);
-            \draw[densely dashed,blue!40,->] (0,0)--(yv) node [black,left] {\large $yv$};
-            \draw[densely dashed,blue!40,->] (0,0)--(xu) node [black,right] {\large $xu$};
-            \draw[black,->] (0,0)--(\angvalue+90:1 cm) node [black,midway,left] {\large $v$};
-            \draw[black,->] (0,0)--(\angvalue:1 cm) node [black,near end,below] {\large $u$};
-        }
-            
-        \coordinate [label=left:\large$FrameB$] (t) at (1,-3);
-    \\   
-	};
+    $$
+    \begin {aligned} 
+    \bold P_{A} = x \bold u_{A} + y \bold v_{A}
+    \end{aligned}
+    $$
+
+    - 이번에는 $P_{B}$ 를 **$B$ 좌표계로 표현한 $A$ 좌표계**의 기저벡터 $\bold u_{B},\ \bold v_{B}$ 를 이용하여 다음과 같이 표현할 수 있다.
+
+    [//]: ![](coordi_system_ex_b.png)
+
+    $$
+    \begin {aligned} 
+    \bold P_{B} = x \bold u_{B} + y \bold v_{B}
+    \end{aligned}
+    $$
+
+    - $\bold u_{B},\ \bold v_{B}$ 는 각각 $\bold u_{A},\ \bold v_{A}$ 를 선형변환하여 얻어 낸 것이다. 
+    - 따라서 선형변환에 해당하는 행렬 $C_{A->B}$ 를 $\bold u_{A},\ \bold v_{A}$ 에 곰셉연산하여 $\bold u_{B},\ \bold v_{B}$ 를 구할 수 있다.
+
+    [//]: ![](coordi_system_equ.png)
+
+    $$
+    \begin {aligned} 
+    \bold uC_{A->B} &= \bold u_{B} \\
+    \bold vC_{A->B} &= \bold v_{B} \\
+    \bold P_{B} &= x \bold u_{B} + y \bold v_{B} \\
+                &= x \tau(u) + y \tau(v) \\
+                &= x u C_{A->B} + y v C_{A->B}
+    \end{aligned}
+    $$
+
+    - 정리하면 $A$ 좌표계의 $x_{A},\ y_{A}$ 와 기저벡터 $u_{A},\ v_{A}$ 그리고 $A$ 좌표계를 $B$ 좌표계로 변환하기 위한 행렬 $C_{A->B}$ 를 알면 $x_{B},\ y_{B}$ 를 구할 수 있다.
+
+    - 지금까지 2D 를 기준으로 설명한 것을 3D 를 기준으로 다음과 같이 확장할 수 있다.
+
+    [//]: ![](coordi_system_ex_3d.png)
+
+    $$
+    \begin {aligned} 
+    \bold P_{B} = x \bold u_{B} + y \bold v_{B} + z \bold w_{B}
+    \end{aligned}
+    $$
+
+    - 점의 경우는 다음과 같이 이동변환을 추가하여 이해할 수 있다.
+
+    [//]: ![](coordi_system_ex_dot.png)
+
+    $$
+    \begin {aligned} 
+    \bold P_{B} = x \bold u_{B} + y \bold v_{B} + z \bold w_{B} + \bold Q_{B}
+    \end{aligned}
+    $$
+
+    ![](coor_dot.png)
+
+
+    - 좌표계의 변환도 동차좌표를 사용하여 벡터와 점을 처리하는 하나의 공식으로 만들 수 있으며, 행렬로 표현할 수 있다.
     
-\end{tikzpicture}
-
-\end{document}
-```
-
-위의 그림은 두 좌표계 A와 B, 그리고 벡터 p가 있을 때 좌표계 B에 상대적인 p의 좌표를 도식으로 보여주고 있다. 
-
-`P_{A}` 를 A 좌표계의 기저벡터 `u, v` 를 이용하여 다음과 같이 표현할 수 있다.
-
-[//]: ![](coordi_system_ex_a.png)
-
-```latex
-\begin {aligned} 
-\bold P_{A} = x \bold u + y \bold v
-\end{aligned}
-```
-
-이번에는 `P_{B}` 를 B 좌표계의 기저벡터 `{u}', {v}'` 를 이용하여 다음과 같이 표현할 수 있다.
-
-[//]: ![](coordi_system_ex_b.png)
-
-```latex
-\begin {aligned} 
-\bold P_{B} = x \bold {u}' + y \bold {v}'
-\end{aligned}
-```
-
-`{u}', {v}'` 는 각각 `u, v` 를 선형변환하여 얻어 낸 것이다. 따라서 선형변환에 해당하는 행렬 A 를 `u, v` 에 곰셉연산하여 `{u}', {v}'` 를 구할 수 있다.
-
-[//]: ![](coordi_system_equ.png)
-
-```latex
-\begin {aligned} 
-\bold u A   &= \bold {u}' \\
-\bold v A   &= \bold {v}' \\
-\bold P_{B} &= x \bold {u}' + y \bold {v}' \\
-            &= x u A + y v A
-\end{aligned}
-```
-
-예를 들어서 A 좌표계의 좌표 `1, 2` 를 B 좌표계의 좌표로 변환해 보자. A 좌표계를 시계방향으로 90 도 회전하여 B 좌표계를 얻어냈다고 하자.
-
-[//]: ![](coordi_system_equ_ex.png)
-
-```latex
-\begin {aligned} 
-\bold u A   &= \bold {u}' \\
-\bold v A   &= \bold {v}' \\
-\bold P_{B} &= x \bold {u}' + y \bold {v}' \\
-            &= 1 \cdot (1,0) A + 2 \cdot (0, 1) A \\
-            &= (-2, 1)
-\end{aligned}
-```
-
-정리하면 A 좌표계의 `x, y` 와 기저벡터 `u, v` 그리고 A 좌표계를 B 좌표계로 변환하기 위한 행렬 `A` 를 알면 `{x}',{y}'` 를 구할 수 있다.
-
-지금까지 2D 를 기준으로 설명한 것을 3D 를 기준으로 다음과 같이 확장할 수 있다.
-
-[//]: ![](coordi_system_ex_3d.png)
-
-```latex
-\begin {aligned} 
-\bold P_{B} = x \bold u_{B} + y \bold v_{B} + z \bold w_{B}
-\end{aligned}
-```
-
-점의 경우는 다음과 같이 이동변환을 추가하여 이해할 수 있다.
-
-[//]: ![](coordi_system_ex_dot.png)
-
-```latex
-\begin {aligned} 
-\bold P_{B} = x \bold u_{B} + y \bold v_{B} + z \bold w_{B} + \bold Q_{B}
-\end{aligned}
-```
-
-[//]: ![](coor_dot.png)
-
-```latex
-\documentclass[tikz,border=10pt]{standalone}
-
-\usepackage{tikz}
-\usepackage{rotating}
-
-\usetikzlibrary{scopes}
-\usetikzlibrary{calc}
-
-\begin{document}
-
-\begin{tikzpicture}
-    \def\rotangle{30}
-    \def\angvalue{30}
-    \def\rad{3}
-    \def\x{2} \def\y{1.5}
-	\tikzset{arrow_style/.style={>=latex,very thick}}
-	
-        \coordinate (PA) at (\angvalue:2.5 cm);
-        \begin{turn}{\rotangle}
-    		\fill[draw=black] (PA) circle (1.5pt);
-    		\fill[draw=black] (0,0) circle (1.5pt);
-            
-        {[arrow_style]
-            \draw[->]let \p{PA}=(PA) in (\x{PA},0) node [black,below,rotate=360-\rotangle] {\large$x$}--(PA) node [black,right,midway,rotate=360-\rotangle] {\large$yv$};
-            \draw[->]let \p{PA}=(PA) in (0,\y{PA}) node [black,left,rotate=360-\rotangle] {\large$y$}--(PA) node [black,above,midway,rotate=360-\rotangle] {\large$xu$};
-            \draw [black!50,<->] (0,-1.5)--(0,3) node [black,above] {$+Y$};
-            \draw [black!50,<->] (-3,0)--(3,0) node [black,right] {$+X$};
-            \draw[->] (0,0)--(0,1) node [black,midway,left,rotate=360-\rotangle] {\large $v$};
-            \draw[->] (0,0)--(1,0) node [black,midway,below,rotate=360-\rotangle] {\large $u$};
-            
-        }
-        
-        \end{turn}
-        \coordinate [label=left:\large$FrameA$] (t) at (-1,0);
-        
-        % frame B center : 5,-2
-        {[arrow_style]
-            \draw [->] (5,-2)--(0,0) node [black,above,midway] {$\mathbf{Q}$};
-            \draw [black!50,<->] (5,-3)--(5,3) node [black,above] {$+Y$};
-            \draw [black!50,<->] (-0.5,-2)--(7,-2) node [black,right] {$+X$};
-        }
-        \coordinate[label=above:\large${p_{A}=(x,y)}$] (PA) at (\rotangle+\angvalue:2.5 cm);
-        \draw[densely dashed]let \p{PA}=(PA) in (PA) -- (\x{PA},-2) node [black,below] {\large$x'$};
-        \draw[densely dashed]let \p{PA}=(PA) in (PA) -- (5,\y{PA})node [black,right] {\large$y'$};
-	
-        \coordinate [label=right:\large$FrameB$] (t) at (5.5,-2.5);
-    
-\end{tikzpicture}
-
-\end{document}
-```
-
-좌표계의 변환도 동차좌표를 사용하여 벡터와 점을 처리하는 하나의 공식으로 만들 수 있으며, 행렬로 표현할 수 있다.
+    - 이 때, 만들어지는 4x4 행렬을 `좌표 변경 행렬(change of coordinate matrix)` 또는 `좌표계 변경 행렬(change of frame matrix)`라고 부르고, 행렬이 수행하는 변환을 지칭할 때 `"변환한다(convert)"` 또는 `"사상한다(map)"`라고 말한다.
+    - $\therefore$ $A$ 좌표계의 점을 $B$ 좌표계로 변경하기 위해서는 **$B$ 좌표계로 표현한 $A$ 좌표계**의 기저벡터가 필요하다.
 
 [//]: ![](coor_matrix.png)
 
-```latex
+$$
 \begin {aligned} 
-\\(x',y',z',w) &= xu_{B} + yv_{B} + zw_{B} + wQ_{B} \\
-\left[x',y',z',w\right] &= [x,y,z,w]\begin{bmatrix}
-                           u_{x} & u_{y} & u_{z} & 0\\ 
-                           v_{x} & v_{y} & v_{z} & 0\\ 
-                           w_{x} & w_{y} & w_{z} & 0\\ 
-                           Q_{x} & Q_{y} & Q_{z} & 1
-                           \end{bmatrix} \\
+\\(x',\ y',\ z',\ w) &= xu_{B} + yv_{B} + zw_{B} + wQ_{B} \\
+\left[x',\ y',\ z',\ w\right] &= [x,\ y,\ z,\ w]
+  \begin{bmatrix}
+   u_{x} & u_{y} & u_{z} & 0\\ 
+   v_{x} & v_{y} & v_{z} & 0\\ 
+   w_{x} & w_{y} & w_{z} & 0\\ 
+   Q_{x} & Q_{y} & Q_{z} & 1
+  \end{bmatrix} \\
                         &= xu_{B} + yv_{B} + zw_{B} + wQ_{B}
 \end{aligned}
-```
-
-위의 식에서 표현된 4x4 행렬을 좌표 변경 행렬(change of coordinate matrix) 또는 좌표계 변경 행렬(change of frame matrix)라고 부르고, 행렬이 수행하는 변환을 지칭할 때 "변환한다(convert)" 또는 "사상한다(map)"라고 말한다.
+$$
 
 
 # 좌표변환과 좌표계의 변환
@@ -865,4 +753,129 @@ R_{z}    &= \begin{bmatrix}
             0 & 0 & 1
             \end{bmatrix}
 \end{aligned}
+```
+
+# Latex 소스코드
+
+## coor_vector.png
+
+```latex
+\documentclass[tikz,border=10pt]{standalone}
+
+\usepackage{tikz}
+\usepackage{rotating}
+
+\usetikzlibrary{scopes}
+\usetikzlibrary{intersections}
+\usetikzlibrary{calc}
+
+\begin{document}
+
+\begin{tikzpicture}
+    \def\rotangle{30}
+    \def\angvalue{30}
+    %\def\rad{3}
+    %\def\x{2} \def\y{1.5}
+	\tikzset{arrow_style/.style={>=latex,very thick}}
+	
+	\matrix[column sep=1cm] {
+        \begin{turn}{\rotangle}
+            \coordinate(PA) at (\angvalue:2.5 cm);
+            \draw[densely dashed,blue!40]let \p{PA}=(PA) in (PA) -- (\x{PA},0) node [black,below,rotate=360-\rotangle] {\large$x$};
+            \draw[densely dashed,blue!40]let \p{PA}=(PA) in (PA) -- (0,\y{PA})node [black,left,rotate=360-\rotangle] {\large$y$};
+            \draw [arrow_style,black!50,<->] (0,-3)--(0,3) node [black,above] {$+Y$};
+            \draw [arrow_style,black!50,<->] (-3,0)--(3,0) node [black,right] {$+X$};
+            \draw [arrow_style,blue,->] (0,0)--(PA) node [black,above,rotate=360-\rotangle] {\Large$p_{A}=(x,y)$};
+        \end{turn}
+        \coordinate [label=left:\large$FrameA$] (t) at (1,-3);
+        
+        &
+            
+        \coordinate(PB) at (\angvalue+\rotangle:2.5 cm);
+        \path[name path=lineYV,shift={(PB)}] (0,0)--(\angvalue+180:2.5 cm);
+        \path[name path=lineXU,shift={(PB)}] (0,0)--(\angvalue+270:2.5 cm);
+        \path[name path=lineOV] (0,0)--(\angvalue+90:2.5 cm);
+        \path[name path=lineOU] (0,0)--(\angvalue:2.5 cm);
+	    \path [name intersections={of = lineYV and lineOV}];
+        \coordinate(yv) at (intersection-1);
+	    \path [name intersections={of = lineXU and lineOU}];
+        \coordinate(xu) at (intersection-1);
+        
+        \draw[densely dashed,black]let \p{PB}=(PB) in (PB) -- (\x{PB},0) node [black,below] {\large$x'$};
+        \draw[densely dashed,black]let \p{PB}=(PB) in (PB) -- (0,\y{PB})node [black,left] {\large$y'$};
+        {[arrow_style]
+            \draw [black!50,<->] (0,-1.5)--(0,3) node [black,above] {$+Y$};
+            \draw [black!50,<->] (-3,0)--(3,0) node [black,right] {$+X$};
+            \draw [blue,->] (0,0)--(PB) node [black,right] {\Large$p_{B}=(x',y')$};
+          
+            \draw[densely dashed,blue!40] (PB)--(yv);
+            \draw[densely dashed,blue!40] (PB)--(xu);
+            \draw[densely dashed,blue!40,->] (0,0)--(yv) node [black,left] {\large $yv$};
+            \draw[densely dashed,blue!40,->] (0,0)--(xu) node [black,right] {\large $xu$};
+            \draw[black,->] (0,0)--(\angvalue+90:1 cm) node [black,midway,left] {\large $v$};
+            \draw[black,->] (0,0)--(\angvalue:1 cm) node [black,near end,below] {\large $u$};
+        }
+            
+        \coordinate [label=left:\large$FrameB$] (t) at (1,-3);
+    \\   
+	};
+    
+\end{tikzpicture}
+
+\end{document}
+```
+
+## coor_dot.png
+
+```latex
+\documentclass[tikz,border=10pt]{standalone}
+
+\usepackage{tikz}
+\usepackage{rotating}
+
+\usetikzlibrary{scopes}
+\usetikzlibrary{calc}
+
+\begin{document}
+
+\begin{tikzpicture}
+    \def\rotangle{30}
+    \def\angvalue{30}
+    \def\rad{3}
+    \def\x{2} \def\y{1.5}
+	\tikzset{arrow_style/.style={>=latex,very thick}}
+	
+        \coordinate (PA) at (\angvalue:2.5 cm);
+        \begin{turn}{\rotangle}
+    		\fill[draw=black] (PA) circle (1.5pt);
+    		\fill[draw=black] (0,0) circle (1.5pt);
+            
+        {[arrow_style]
+            \draw[->]let \p{PA}=(PA) in (\x{PA},0) node [black,below,rotate=360-\rotangle] {\large$x$}--(PA) node [black,right,midway,rotate=360-\rotangle] {\large$yv$};
+            \draw[->]let \p{PA}=(PA) in (0,\y{PA}) node [black,left,rotate=360-\rotangle] {\large$y$}--(PA) node [black,above,midway,rotate=360-\rotangle] {\large$xu$};
+            \draw [black!50,<->] (0,-1.5)--(0,3) node [black,above] {$+Y$};
+            \draw [black!50,<->] (-3,0)--(3,0) node [black,right] {$+X$};
+            \draw[->] (0,0)--(0,1) node [black,midway,left,rotate=360-\rotangle] {\large $v$};
+            \draw[->] (0,0)--(1,0) node [black,midway,below,rotate=360-\rotangle] {\large $u$};
+            
+        }
+        
+        \end{turn}
+        \coordinate [label=left:\large$FrameA$] (t) at (-1,0);
+        
+        % frame B center : 5,-2
+        {[arrow_style]
+            \draw [->] (5,-2)--(0,0) node [black,above,midway] {$\mathbf{Q}$};
+            \draw [black!50,<->] (5,-3)--(5,3) node [black,above] {$+Y$};
+            \draw [black!50,<->] (-0.5,-2)--(7,-2) node [black,right] {$+X$};
+        }
+        \coordinate[label=above:\large${p_{A}=(x,y)}$] (PA) at (\rotangle+\angvalue:2.5 cm);
+        \draw[densely dashed]let \p{PA}=(PA) in (PA) -- (\x{PA},-2) node [black,below] {\large$x'$};
+        \draw[densely dashed]let \p{PA}=(PA) in (PA) -- (5,\y{PA})node [black,right] {\large$y'$};
+	
+        \coordinate [label=right:\large$FrameB$] (t) at (5.5,-2.5);
+    
+\end{tikzpicture}
+
+\end{document}
 ```
