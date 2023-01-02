@@ -1,13 +1,15 @@
 ﻿- [선형변환](#선형변환)
 - [아핀변환](#아핀변환)
 - [변환의 합성](#변환의-합성)
-- [좌표계의 변환](#좌표계의-변환)
-- [좌표변환과 좌표계의 변환](#좌표변환과-좌표계의-변환)
+- [좌표계의 변경](#좌표계의-변경)
+- [좌표 변환과 좌표계의 변경](#좌표-변환과-좌표계의-변경)
 - [비례 선형변환 증명](#비례-선형변환-증명)
 - [회전 선형변환 증명](#회전-선형변환-증명)
 - [Latex 소스코드](#latex-소스코드)
   - [coor\_vector.png](#coor_vectorpng)
   - [coor\_dot.png](#coor_dotpng)
+  - [equivalence.png (좌표계 변환)](#equivalencepng-좌표계-변환)
+  - [rotation.png (회전 선형변환 증명)](#rotationpng-회전-선형변환-증명)
 
 
 
@@ -20,22 +22,22 @@
 
 $$
 \begin{aligned} 
-\tau(u + v) &= \tau(u) + \tau(t) \\
-\tau(ku)  &= k\tau(u) \\
+\tau(\textbf u + \textbf v) &= \tau(\textbf u) + \tau(\textbf v) \\
+\tau(k\textbf u)  &= k\tau(\textbf u) \\
 \end{aligned}
 $$
 
   - 컴퓨터로 선형변환을 구현하기 위해서는 행렬의 곱연산이 필요하다. 그리고 그 행렬은 다음과 같이 제작한다.
 
-  1. $u = (x,\ y,\ z)$ 라 할 때 좌표축을 나타내는 벡터 $i,\ j,\ k$ 를 이용하여 벡터를 분해할 수 있다.
-  2. 벡터 $i,\ j,\ k$ 는 삼차원 공간에서 $x,\ y,\ z$ 축과 같은 방향의 단위벡터로 **표준기저벡터(standard basis vector)** 라고 부른다.
+  1. $u = (x,\ y,\ z)$ 라 할 때 좌표축을 나타내는 벡터 $\textbf i,\ \textbf j,\ \textbf k$ 를 이용하여 벡터를 분해할 수 있다.
+  2. 벡터 $\textbf i,\ \textbf j,\ \textbf k$ 는 삼차원 공간에서 $x,\ y,\ z$ 축과 같은 방향의 단위벡터로 **표준기저벡터(standard basis vector)** 라고 부른다.
 
   [//]: ![](standard_vector.png)
 
 $$
 \begin{aligned}
 u &= (x,\ y,\ z) \\
-  &= xi + yj + zk \\
+  &= x\textbf i + y\textbf j + z\textbf k \\
   &= x(1,\ 0,\ 0) + y(0,\ 1,\ 0) + z(0,\ 0,\ 1)
 \end{aligned}
 $$
@@ -46,13 +48,13 @@ $$
 
 $$
 \begin{aligned}
-\tau(u) &= \tau(xi + yj + zk) \\
-        &= x\tau(i) + y\tau(j) + z\tau(k) \\
-        &= uA \\
+\tau(\textbf u) &= \tau(x\textbf i + y\textbf j + z\textbf k) \\
+        &= x\tau(\textbf i) + y\tau(\textbf j) + z\tau(\textbf k) \\
+        &= \textbf{uA} \\
         &= [x,\ y,\ z] \begin{bmatrix} 
-                    \leftarrow \tau(i) \rightarrow \\
-                    \leftarrow \tau(j) \rightarrow \\
-                    \leftarrow \tau(k) \rightarrow 
+                    \leftarrow \tau(\textbf i) \rightarrow \\
+                    \leftarrow \tau(\textbf j) \rightarrow \\
+                    \leftarrow \tau(\textbf k) \rightarrow 
                    \end{bmatrix} \\
         &= [x,\ y,\ z] \begin{bmatrix} 
                     A_{11} & A_{12} & A_{13} \\
@@ -70,7 +72,7 @@ $$
 
 $$
 \begin{aligned} 
-\tau (u) &= uS \\
+\tau (\textbf u) &= \textbf{uS} \\
          &= [x,\ y,\ z] \begin{bmatrix}
                        s_{x} & 0 & 0 \\ 
                        0 & s_{y} & 0 \\ 
@@ -137,6 +139,7 @@ $$
   - 앞서 언급한 수식에 동차좌표가 도입되면 $u$ 는 `벡터`와 `점` 모두 표현이 가능하다.
   
   - 아래 식의 4 x 4 행렬을 **아핀변환 $\alpha$ 의 행렬 표현**이라고 부른다.
+    - 보통 **변환 행렬** 으로 표현한다.
 
 [//]: ![](affine_matrix.png)
 
@@ -151,7 +154,7 @@ $$
 $$
 
   - $\therefore$ 아핀변환 $\alpha$를 선형변환 $\tau$ 와 벡터 $b$ 를 이용하여 다음과 같이 표현할 수 있다.
-    - 아핀변환 $\alpha$ 는 `기저벡터` $i,\ j,\ k$ 를 선형변환하고 `벡터` $b$ 를 덧셈연산한 것과 같음을 알 수 있다.
+    - 아핀변환 $\alpha$ 는 기저벡터 $i,\ j,\ k$ 를 `선형변환`하고 벡터 $b$ 를 `덧셈연산`한 것과 같음을 알 수 있다.
 
 [//]: ![](affine_definition2.png)
 
@@ -201,7 +204,7 @@ v_{i}(SRT) &= v_{i}C \\
 \end{aligned}
 $$
 
-# 좌표계의 변환
+# 좌표계의 변경
 
   - 우리는 주로 섭씨 온도를 사용한다. 예를 들어 섭씨 온도 $100^{\circ}$ 를 화씨 온도로 변환 하려면 어떻게 해야할까? 바로 다음과 같은 식을 이용하면 된다.
 
@@ -216,20 +219,20 @@ T_{F} &= \frac{9}{5} T_{c} + 32^{\circ} \\
 $$
 
   - 유사한 방법으로 3D 공간의 벡터 혹은 점을 다른 좌표계에서 표현할 수 있다.
-  - 한 좌표계의 좌표를 다른 좌표계의 좌표로 변환하는 것을 `좌표계의 변환(change of coordinate transformation)`이라고 한다.
+  - 한 좌표계의 좌표를 다른 좌표계의 좌표로 변환하는 것을 `좌표 변경 변환(change of coordinate transformation)`이라고 한다.
   - 기하구조 자체를 변경하는 것이 아니기 때문에 **기존 변환과 대조적**이다.
 
-  - $\therefore$ $A$ 좌표계의 점을 $B$ 좌표계로 변경하기 위해서는 **$B$ 좌표계로 표현한 $A$ 좌표계**의 기저벡터가 필요하다.
+  - $\therefore$ 좌표계 $A$ 에 상대적인 점 또는 벡터의 좌표를 좌표계 $B$ 에 상대적인 좌표로 변경하기 위해서는 **$B$ 좌표계로 표현한(상대적인) $A$ 좌표계의 기저벡터**가 필요하다.
   
   - 증명
   
-예를 들어 2D 공간에서 A 좌표계를 기준으로 한 좌표 $P_A(x,\ y)$ 를 B 좌표계를 기준으로 한 좌표 $P_B({x}',\ {y}')$ 으로 표현해보자.
+예를 들어 2D 공간에서 $A$ 좌표계를 기준으로 한 좌표 $P_A(x,\ y)$ 를 $B$ 좌표계를 기준으로 한 좌표 $P_B({x}',\ {y}')$ 으로 표현해보자.
 
 ![](coor_vector.png)
 
 위의 그림은 두 좌표계 $A$와 $B$, 그리고 벡터 $p$가 있을 때 좌표계 $B$에 상대적인 $p$의 좌표를 도식으로 보여주고 있다. 
 
-$P_{A}$ 를 A 좌표계의 기저벡터 $\textbf u_{A},\ \textbf v_{A}$ 를 이용하여 다음과 같이 표현할 수 있다.
+$P_{A}$ 를 $A$ 좌표계의 기저벡터 $\textbf u_{A},\ \textbf v_{A}$ 를 이용하여 다음과 같이 표현할 수 있다.
 
 [//]: ![](coordi_system_ex_a.png)
 
@@ -239,7 +242,7 @@ $$
 \end{aligned}
 $$
 
-이번에는 $P_{B}$ 를 **$B$ 좌표계로 표현한 $A$ 좌표계**의 기저벡터 $\textbf u_{B},\ \textbf v_{B}$ 를 이용하여 다음과 같이 표현할 수 있다.
+$B$ 좌표계를 기준으로 하는 좌표 $P_{B}$ 또한 **$B$ 좌표계로 표현한 $A$ 좌표계의 기저벡터** $\textbf u_{B},\ \textbf v_{B}$ 를 이용하여 다음과 같이 표현할 수 있다.
 
 [//]: ![](coordi_system_ex_b.png)
 
@@ -248,24 +251,6 @@ $$
 \textbf P_{B} = x \textbf u_{B} + y \textbf v_{B}
 \end{aligned}
 $$
-
-$\textbf u_{B},\ \textbf v_{B}$ 는 각각 $\textbf u_{A},\ \textbf v_{A}$ 를 선형변환하여 얻어 낸 것이다.
-
-따라서 선형변환에 해당하는 행렬 $C_{A->B}$ 를 $\textbf u_{A},\ \textbf v_{A}$ 에 곰셉연산하여 $\textbf u_{B},\ \textbf v_{B}$ 를 구할 수 있다.
-
-[//]: ![](coordi_system_equ.png)
-
-$$
-\begin {aligned} 
-\textbf uC_{A->B} &= \textbf u_{B} \\
-\textbf vC_{A->B} &= \textbf v_{B} \\
-\textbf P_{B} &= x \textbf u_{B} + y \textbf v_{B} \\
-            &= x \tau(u) + y \tau(v) \\
-            &= x u C_{A->B} + y v C_{A->B}
-\end{aligned}
-$$
-
-정리하면 $A$ 좌표계의 $x_{A},\ y_{A}$ 와 기저벡터 $u_{A},\ v_{A}$ 그리고 $A$ 좌표계를 $B$ 좌표계로 변환하기 위한 행렬 $C_{A->B}$ 를 알면 $x_{B},\ y_{B}$ 를 구할 수 있다.
 
 지금까지 2D 를 기준으로 설명한 것을 3D 를 기준으로 다음과 같이 확장할 수 있다.
 
@@ -287,91 +272,395 @@ $$
 \end{aligned}
 $$
 
+$\textbf Q_{B}$ 는 $B$ 좌표계로 표현한 $A$ 좌표계의 원점이다.
+
 ![](coor_dot.png)
 
 
-좌표계의 변환도 동차좌표를 사용하여 벡터와 점을 처리하는 하나의 공식으로 만들 수 있으며, 행렬로 표현할 수 있다.
-  
-이 때, 만들어지는 4x4 행렬을 `좌표 변경 행렬(change of coordinate matrix)` 또는 `좌표계 변경 행렬(change of frame matrix)`라고 부르고, 행렬이 수행하는 변환을 지칭할 때 `"변환한다(convert)"` 또는 `"사상한다(map)"`라고 말한다.
-
-$\therefore$ $A$ 좌표계의 점을 $B$ 좌표계로 변경하기 위해서는 **$B$ 좌표계로 표현한 $A$ 좌표계**의 기저벡터가 필요하다.
+좌표계의 변환도 `동차좌표`를 사용하여 벡터와 점을 처리하는 하나의 공식으로 만들 수 있으며, 행렬로 표현할 수 있다.
 
 [//]: ![](coor_matrix.png)
 
 $$
 \begin {aligned} 
-\\(x',\ y',\ z',\ w) &= xu_{B} + yv_{B} + zw_{B} + wQ_{B} \\
-\left[x',\ y',\ z',\ w\right] &= [x,\ y,\ z,\ w]
-  \begin{bmatrix}
-   u_{x} & u_{y} & u_{z} & 0\\ 
-   v_{x} & v_{y} & v_{z} & 0\\ 
-   w_{x} & w_{y} & w_{z} & 0\\ 
-   Q_{x} & Q_{y} & Q_{z} & 1
-  \end{bmatrix} \\
-                        &= xu_{B} + yv_{B} + zw_{B} + wQ_{B}
+(x',\ y',\ z',\ w)
+  &= [x,\ y,\ z,\ w]
+     \begin{bmatrix}
+      \leftarrow \textbf u_{B} \rightarrow \\
+      \leftarrow \textbf v_{B} \rightarrow \\
+      \leftarrow \textbf w_{B} \rightarrow \\
+      \leftarrow \textbf Q_{B} \rightarrow \\
+     \end{bmatrix} \\
+\left[x',\ y',\ z',\ w\right] 
+  &= [x,\ y,\ z,\ w]
+   \begin{bmatrix}
+    u_{x} & u_{y} & u_{z} & 0\\ 
+    v_{x} & v_{y} & v_{z} & 0\\ 
+    w_{x} & w_{y} & w_{z} & 0\\ 
+    Q_{x} & Q_{y} & Q_{z} & 1
+   \end{bmatrix} \\
+  &= x \textbf u_{B} + y \textbf v_{B} + z \textbf w_{B} + w \textbf Q_{B}
 \end{aligned}
 $$
 
+여기서 $\textbf Q_{B} = (Q_{x},\ Q_{y},\ Q_{z},\ 1)$, 
+$\textbf u_{B} = (u_{x},\ u_{y},\ u_{z},\ 0)$,
+$\textbf v_{B} = (v_{x},\ v_{y},\ v_{z},\ 0)$,
+$\textbf w_{B} = (w_{x},\ w_{y},\ w_{z},\ 0)$ 은 
+좌표계 $A$ 의 원점과 축들의 $B$ 기준 `동차좌표`들이다.
+  
+이 때, $A$ 기준 좌표들을 $B$ 기준 좌표들로 변환(convert, = 사상한다(mapping))하는 4x4 행렬을 
+`좌표 변경 행렬(change of coordinate matrix)` 또는 
+`좌표계 변환 행렬(change of frame matrix)`라고 부른다.
 
-# 좌표변환과 좌표계의 변환
+$\therefore$ 좌표계 $A$ 에 상대적인 점 또는 벡터의 좌표를 좌표계 $B$ 에 상대적인 좌표로 변경하기 위해서는 **$B$ 좌표계로 표현한(상대적인) $A$ 좌표계의 기저벡터**가 필요하다.
 
-특정좌표 `x, y, z` 를 아핀변환한 것은 다음과 같다.
+
+# 좌표 변환과 좌표계의 변경
+
+  - 특정좌표 $x,\ y,\ z$ 를 아핀변환한 것은 다음과 같다.
 
 [//]: ![](affine_definition2.png)
 
-```latex
+$$
 \begin{aligned}
-\alpha(x, y, z) &= \tau(x, y, z) + \textbf b \\
-                &= x \tau(\textbf i) + y \tau(\textbf j) + z \tau(\textbf k) + \textbf b \\
-                &= \begin{bmatrix}
-                     x & y & z & w
-                   \end{bmatrix} 
-                   \begin{bmatrix}
-                     \leftarrow \tau(\textbf i) \rightarrow \\
-                     \leftarrow \tau(\textbf i) \rightarrow \\
-                     \leftarrow \tau(\textbf i) \rightarrow \\
-                     \leftarrow \textbf b \rightarrow \\
-                   \end{bmatrix} \\
-                &= \begin{bmatrix}
-                     {x}' & {y}' & {z}' & {w}'
-                   \end{bmatrix} 
+\alpha(x,\ y,\ z) 
+  &= \tau(x,\ y,\ z) + \textbf b \\
+  &= x\tau(\textbf i) + y\tau(\textbf j) + z\tau(\textbf k) + \textbf b \\
+  &= \begin{bmatrix}
+      x, & y, & z, & w
+     \end{bmatrix} 
+     \begin{bmatrix}
+      \leftarrow \tau(\textbf i) \rightarrow \\
+      \leftarrow \tau(\textbf i) \rightarrow \\
+      \leftarrow \tau(\textbf i) \rightarrow \\
+      \leftarrow \textbf b \rightarrow \\
+     \end{bmatrix} \\
+  &= \begin{bmatrix}
+       {x}', & {y}', & {z}', & {w}'
+     \end{bmatrix} 
 \end{aligned}
-```
+$$
 
-특정좌표 `x, y, z` 의 좌표계를 변환한 것은 다음과 같다.
+  - 특정좌표 $x,\ y,\ z$ 의 좌표계를 변경한 것은 다음과 같다.
 
 [//]: ![](change_of_coord_transform_eq.png)
 
-```latex
-\begin{aligned}
-\begin{bmatrix}
-  {x}' & {y}' & {z}' & {w}'
-\end{bmatrix} 
-                &= \begin{bmatrix}
-                     x & y & z & w
-                   \end{bmatrix} 
-                   \begin{bmatrix}
-                     \leftarrow \textbf u_{B} \rightarrow \\
-                     \leftarrow \textbf v_{B} \rightarrow \\
-                     \leftarrow \textbf w_{B} \rightarrow \\
-                     \leftarrow \textbf Q_{B} \rightarrow \\
-                   \end{bmatrix} \\
-                &= \begin{bmatrix}
-                     x & y & z & w
-                   \end{bmatrix} 
-                   \begin{bmatrix}
-                     u_{x} & u_{y} & u_{z} & 0 \\
-                     v_{x} & v_{y} & v_{z} & 0 \\
-                     w_{x} & w_{y} & w_{z} & 0 \\
-                     Q_{x} & Q_{y} & Q_{z} & 1 \\
-                   \end{bmatrix} \\
-                &= x \textbf u_{B} + y \textbf v_{B} + z \textbf w_{B} + w \textbf Q_{B}
+$$
+\begin {aligned} 
+(x',\ y',\ z',\ w)
+  &= [x,\ y,\ z,\ w]
+     \begin{bmatrix}
+      \leftarrow \textbf u_{B} \rightarrow \\
+      \leftarrow \textbf v_{B} \rightarrow \\
+      \leftarrow \textbf w_{B} \rightarrow \\
+      \leftarrow \textbf Q_{B} \rightarrow \\
+     \end{bmatrix} \\
+\left[x',\ y',\ z',\ w\right] 
+  &= [x,\ y,\ z,\ w]
+   \begin{bmatrix}
+    u_{x} & u_{y} & u_{z} & 0\\ 
+    v_{x} & v_{y} & v_{z} & 0\\ 
+    w_{x} & w_{y} & w_{z} & 0\\ 
+    Q_{x} & Q_{y} & Q_{z} & 1
+   \end{bmatrix} \\
+  &= x \textbf u_{B} + y \textbf v_{B} + z \textbf w_{B} + w \textbf Q_{B}
 \end{aligned}
+$$
+
+  - ### $\therefore$ 좌표 변환('능동적' 변환, 비례, 회전, 이동)과 좌표계를 변경(좌표 변경 변환)하는 것은 **수학적으로 동등하다. ('동치'관계, equivalence)**
+    - 능동적 변환을 좌표 변경 변환으로 해석하는 것이 가능하며, 그 역도 마찬가지이다.
+
+![](equivalence.png)
+
+  - $(a)$에서는 하나의 좌표계 $B$를 기준으로 아핀변환을 적용해서 입방체의 위치와 방향을 변경한다.
+    - $\alpha(x,\ y,\ z,\ w) = x \tau(\textbf i) + y \tau(\textbf j) + z \tau(\textbf k) + w \textbf b$
+  
+  - $(b)$에서는 $A$와 $B$라는 두 개의 좌표계를 사용하여 $A$에 상대적인 입방체 점들의 좌표를 $B$에 상대적인 좌표들로 변환한다. 
+    - $\textbf p_{B} = x \textbf u_{B} + y \textbf v_{B} + z \textbf w_{B} + w \textbf Q_{B}$
+  
+  - 두 경우 모두 좌표계 $B$를 기준으로 $\alpha(p) = (x',\ y',\ z',\ w) = p_{B}$ 가 성립한다.
+    - $(b)$ 의 좌표계 변경 행렬은 $(a)$ 의 변환 행렬과 동일하다.
+
+  - 여러 개의 좌표들을 다루면서 좌표계만 변경하는 경우와 $(b)$ 하나의 좌표계에서 물체의 좌표를 변환하는 경우 $(a)$ 둘 중 편한 방법을 선택하면 된다.
+
+
+# 비례 선형변환 증명
+
+  - 비례변환은 다음 그림의 식을 통해 선형변환의 성질을 만족한다는 것을 확인할 수 있다.
+
+[//]: ![](scaling_definition.png)
+
+$$
+\begin {aligned} 
+S(\textbf u + \textbf v) 
+  &= (s_{x}(u_{x} + v_{x}),\ s_{y}(u_{y} + v_{y}),\ s_{z}(u_{z} + v_{z})) \\
+  &= (s_{x}u_{x} + s_{x}v_{x},\ s_{y}u_{y} + s_{y}v_{y},\ s_{z}u_{z} + s_{z}v_{z}) \\
+  &= (s_{x}u_{x},\ s_{y}u_{y},\ s_{z}u_{z}) + (s_{x}v_{x},\ s_{y}v_{y},\ s_{z}v_{z}) \\
+  &= S(\textbf u) + S(\textbf v) \\
+\\
+S(k\textbf u) &= (s_{x}k\, u_{x},\ s_{y}k\, u_{y},\ s_{z}k\, u_{z}) \\
+      &= k(s_{x}u_{x},\ s_{y}u_{y},\ s_{z}u_{z}) \\
+      &= kS(\textbf u) \\
+\end{aligned}
+$$
+
+  - 비례변환에 표준기저벡터를 곱하면 각 축에 해당하는 원소의 크기를 변경하는 비례행렬을 얻을 수 있다.
+
+[//]: ![](scaling_definition2.png)
+
+$$
+\begin{aligned}
+S(\textbf i) &= (s_{x}\cdot 1,\ s_{y}\cdot 0,\ s_{z}\cdot 0) = (s_{x},\ 0,\ 0) \\
+S(\textbf j) &= (s_{x}\cdot 0,\ s_{y}\cdot 1,\ s_{z}\cdot 0) = (0,\ s_{y},\ 0) \\
+S(\textbf k) &= (s_{x}\cdot 0,\ s_{y}\cdot 0,\ s_{z}\cdot 1) = (0,\ 0,\ s_{z}) \\
+S &= \begin{bmatrix}
+      _{x} & 0 & 0\\ 
+      0 & s_{y} & 0\\ 
+      0 &  0 & s_{z}
+     \end{bmatrix}
+\end{aligned}
+$$
+
+  - 비례변환의 행렬 S는 `비례 행렬(scaling matrix)`이라고 부른다. 
+
+  - $s_{x}$ 는 $x$ 축의 비율을, $s_{y}$ 는 $y$ 축의 비율을, $s_{z}$ 는 $z$ 축의 비율을 조절한다.
+
+
+# 회전 선형변환 증명
+
+  - 벡터 $\textbf v$ 를 축 $\textbf n$ 에 대해 회전하는 변환을 표현하기 위해서는 복잡한 식의 계산이 필요하다.
+
+![](rotation.png)
+
+(위의 그림에서 회전각은 $\textbf n$ 을 내려다 볼 때(머리->꼬리) `시계방향`으로 측정하며, $\textbf n$ 의 크기는 `1`이라고 가정한다.)
+
+  - 먼저, 벡터 $\textbf v$ 를 축 $\textbf n$ 에 평행한 정사영 벡터 $proj_{\textbf n}(\textbf v)$ 와 $\textbf n$ 에 수직인 벡터 $\textbf v_{\perp}$ 로 쪼갠다. 
+    - 정사영 벡터는 $\textbf n$ 과 평행하기 때문에 $\textbf v_{\perp}$ 의 회전방법만 알아내면 회전 후의 $\textbf v$ 를 알아낼 수 있다.
+
+  - $R_{n}(\textbf v_{\perp})$ 를 알아내기 위해서 $\textbf n$ 과 $\textbf v_{\perp}$ 에 수직인 벡터 $\textbf n \times \textbf v$(외적) 를 구한다. 
+$\textbf n \times \textbf v$ 의 크기는 다음과 같은 공식으로 $\textbf v_{\perp}$ 와 크기가 같다는 것을 알 수 있다.
+
+[//]: ![](ntimesv.png)
+
+$$
+\begin {aligned} 
+\left\| \textbf n \times \textbf v \right\| 
+  &= \left\| \textbf n \right\| \left\| \textbf v \right\| sin\alpha \\
+  &= \left\| \textbf v \right\| sin\alpha \\
+  &= \left\| \textbf v_{\perp} \right\|
+\end{aligned}
+$$
+
+  - $\textbf v_{\perp}$ 와 $\textbf n \times \textbf v$ 두 개의 벡터를 통해 $R_{n}(\textbf v_{\perp})$ 를 구할 수 있다.
+
+[//]: ![](rotequ_mid.png)
+
+$$
+R_{n}(\textbf v_{\perp}) = cos\theta \, \textbf v_{\perp} + sin\theta \, (\textbf n \times \textbf v)
+$$
+
+  - 이를 통해 다음과 같은 공식을 이끌어낼 수 있다.
+
+[//]: ![](rotequ_result.png)
+
+$$
+\begin {aligned} 
+R_{n}(\textbf v) 
+  &= proj_{n}(\textbf v) + R_{n}(\textbf v_{\perp}) \\
+  &= (\textbf n\cdot \textbf v)n + cos\theta \, \textbf v_{\perp} + sin\theta \, (\textbf n\times \textbf v) \\
+  &= (\textbf n\cdot \textbf v)\textbf n + cos\theta(\textbf v-(\textbf n\cdot \textbf v)\textbf n) + sin\theta \, (\textbf n\times \textbf v) \\
+  &= cos\theta \, \textbf v +(1-cos\theta)(\textbf n\cdot \textbf v)\textbf n + sin\theta(\textbf n\times \textbf v)
+\end{aligned}
+$$
+
+  - 해당 공식 내부의 벡터를 $(x,\ y,\ z)$ 형태로 변환하면 다음과 같이 표현할 수 있다.
+
+[//]: ![](rotequ_other_result.png)
+
+$$
+\begin {aligned} 
+R_{n}(v_{x},\ v_{y},\ v_{z}) 
+  &= C(v_{x},\ v_{y},\ v_{z}) \\
+  &\ + (1-C)(n_{x}v_{x} + n_{y}v_{y} + n_{z}v_{z})(n_{x},\ n_{y},\ n_{z}) \\
+  &\ + S(n_{y}v_{z} - n_{z}v_{y},\ n_{z}v_{x} - n_{x}v_{z},\ n_{x}v_{y} - n_{y}v_{z})
+\\
+\end{aligned}
+\\ (C = cos\theta,\ S = sin\theta)
+$$
+
+  - 위의 식의 $\textbf v$ 에 `표준기저벡터`를 대입하여 나온 벡터를 행으로 삼아서 행렬을 만들면 **벡터 $\textbf v$ 를 축 $\textbf n$ 에 대해 회전시키는 회전행렬**이 나온다. ([선형변환 의 세번째 식](#선형변환) 참고)
+
+[//]: ![](rot_matrix.png)
+
+$$
+\begin{aligned} 
+R_{n}(1,\ 0,\ 0) = (C+(1-C)(n_{x})^2,\ (1-C)n_{x}n_{y} + Sn_{z},\ (1-C)n_{x}n_{z} - Sn_{y}) \\ 
+R_{n}(0,\ 1,\ 0) = ((1-C)n_{x}n_{y} - Sn_{z},\ C+(1-C)(n_{y})^2,\ (1-C)n_{y}n_{z} + Sn_{x}) \\ 
+R_{n}(0,\ 0,\ 1) = ((1-C)n_{x}n_{z} + Sn_{y},\ (1-C)n_{y}n_{z} - Sn_{x},\ C+(1-C)(n_{z})^2) \\
+\\
+\therefore R_{n} = 
+  \begin{bmatrix}
+   C+(1-C)(n_{x})^2 & (1-C)n_{x}n_{y} + Sn_{z} & (1-C)n_{x}n_{z} - Sn_{y}\\ 
+   (1-C)n_{x}n_{y} - Sn_{z} & C+(1-C)(n_{y})^2 & (1-C)n_{y}n_{z} + Sn_{x}\\ 
+   (1-C)n_{x}n_{z} + Sn_{y} & (1-C)n_{y}n_{z} - Sn_{x} & C+(1-C)(n_{z})^2
+  \end{bmatrix}
+\end{aligned}
+\\ (C = cos\theta,\ S = sin\theta)
+$$
+
+  - 회전축이 $x$ 축, $y$ 축, $z$ 축인 경우 (각각 $\textbf n = (1,\ 0,\ 0),\ \textbf n = (0,\ 1,\ 0),\ \textbf n = (0,\ 0,\ 1)$인 경우)는 회전행렬이 매우 간단해진다.
+
+[//]: ![](rotation_ex.png)
+
+$$
+\begin{aligned}
+R_{x} &= \begin{bmatrix}
+         1 & 0 & 0\\ 
+         0 & cos\theta & sin\theta\\ 
+         0 & -sin\theta & cos\theta
+         \end{bmatrix} \\
+R_{y}    &= \begin{bmatrix}
+            cos\theta & 0 & -sin\theta\\ 
+            0 & 1 & 0\\ 
+            sin\theta & 0 & cos\theta
+            \end{bmatrix} \\
+R_{z}    &= \begin{bmatrix}
+            cos\theta & sin\theta & 0\\ 
+            -sin\theta & cos\theta & 0\\ 
+            0 & 0 & 1
+            \end{bmatrix}
+\end{aligned}
+$$
+
+# Latex 소스코드
+
+## coor_vector.png
+
+```latex
+\documentclass[tikz,border=10pt]{standalone}
+
+\usepackage{tikz}
+\usepackage{rotating}
+
+\usetikzlibrary{scopes}
+\usetikzlibrary{intersections}
+\usetikzlibrary{calc}
+
+\begin{document}
+
+\begin{tikzpicture}
+    \def\rotangle{30}
+    \def\angvalue{30}
+    %\def\rad{3}
+    %\def\x{2} \def\y{1.5}
+	\tikzset{arrow_style/.style={>=latex,very thick}}
+	
+	\matrix[column sep=1cm] {
+        \begin{turn}{\rotangle}
+            \coordinate(PA) at (\angvalue:2.5 cm);
+            \draw[densely dashed,blue!40]let \p{PA}=(PA) in (PA) -- (\x{PA},0) node [black,below,rotate=360-\rotangle] {\large$x$};
+            \draw[densely dashed,blue!40]let \p{PA}=(PA) in (PA) -- (0,\y{PA})node [black,left,rotate=360-\rotangle] {\large$y$};
+            \draw [arrow_style,black!50,<->] (0,-3)--(0,3) node [black,above] {$+Y$};
+            \draw [arrow_style,black!50,<->] (-3,0)--(3,0) node [black,right] {$+X$};
+            \draw [arrow_style,blue,->] (0,0)--(PA) node [black,above,rotate=360-\rotangle] {\Large$p_{A}=(x,y)$};
+        \end{turn}
+        \coordinate [label=left:\large$FrameA$] (t) at (1,-3);
+        
+        &
+            
+        \coordinate(PB) at (\angvalue+\rotangle:2.5 cm);
+        \path[name path=lineYV,shift={(PB)}] (0,0)--(\angvalue+180:2.5 cm);
+        \path[name path=lineXU,shift={(PB)}] (0,0)--(\angvalue+270:2.5 cm);
+        \path[name path=lineOV] (0,0)--(\angvalue+90:2.5 cm);
+        \path[name path=lineOU] (0,0)--(\angvalue:2.5 cm);
+	    \path [name intersections={of = lineYV and lineOV}];
+        \coordinate(yv) at (intersection-1);
+	    \path [name intersections={of = lineXU and lineOU}];
+        \coordinate(xu) at (intersection-1);
+        
+        \draw[densely dashed,black]let \p{PB}=(PB) in (PB) -- (\x{PB},0) node [black,below] {\large$x'$};
+        \draw[densely dashed,black]let \p{PB}=(PB) in (PB) -- (0,\y{PB})node [black,left] {\large$y'$};
+        {[arrow_style]
+            \draw [black!50,<->] (0,-1.5)--(0,3) node [black,above] {$+Y$};
+            \draw [black!50,<->] (-3,0)--(3,0) node [black,right] {$+X$};
+            \draw [blue,->] (0,0)--(PB) node [black,right] {\Large$p_{B}=(x',y')$};
+          
+            \draw[densely dashed,blue!40] (PB)--(yv);
+            \draw[densely dashed,blue!40] (PB)--(xu);
+            \draw[densely dashed,blue!40,->] (0,0)--(yv) node [black,left] {\large $yv$};
+            \draw[densely dashed,blue!40,->] (0,0)--(xu) node [black,right] {\large $xu$};
+            \draw[black,->] (0,0)--(\angvalue+90:1 cm) node [black,midway,left] {\large $v$};
+            \draw[black,->] (0,0)--(\angvalue:1 cm) node [black,near end,below] {\large $u$};
+        }
+            
+        \coordinate [label=left:\large$FrameB$] (t) at (1,-3);
+    \\   
+	};
+    
+\end{tikzpicture}
+
+\end{document}
 ```
 
-아핀변환을 한 것은 좌표계를 변환한 것과 같다.(equivalence)
 
-[//]: ![](equivalence.png)
+## coor_dot.png
+
+```latex
+\documentclass[tikz,border=10pt]{standalone}
+
+\usepackage{tikz}
+\usepackage{rotating}
+
+\usetikzlibrary{scopes}
+\usetikzlibrary{calc}
+
+\begin{document}
+
+\begin{tikzpicture}
+    \def\rotangle{30}
+    \def\angvalue{30}
+    \def\rad{3}
+    \def\x{2} \def\y{1.5}
+	\tikzset{arrow_style/.style={>=latex,very thick}}
+	
+        \coordinate (PA) at (\angvalue:2.5 cm);
+        \begin{turn}{\rotangle}
+    		\fill[draw=black] (PA) circle (1.5pt);
+    		\fill[draw=black] (0,0) circle (1.5pt);
+            
+        {[arrow_style]
+            \draw[->]let \p{PA}=(PA) in (\x{PA},0) node [black,below,rotate=360-\rotangle] {\large$x$}--(PA) node [black,right,midway,rotate=360-\rotangle] {\large$yv$};
+            \draw[->]let \p{PA}=(PA) in (0,\y{PA}) node [black,left,rotate=360-\rotangle] {\large$y$}--(PA) node [black,above,midway,rotate=360-\rotangle] {\large$xu$};
+            \draw [black!50,<->] (0,-1.5)--(0,3) node [black,above] {$+Y$};
+            \draw [black!50,<->] (-3,0)--(3,0) node [black,right] {$+X$};
+            \draw[->] (0,0)--(0,1) node [black,midway,left,rotate=360-\rotangle] {\large $v$};
+            \draw[->] (0,0)--(1,0) node [black,midway,below,rotate=360-\rotangle] {\large $u$};
+            
+        }
+        
+        \end{turn}
+        \coordinate [label=left:\large$FrameA$] (t) at (-1,0);
+        
+        % frame B center : 5,-2
+        {[arrow_style]
+            \draw [->] (5,-2)--(0,0) node [black,above,midway] {$\mathbf{Q}$};
+            \draw [black!50,<->] (5,-3)--(5,3) node [black,above] {$+Y$};
+            \draw [black!50,<->] (-0.5,-2)--(7,-2) node [black,right] {$+X$};
+        }
+        \coordinate[label=above:\large${p_{A}=(x,y)}$] (PA) at (\rotangle+\angvalue:2.5 cm);
+        \draw[densely dashed]let \p{PA}=(PA) in (PA) -- (\x{PA},-2) node [black,below] {\large$x'$};
+        \draw[densely dashed]let \p{PA}=(PA) in (PA) -- (5,\y{PA})node [black,right] {\large$y'$};
+	
+        \coordinate [label=right:\large$FrameB$] (t) at (5.5,-2.5);
+    
+\end{tikzpicture}
+
+\end{document}
+```
+
+
+## equivalence.png (좌표계 변환)
 
 ```latex
 \documentclass[tikz,border=10pt]{standalone}
@@ -507,55 +796,8 @@ $$
 \end{document}
 ```
 
-(a)에서는 하나의 좌표계 B를 기준으로 아핀변환을 적용해서 입방체의 위치와 방향을 변경한다. (b)에서는 A와 B라는 두 개의 좌표계를 사용하여 A에 상대적인 입방체 점들의 좌표를 B에 상대적인 좌표들로 변환한다. 두 경우 모두 좌표계 B를 기준으로 `\alpha(p) = (x',y',z',w) = p_{B}`가 성립한다. b = Q이고 `\tau(i) = u, \tau(j) = v, \tau(k) = w`이다.
 
-
-# 비례 선형변환 증명
-
-비례변환은 다음 그림의 식을 통해 선형변환의 성질을 만족한다는 것을 확인할 수 있다.
-
-[//]: ![](scaling_definition.png)
-
-```latex
-\begin {aligned} 
-S(u + v) &= (s_{x}(u_{x} + v_{x}), s_{y}(u_{y} + v_{y}), s_{z}(u_{z} + v_{z})) \\
-         &= (s_{x}u_{x} + s_{x}v_{x}, s_{y}u_{y} + s_{y}v_{y}, s_{z}u_{z} + s_{z}v_{z}) \\
-         &= (s_{x}u_{x}, s_{y}u_{y}, s_{z}u_{z}) + (s_{x}v_{x}, s_{y}v_{y}, s_{z}v_{z}) \\
-         &= S(u) + S(v) \\
-\\
-S(ku) &= (s_{x}ku_{x}, s_{y}ku_{y}, s_{z}ku_{z}) \\
-      &= k(s_{x}u_{x}, s_{y}u_{y}, s_{z}u_{z}) \\
-      &= kS(u) \\
-\end{aligned}
-```
-
-비례변환에 표준기저벡터를 곱하면 각 축에 해당하는 원소의 크기를 변경하는 비례행렬을 얻을 수 있다.
-
-[//]: ![](scaling_definition2.png)
-
-```latex
-\begin{aligned}
-S(i) &= (s_{x}\cdot 1, s_{y}\cdot 0, s_{z}\cdot 0) = (s_{x}, 0, 0) \\
-S(j) &= (s_{x}\cdot 0, s_{y}\cdot 1, s_{z}\cdot 0) = (0, s_{y}, 0) \\
-S(k) &= (s_{x}\cdot 0, s_{y}\cdot 0, s_{z}\cdot 1) = (0, 0, s_{z}) \\
-S    &=  \begin{bmatrix}
-         s_{x} & 0 & 0\\ 
-         0& s_{y} & 0\\ 
-         0&  0& s_{z}
-         \end{bmatrix}
-\end{aligned}
-```
-
-비례변환의 행렬 S는 비례행렬(scaling matrix)이라고 부른다. 
-
-`s_{x}`는 x축의 비율을, `s_{y}`는 y축의 비율을, `s_{z}`는 z축의 비율을 조절한다.
-
-
-# 회전 선형변환 증명
-
-벡터 v를 축 n에 대해 회전하는 변환을 표현하기 위해서는 복잡한 식의 계산이 필요하다.
-
-[//]: ![](rotation.png)
+## rotation.png (회전 선형변환 증명)
 
 ```latex
 \documentclass[tikz,border=10pt]{standalone}
@@ -649,234 +891,6 @@ S    &=  \begin{bmatrix}
         \end{turn}
     \\   
 	};
-\end{tikzpicture}
-
-\end{document}
-```
-
-(위의 그림에서 회전각은 n의 진행방향을 기준으로 반시계방향으로 측정하며, n의 크기는 1이라고 가정한다.)
-
-먼저, 벡터 v를 축 n에 평행한 정사영벡터 `proj_{n}(v)`와 n에 수직인 벡터 `v_{\perp}`로 쪼갠다. 정사영벡터는 n과 평행하기 때문에 수직인 벡터의 회전방법만 알아내면 회전 후의 v를 알아낼 수 있다.
-
-`R_{n}(v_{\perp})`를 알아내기 위해서 n과 `v_{\perp}`에 수직인 벡터 `n \times v`(외적)를 구한다. `n \times v`의 크기는 다음과 같은 공식으로 `v_{\perp}`와 크기가 같다는 것을 알 수 있다.
-
-[//]: ![](ntimesv.png)
-
-```latex
-\begin {aligned} 
-\left\| n \times v \right\| &= \left\| n \right\| \left\| v \right\| sin\alpha \\
-                            &= \left\| v \right\| sin\alpha \\
-                            &= \left\| v_{\perp} \right\|
-\end{aligned}
-```
-
-`v_{\perp}`와 `n \times v` 두 개의 벡터를 통해 `R_{n}(v_{\perp})`를 구할 수 있다.
-
-[//]: ![](rotequ_mid.png)
-
-```latex
-R_{n}(v_{\perp}) = cos\theta v_{\perp} + sin\theta(n \times v)
-```
-
-이를 통해 다음과 같은 공식을 이끌어낼 수 있다.
-
-[//]: ![](rotequ_result.png)
-
-```latex
-\begin {aligned} 
-R_{n}(v) &= proj_{n}(v) + R_{n}(v_{\perp}) \\
-         &= (n\cdot v)n + cos\theta v_{\perp} + sin\theta(n\times v) \\
-         &= (n\cdot v)n + cos\theta(v-(n\cdot v)n) + sin\theta(n\times v) \\
-         &= cos\theta v +(1-cos\theta)(n\cdot v)n + sin\theta(n\times v)
-\end{aligned}
-```
-
-해당 공식 내부의 벡터를 (x,y,z) 형태로 변환하면 다음과 같이 표현할 수 있다.
-
-[//]: ![](rotequ_other_result.png)
-
-```latex
-\begin {aligned} 
-R_{n}(v_{x},v_{y},v_{z}) &= c(v_{x},v_{y},v_{z}) \\
-                         &\ + (1-c)(n_{x}v_{x}+n_{y}v_{y}+n_{z}v_{z})(n_{x},n_{y},n_{z}) \\
-                         &\ + s(n_{y}v_{z}-n_{z}v_{y},n_{z}v_{x}-n_{x}v_{z},n_{x}v_{y}-n_{y}v_{z})
-\\ &
-\\ & (c = cos\theta,s = sin\theta)
-\end{aligned}
-```
-
-위의 식에 표준기저벡터를 적용하여 나온 벡터들을 행으로 삼아서 하나의 행렬을 만들면 벡터 v를 축 n에 대해 회전시키는 회전행렬이 나온다.
-
-[//]: ![](rot_matrix.png)
-
-```latex
-\begin{aligned} 
-\\R_{n} &= \begin{bmatrix}
-          c+(1-c)(n_{x})^2 & (1-c)n_{x}n_{y}+sn_{z} & (1-c)n_{x}n_{z}-sn_{y}\\ 
-          (1-c)n_{x}n_{y}-sn_{z} & c+(1-c)(n_{y})^2 & (1-c)n_{y}n_{z}+sn_{x}\\ 
-          (1-c)n_{x}n_{z}+sn_{y} & (1-c)n_{y}n_{z}-sn_{x} & c+(1-c)(n_{z})^2
-          \end{bmatrix}
-\\ & (c = cos\theta,s = sin\theta)
-\end{aligned}
-```
-
-회전행렬의 각 행벡터는 단위길이이고, 서로 직교이기 때문에 정규직교이다. 직교행렬은 역행렬이 자신의 전치행렬과 같다는 속성이 있다.
-
-[//]: ![](rot_reverse_matrix.png)
-
-```latex
-\\R_{n}^{-1}=R_{n}^{T}=\begin{bmatrix}
-c+(1-c)(n_{x})^2 & (1-c)n_{x}n_{y}-sn_{z} & (1-c)n_{x}n_{z}+sn_{y}\\ 
-(1-c)n_{x}n_{y}+sn_{z} & c+(1-c)(n_{y})^2 & (1-c)n_{y}n_{z}-sn_{x}\\ 
-(1-c)n_{x}n_{z}-sn_{y} & (1-c)n_{y}n_{z}+sn_{x} & c+(1-c)(n_{z})^2
-\end{bmatrix}
-\\(c=cos\theta,s=sin\theta)
-```
-
-회전축이 x축, y축, z축인 경우(n = (1,0,0), (0,1,0), (0,0,1))는 회전행렬이 매우 간단해진다.
-
-[//]: ![](rotation_ex.png)
-
-```latex
-\begin{aligned}
-R_{x} &= \begin{bmatrix}
-         1 & 0 & 0\\ 
-         0 & cos\theta & sin\theta\\ 
-         0 & -sin\theta & cos\theta
-         \end{bmatrix} \\
-R_{y}    &= \begin{bmatrix}
-            cos\theta & 0 & -sin\theta\\ 
-            0 & 1 & 0\\ 
-            sin\theta & 0 & cos\theta
-            \end{bmatrix} \\
-R_{z}    &= \begin{bmatrix}
-            cos\theta & sin\theta & 0\\ 
-            -sin\theta & cos\theta & 0\\ 
-            0 & 0 & 1
-            \end{bmatrix}
-\end{aligned}
-```
-
-# Latex 소스코드
-
-## coor_vector.png
-
-```latex
-\documentclass[tikz,border=10pt]{standalone}
-
-\usepackage{tikz}
-\usepackage{rotating}
-
-\usetikzlibrary{scopes}
-\usetikzlibrary{intersections}
-\usetikzlibrary{calc}
-
-\begin{document}
-
-\begin{tikzpicture}
-    \def\rotangle{30}
-    \def\angvalue{30}
-    %\def\rad{3}
-    %\def\x{2} \def\y{1.5}
-	\tikzset{arrow_style/.style={>=latex,very thick}}
-	
-	\matrix[column sep=1cm] {
-        \begin{turn}{\rotangle}
-            \coordinate(PA) at (\angvalue:2.5 cm);
-            \draw[densely dashed,blue!40]let \p{PA}=(PA) in (PA) -- (\x{PA},0) node [black,below,rotate=360-\rotangle] {\large$x$};
-            \draw[densely dashed,blue!40]let \p{PA}=(PA) in (PA) -- (0,\y{PA})node [black,left,rotate=360-\rotangle] {\large$y$};
-            \draw [arrow_style,black!50,<->] (0,-3)--(0,3) node [black,above] {$+Y$};
-            \draw [arrow_style,black!50,<->] (-3,0)--(3,0) node [black,right] {$+X$};
-            \draw [arrow_style,blue,->] (0,0)--(PA) node [black,above,rotate=360-\rotangle] {\Large$p_{A}=(x,y)$};
-        \end{turn}
-        \coordinate [label=left:\large$FrameA$] (t) at (1,-3);
-        
-        &
-            
-        \coordinate(PB) at (\angvalue+\rotangle:2.5 cm);
-        \path[name path=lineYV,shift={(PB)}] (0,0)--(\angvalue+180:2.5 cm);
-        \path[name path=lineXU,shift={(PB)}] (0,0)--(\angvalue+270:2.5 cm);
-        \path[name path=lineOV] (0,0)--(\angvalue+90:2.5 cm);
-        \path[name path=lineOU] (0,0)--(\angvalue:2.5 cm);
-	    \path [name intersections={of = lineYV and lineOV}];
-        \coordinate(yv) at (intersection-1);
-	    \path [name intersections={of = lineXU and lineOU}];
-        \coordinate(xu) at (intersection-1);
-        
-        \draw[densely dashed,black]let \p{PB}=(PB) in (PB) -- (\x{PB},0) node [black,below] {\large$x'$};
-        \draw[densely dashed,black]let \p{PB}=(PB) in (PB) -- (0,\y{PB})node [black,left] {\large$y'$};
-        {[arrow_style]
-            \draw [black!50,<->] (0,-1.5)--(0,3) node [black,above] {$+Y$};
-            \draw [black!50,<->] (-3,0)--(3,0) node [black,right] {$+X$};
-            \draw [blue,->] (0,0)--(PB) node [black,right] {\Large$p_{B}=(x',y')$};
-          
-            \draw[densely dashed,blue!40] (PB)--(yv);
-            \draw[densely dashed,blue!40] (PB)--(xu);
-            \draw[densely dashed,blue!40,->] (0,0)--(yv) node [black,left] {\large $yv$};
-            \draw[densely dashed,blue!40,->] (0,0)--(xu) node [black,right] {\large $xu$};
-            \draw[black,->] (0,0)--(\angvalue+90:1 cm) node [black,midway,left] {\large $v$};
-            \draw[black,->] (0,0)--(\angvalue:1 cm) node [black,near end,below] {\large $u$};
-        }
-            
-        \coordinate [label=left:\large$FrameB$] (t) at (1,-3);
-    \\   
-	};
-    
-\end{tikzpicture}
-
-\end{document}
-```
-
-## coor_dot.png
-
-```latex
-\documentclass[tikz,border=10pt]{standalone}
-
-\usepackage{tikz}
-\usepackage{rotating}
-
-\usetikzlibrary{scopes}
-\usetikzlibrary{calc}
-
-\begin{document}
-
-\begin{tikzpicture}
-    \def\rotangle{30}
-    \def\angvalue{30}
-    \def\rad{3}
-    \def\x{2} \def\y{1.5}
-	\tikzset{arrow_style/.style={>=latex,very thick}}
-	
-        \coordinate (PA) at (\angvalue:2.5 cm);
-        \begin{turn}{\rotangle}
-    		\fill[draw=black] (PA) circle (1.5pt);
-    		\fill[draw=black] (0,0) circle (1.5pt);
-            
-        {[arrow_style]
-            \draw[->]let \p{PA}=(PA) in (\x{PA},0) node [black,below,rotate=360-\rotangle] {\large$x$}--(PA) node [black,right,midway,rotate=360-\rotangle] {\large$yv$};
-            \draw[->]let \p{PA}=(PA) in (0,\y{PA}) node [black,left,rotate=360-\rotangle] {\large$y$}--(PA) node [black,above,midway,rotate=360-\rotangle] {\large$xu$};
-            \draw [black!50,<->] (0,-1.5)--(0,3) node [black,above] {$+Y$};
-            \draw [black!50,<->] (-3,0)--(3,0) node [black,right] {$+X$};
-            \draw[->] (0,0)--(0,1) node [black,midway,left,rotate=360-\rotangle] {\large $v$};
-            \draw[->] (0,0)--(1,0) node [black,midway,below,rotate=360-\rotangle] {\large $u$};
-            
-        }
-        
-        \end{turn}
-        \coordinate [label=left:\large$FrameA$] (t) at (-1,0);
-        
-        % frame B center : 5,-2
-        {[arrow_style]
-            \draw [->] (5,-2)--(0,0) node [black,above,midway] {$\mathbf{Q}$};
-            \draw [black!50,<->] (5,-3)--(5,3) node [black,above] {$+Y$};
-            \draw [black!50,<->] (-0.5,-2)--(7,-2) node [black,right] {$+X$};
-        }
-        \coordinate[label=above:\large${p_{A}=(x,y)}$] (PA) at (\rotangle+\angvalue:2.5 cm);
-        \draw[densely dashed]let \p{PA}=(PA) in (PA) -- (\x{PA},-2) node [black,below] {\large$x'$};
-        \draw[densely dashed]let \p{PA}=(PA) in (PA) -- (5,\y{PA})node [black,right] {\large$y'$};
-	
-        \coordinate [label=right:\large$FrameB$] (t) at (5.5,-2.5);
-    
 \end{tikzpicture}
 
 \end{document}
