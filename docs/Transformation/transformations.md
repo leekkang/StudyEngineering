@@ -168,8 +168,8 @@ $$
      \end{bmatrix} 
      \begin{bmatrix}
       \leftarrow \tau(\textbf i) \rightarrow \\
-      \leftarrow \tau(\textbf i) \rightarrow \\
-      \leftarrow \tau(\textbf i) \rightarrow \\
+      \leftarrow \tau(\textbf j) \rightarrow \\
+      \leftarrow \tau(\textbf k) \rightarrow \\
       \leftarrow \textbf b \rightarrow \\
      \end{bmatrix} \\
   &= \begin{bmatrix}
@@ -332,8 +332,8 @@ $$
      \end{bmatrix} 
      \begin{bmatrix}
       \leftarrow \tau(\textbf i) \rightarrow \\
-      \leftarrow \tau(\textbf i) \rightarrow \\
-      \leftarrow \tau(\textbf i) \rightarrow \\
+      \leftarrow \tau(\textbf j) \rightarrow \\
+      \leftarrow \tau(\textbf k) \rightarrow \\
       \leftarrow \textbf b \rightarrow \\
      \end{bmatrix} \\
   &= \begin{bmatrix}
@@ -368,7 +368,7 @@ $$
 \end{aligned}
 $$
 
-  - ### $\therefore$ 좌표 변환('능동적' 변환, 비례, 회전, 이동)과 좌표계를 변경(좌표 변경 변환)하는 것은 **수학적으로 동등하다. ('동치'관계, equivalence)**
+  - ### $\therefore$ 좌표 변환('능동적' 변환, 비례, 회전, 이동)과 좌표계를 변경(좌표 변경 변환)하는 것은 수학적으로 동등하다. ('동치'관계, equivalence)
     - 능동적 변환을 좌표 변경 변환으로 해석하는 것이 가능하며, 그 역도 마찬가지이다.
 
 ![](equivalence.png)
@@ -415,7 +415,7 @@ S(\textbf i) &= (s_{x}\cdot 1,\ s_{y}\cdot 0,\ s_{z}\cdot 0) = (s_{x},\ 0,\ 0) \
 S(\textbf j) &= (s_{x}\cdot 0,\ s_{y}\cdot 1,\ s_{z}\cdot 0) = (0,\ s_{y},\ 0) \\
 S(\textbf k) &= (s_{x}\cdot 0,\ s_{y}\cdot 0,\ s_{z}\cdot 1) = (0,\ 0,\ s_{z}) \\
 S &= \begin{bmatrix}
-      _{x} & 0 & 0\\ 
+      s_{x} & 0 & 0\\ 
       0 & s_{y} & 0\\ 
       0 &  0 & s_{z}
      \end{bmatrix}
@@ -504,9 +504,9 @@ R_{n}(0,\ 0,\ 1) = ((1-C)n_{x}n_{z} + Sn_{y},\ (1-C)n_{y}n_{z} - Sn_{x},\ C+(1-C
    C+(1-C)(n_{x})^2 & (1-C)n_{x}n_{y} + Sn_{z} & (1-C)n_{x}n_{z} - Sn_{y}\\ 
    (1-C)n_{x}n_{y} - Sn_{z} & C+(1-C)(n_{y})^2 & (1-C)n_{y}n_{z} + Sn_{x}\\ 
    (1-C)n_{x}n_{z} + Sn_{y} & (1-C)n_{y}n_{z} - Sn_{x} & C+(1-C)(n_{z})^2
-  \end{bmatrix}
-\end{aligned}
+  \end{bmatrix} \\
 \\ (C = cos\theta,\ S = sin\theta)
+\end{aligned}
 $$
 
   - 회전축이 $x$ 축, $y$ 축, $z$ 축인 경우 (각각 $\textbf n = (1,\ 0,\ 0),\ \textbf n = (0,\ 1,\ 0),\ \textbf n = (0,\ 0,\ 1)$인 경우)는 회전행렬이 매우 간단해진다.
