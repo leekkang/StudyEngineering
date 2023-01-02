@@ -158,16 +158,16 @@ $$
 $$
 \begin{aligned}
 \alpha(x,\ y,\ z) 
-  &= \tau(x,\ y,\ z) + \bold b \\
-  &= x\tau(\bold i) + y\tau(\bold j) + z\tau(\bold k) + \bold b \\
+  &= \tau(x,\ y,\ z) + \textbf b \\
+  &= x\tau(\textbf i) + y\tau(\textbf j) + z\tau(\textbf k) + \textbf b \\
   &= \begin{bmatrix}
       x, & y, & z, & w
      \end{bmatrix} 
      \begin{bmatrix}
-      \leftarrow \tau(\bold i) \rightarrow \\
-      \leftarrow \tau(\bold i) \rightarrow \\
-      \leftarrow \tau(\bold i) \rightarrow \\
-      \leftarrow \bold b \rightarrow \\
+      \leftarrow \tau(\textbf i) \rightarrow \\
+      \leftarrow \tau(\textbf i) \rightarrow \\
+      \leftarrow \tau(\textbf i) \rightarrow \\
+      \leftarrow \textbf b \rightarrow \\
      \end{bmatrix} \\
   &= \begin{bmatrix}
        {x}', & {y}', & {z}', & {w}'
@@ -229,37 +229,37 @@ $$
 
 위의 그림은 두 좌표계 $A$와 $B$, 그리고 벡터 $p$가 있을 때 좌표계 $B$에 상대적인 $p$의 좌표를 도식으로 보여주고 있다. 
 
-$P_{A}$ 를 A 좌표계의 기저벡터 $\bold u_{A},\ \bold v_{A}$ 를 이용하여 다음과 같이 표현할 수 있다.
+$P_{A}$ 를 A 좌표계의 기저벡터 $\textbf u_{A},\ \textbf v_{A}$ 를 이용하여 다음과 같이 표현할 수 있다.
 
 [//]: ![](coordi_system_ex_a.png)
 
 $$
 \begin {aligned} 
-\bold P_{A} = x \bold u_{A} + y \bold v_{A}
+\textbf P_{A} = x \textbf u_{A} + y \textbf v_{A}
 \end{aligned}
 $$
 
-이번에는 $P_{B}$ 를 **$B$ 좌표계로 표현한 $A$ 좌표계**의 기저벡터 $\bold u_{B},\ \bold v_{B}$ 를 이용하여 다음과 같이 표현할 수 있다.
+이번에는 $P_{B}$ 를 **$B$ 좌표계로 표현한 $A$ 좌표계**의 기저벡터 $\textbf u_{B},\ \textbf v_{B}$ 를 이용하여 다음과 같이 표현할 수 있다.
 
 [//]: ![](coordi_system_ex_b.png)
 
 $$
 \begin {aligned} 
-\bold P_{B} = x \bold u_{B} + y \bold v_{B}
+\textbf P_{B} = x \textbf u_{B} + y \textbf v_{B}
 \end{aligned}
 $$
 
-$\bold u_{B},\ \bold v_{B}$ 는 각각 $\bold u_{A},\ \bold v_{A}$ 를 선형변환하여 얻어 낸 것이다.
+$\textbf u_{B},\ \textbf v_{B}$ 는 각각 $\textbf u_{A},\ \textbf v_{A}$ 를 선형변환하여 얻어 낸 것이다.
 
-따라서 선형변환에 해당하는 행렬 $C_{A->B}$ 를 $\bold u_{A},\ \bold v_{A}$ 에 곰셉연산하여 $\bold u_{B},\ \bold v_{B}$ 를 구할 수 있다.
+따라서 선형변환에 해당하는 행렬 $C_{A->B}$ 를 $\textbf u_{A},\ \textbf v_{A}$ 에 곰셉연산하여 $\textbf u_{B},\ \textbf v_{B}$ 를 구할 수 있다.
 
 [//]: ![](coordi_system_equ.png)
 
 $$
 \begin {aligned} 
-\bold uC_{A->B} &= \bold u_{B} \\
-\bold vC_{A->B} &= \bold v_{B} \\
-\bold P_{B} &= x \bold u_{B} + y \bold v_{B} \\
+\textbf uC_{A->B} &= \textbf u_{B} \\
+\textbf vC_{A->B} &= \textbf v_{B} \\
+\textbf P_{B} &= x \textbf u_{B} + y \textbf v_{B} \\
             &= x \tau(u) + y \tau(v) \\
             &= x u C_{A->B} + y v C_{A->B}
 \end{aligned}
@@ -273,7 +273,7 @@ $$
 
 $$
 \begin {aligned} 
-\bold P_{B} = x \bold u_{B} + y \bold v_{B} + z \bold w_{B}
+\textbf P_{B} = x \textbf u_{B} + y \textbf v_{B} + z \textbf w_{B}
 \end{aligned}
 $$
 
@@ -283,7 +283,7 @@ $$
 
 $$
 \begin {aligned} 
-\bold P_{B} = x \bold u_{B} + y \bold v_{B} + z \bold w_{B} + \bold Q_{B}
+\textbf P_{B} = x \textbf u_{B} + y \textbf v_{B} + z \textbf w_{B} + \textbf Q_{B}
 \end{aligned}
 $$
 
@@ -321,16 +321,16 @@ $$
 
 ```latex
 \begin{aligned}
-\alpha(x, y, z) &= \tau(x, y, z) + \bold b \\
-                &= x \tau(\bold i) + y \tau(\bold j) + z \tau(\bold k) + \bold b \\
+\alpha(x, y, z) &= \tau(x, y, z) + \textbf b \\
+                &= x \tau(\textbf i) + y \tau(\textbf j) + z \tau(\textbf k) + \textbf b \\
                 &= \begin{bmatrix}
                      x & y & z & w
                    \end{bmatrix} 
                    \begin{bmatrix}
-                     \leftarrow \tau(\bold i) \rightarrow \\
-                     \leftarrow \tau(\bold i) \rightarrow \\
-                     \leftarrow \tau(\bold i) \rightarrow \\
-                     \leftarrow \bold b \rightarrow \\
+                     \leftarrow \tau(\textbf i) \rightarrow \\
+                     \leftarrow \tau(\textbf i) \rightarrow \\
+                     \leftarrow \tau(\textbf i) \rightarrow \\
+                     \leftarrow \textbf b \rightarrow \\
                    \end{bmatrix} \\
                 &= \begin{bmatrix}
                      {x}' & {y}' & {z}' & {w}'
@@ -351,10 +351,10 @@ $$
                      x & y & z & w
                    \end{bmatrix} 
                    \begin{bmatrix}
-                     \leftarrow \bold u_{B} \rightarrow \\
-                     \leftarrow \bold v_{B} \rightarrow \\
-                     \leftarrow \bold w_{B} \rightarrow \\
-                     \leftarrow \bold Q_{B} \rightarrow \\
+                     \leftarrow \textbf u_{B} \rightarrow \\
+                     \leftarrow \textbf v_{B} \rightarrow \\
+                     \leftarrow \textbf w_{B} \rightarrow \\
+                     \leftarrow \textbf Q_{B} \rightarrow \\
                    \end{bmatrix} \\
                 &= \begin{bmatrix}
                      x & y & z & w
@@ -365,7 +365,7 @@ $$
                      w_{x} & w_{y} & w_{z} & 0 \\
                      Q_{x} & Q_{y} & Q_{z} & 1 \\
                    \end{bmatrix} \\
-                &= x \bold u_{B} + y \bold v_{B} + z \bold w_{B} + w \bold Q_{B}
+                &= x \textbf u_{B} + y \textbf v_{B} + z \textbf w_{B} + w \textbf Q_{B}
 \end{aligned}
 ```
 
