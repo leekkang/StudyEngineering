@@ -1,3 +1,14 @@
+- [스택 프레임](#스택-프레임)
+- [함수 호출 규약](#함수-호출-규약)
+- [Locality](#locality)
+- [메모리 단편화](#메모리-단편화)
+  - [`페이징(Paging)` 기법](#페이징paging-기법)
+- [정적 지역 변수(Static Local Variable) 원리](#정적-지역-변수static-local-variable-원리)
+
+---
+
+
+
 ## Memory Management Strategy
 
   - 운영체제 내에서 메모리 시스템에 대한 전반적인 지식들을 모아놓은 문서
@@ -57,6 +68,30 @@
 
   - https://phaphaya.tistory.com/24
   - https://plummmm.tistory.com/354
+  
+
+
+---
+# Locality
+
+  - CPU와 메모리 사이에서 데이터를 주고받는 행동(pipeline fetch)은 시간이 오래걸린다.
+  - 이를 해결하기 위해 프로세서 안에 CPU와 메인 메모리 사이에 `캐시(임시 저장소)`를 추가했다.
+    - CPU가 메인 메모리에 정보를 request 하면 메인 메모리는 캐시에 정보를 저장한다. CPU는 캐시의 정보를 사용한다.
+    - 이후 CPU가 같은 정보를 request 하면 캐시에 있던 정보를 바로 사용한다.
+  - 캐시는 메인 메모리보다 크기가 상당히 작다. 어떻게 정보를 저장하나?
+  - 해당 정보만 저장하는 것이 아니라 해당 정보의 `가까운 주변 정보들`을 같이 저장한다.
+  - `Locality` 는 두 가지 종류가 있다.
+    - ### Temporal Locality(Locality in Time, 시간 지역성)
+      - 동일한 데이터가 재사용될 가능성이 높은 경우 캐시에 저장
+    - ### Spatial Locality(Locality in Space, 공간 지역성)
+      - 한번 접근한 데이터의 주변 데이터들을 사용할 가능성이 높은 경우 캐시에 저장
+      - 배열의 경우 여기에 해당한다.
+  
+  - TODO
+
+  - 참고
+    - https://wpaud16.tistory.com/225
+
 
 
 ---
