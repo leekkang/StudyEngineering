@@ -1,4 +1,13 @@
-﻿
+﻿- [Document Link](#document-link)
+- [Rendering Pipeline](#rendering-pipeline)
+- [World, View, Projection Transformation](#world-view-projection-transformation)
+- [Class Default Object](#class-default-object)
+- [Deferred Rendering](#deferred-rendering)
+- [Light](#light)
+
+---
+
+
 ## Graphics
 
   - 그래픽스 관련 정보들을 저장해놓는 문서
@@ -19,6 +28,13 @@
 # Document Link
 
   - ## [CPP Study](CPP_Study.md)
+
+
+---
+# Rendering Pipeline
+
+  - TODO
+  - [Unity 3D Rendering Pipeline](unity3d_rendering_pipeline.md)
 
 
 ---
@@ -64,3 +80,10 @@
   - 렌더 타겟은 최대 8개 만들어 낼 수 있다. (DX9 는 4개) -> 멀티 렌더 타겟(MRT)
   - `알베도 타겟`, `노말 타겟`, `뎁스 타겟`들을 `G버퍼` 라고 한다. (기하 정보 버퍼)
   - 알파값을 가지는 물체는 조명 처리가 끝난 후 따로 그려준다.
+
+
+---
+# Light
+
+  - TODO
+  - [basic_light](basic_light/basic_light.md)
