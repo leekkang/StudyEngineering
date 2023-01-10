@@ -88,7 +88,7 @@
   - TODO
   - [basic_light](basic_light/basic_light.md)
  
-  - ### BDRF (Bidirectional Reflection Distribution Function, 양방향 반사 분포 함수)
+  - ### BRDF (Bidirectional Reflection Distribution Function, 양방향 반사 분포 함수)
     - 표면이 반사하는 빛의 양을 평가하는 데 쓰이는 함수 (수학 공식)
     - 일반적으로 빛의 속성과 표면의 재질 속성, 시점 또는 카메라의 위치를 포함한 여러 개의 입력 매개변수들을 사용한다.
     - `블린-퐁(Blinn-Phong)` 모델의 BDRF를 기본값으로 자주 사용한다.
