@@ -99,14 +99,57 @@
 
   - 이미지의 전체 밝기와 대비(contrast)를 조정하고 출력 장치에 맞게 이미지의 색상 범위를 줄이는 데 사용되는 기술
   - `HDR`을 사용할 때 반드시 필요하다.
+  - `Luminance(휘도)`
+    - 사람이 무언가를 얼마나 밝게 보는지를 측정하는 단일 스칼라 값
+    - 우리는 초록색이 파란색보다 좀 더 밝다고 느낀다.
+    - 때문에 기존 RGB-Triple의 값을 그대로 사용하면 우리가 인식하는 것과 약간 다른 색상이 나온다.
+    - $L=0.2126R+0.7152G+0.0722B$
+    - 휘도를 사용하는 톤매핑 연산자는 RGB 채널을 휘도로 변환 후 매핑을 하고, 결과값을 새 휘도값으로 스케일링 한다.
+      - 라인하르트 말고 다른 톤매핑에서는 그냥 상수값으로 조절하더라..
+
   - ### Reinhard's Operator (라인하르트의 연산자)
     - 가장 간단하고 널리 쓰이는 연산자이다.
     - [자세한 내용은 여기서 참고](https://expf.wordpress.com/2010/05/04/reinhards_tone_mapping_operator/)
+    - 가장 밝은 지역을 없애기 위해 상한값을 지정하는 수정 버전도 있다.
+    - 라인하르트 연산자는 휘도를 사용하는 연산자이기 때문에 정확한 연산을 하려면 RGB값을 휘도로 변경할 필요가 있다.
 
   $$
-L(x,y) = L_w * ( (L(x,y)\ /\ L_w)\ /\ (1 + L(x,y)\ /\ L_w) )
+\begin {aligned} 
+L_d(x,y) &= \frac{L(x,y)}{1 + L(x,y)} \\
+L_{d-ext}(x,y) &= \frac{L(x,y) (1 + \frac{L(x,y)}{L^2_{white}})}{1 + L(x,y)} \quad L_{white} = cutoff\ parameter
+\end {aligned} 
   $$
 
+  - ### Reinhard's Operator (Luminance Tone Map)
+    - 기존 수정된 라인하르트 연산자에 rgb값 대신 휘도를 넣어서 계산하는 방식
+$$
+  C_{out} = C_{int} \frac{L_{out}}{L_{in}} \quad C = RGB, L = luminance
+$$
+
+```cpp
+float luminance(Vector3 v) {
+  return dot(v, Vector3(0.2126f, 0.7152f, 0.0722f));
+}
+
+Vector3 change_luminance(Vector3 c_in, float l_out) {
+  float l_in = luminance(c_in);
+  return c_in * (l_out / l_in);
+}
+
+Vector3 reinhard_extended_luminance(Vector3 v, float max_white_l)
+{
+    float l_old = luminance(v);
+    float numerator = l_old * (1.0f + (l_old / (max_white_l * max_white_l)));
+    float l_new = numerator / (1.0f + l_old);
+    return change_luminance(v, l_new);
+}
+```
+
+  - 참고
+    - https://64.github.io/tonemapping/
+    - https://bruop.github.io/tonemapping/
+    - [Reinhard's Tone-Mapping Operator](https://expf.wordpress.com/2010/05/04/reinhards_tone_mapping_operator/)
+    - 
 
 ## Gamma Correction
 
@@ -153,5 +196,5 @@ L(x,y) = L_w * ( (L(x,y)\ /\ L_w)\ /\ (1 + L(x,y)\ /\ L_w) )
 
   - 참고
     - [UNDERSTANDING GAMMA CORRECTION](https://www.cambridgeincolour.com/tutorials/gamma-correction.htm)
-    - [GAMMA AND LINEAR SPACE - WHAT THEY ARE AND HOW THEY DIFFER](http://www.kinematicsoup.com/news/2016/6/15/gamma-and-linear-space-what-they-are-how-they-differ)
+    - [WHAT EVERY CODER SHOULD KNOW ABOUT GAMMA](https://blog.johnnovak.net/2016/09/21/what-every-coder-should-know-about-gamma/)
     - [LearnOpenGL - Gamma Correction](https://learnopengl.com/Advanced-Lighting/Gamma-Correction)
