@@ -113,6 +113,7 @@
     - 우리는 초록색이 파란색보다 좀 더 밝다고 느낀다.
     - 때문에 기존 RGB-Triple의 값을 그대로 사용하면 우리가 인식하는 것과 약간 다른 색상이 나온다.
     - $Y=0.2126R+0.7152G+0.0722B$
+      - `CIE Yxy 색표계`의 Y값이 휘도와 동일하다고 하는데 더 알아볼 필요가 있다.
     - 휘도를 사용하는 톤매핑 연산자는 RGB 채널을 휘도로 변환 후 매핑을 하고, 결과값을 새 휘도값으로 스케일링 한다.
       - 라인하르트 말고 다른 톤매핑에서는 그냥 상수값으로 조절하더라..
   - `Luma`
@@ -137,6 +138,7 @@
 
   - 이미지의 전체 밝기와 대비(contrast)를 조정하고 출력 장치에 맞게 이미지의 색상 범위를 줄이는 데 사용되는 기술
   - `HDR`을 사용할 때 반드시 필요하다.
+  - `감마 보정`되지 않은 선형성의 색상을 가지고 연산을 진행해야 정확한 값이 나온다. -> 출력 시 감마 인코딩을 해야 한다.
 
   - ### Reinhard's Operator (라인하르트의 연산자)
     - 가장 간단하고 널리 쓰이는 연산자이다.
@@ -158,23 +160,116 @@ $$
 $$
 
 ```cpp
-float luminance(Vector3 v) {
-  return dot(v, Vector3(0.2126f, 0.7152f, 0.0722f));
+float luminance(float3 v) {
+  return dot(v, float3(0.2126f, 0.7152f, 0.0722f));
 }
 
-Vector3 change_luminance(Vector3 c_in, float l_out) {
+float3 change_luminance(float3 c_in, float l_out) {
   float l_in = luminance(c_in);
   return c_in * (l_out / l_in);
 }
 
-Vector3 reinhard_extended_luminance(Vector3 v, float max_white_l)
-{
+float3 reinhard_extended_luminance(float3 v, float max_white_l) {
     float l_old = luminance(v);
     float numerator = l_old * (1.0f + (l_old / (max_white_l * max_white_l)));
     float l_new = numerator / (1.0f + l_old);
     return change_luminance(v, l_new);
 }
 ```
+
+  - ### Filmic Tone Mapping Operator
+    - 말 그대로 영화처럼 보이게 만들어주는 톤 매핑
+    - Radiance(X축)-Brightness(Y축) 그래프에서 라인하르트 연산자와 비교했을 때, 끝 부분 (toe, shoulder)이 굴곡진다.
+    - 감마 보정이 필요 없도록 조정된(Baked) 연산자도 있다.
+
+![](img/filmic-curve.png)
+
+  - ### [Uncharted2](https://www.gdcvault.com/play/1012351/Uncharted-2-HDR)
+    - John Hable이 Uncharted2 HDR Lighting 발표 문서에서 소개한 내용
+    - 최초 버전은 감마 보정 불필요, 수정된 버전은 감마 보정 필요
+
+```cpp
+// 감마값이 포함된 톤맵핑. John Hable이 발표함
+float3 ToneMapFilmicALU(in float3 color) {
+	color = max(0, color - 0.004f);
+	color = (color * (6.2f * color + 0.5f)) / (color * (6.2f * color + 1.7f) + 0.06f);
+	return color;
+}
+
+float3 ToneMapUncharted2Partial(float3 x) {
+	float A = 0.15f;	// Shoulder Strength
+	float B = 0.50f;	// Linear Strength
+	float C = 0.10f;	// Linaer Angle
+	float D = 0.20f;	// Toe Strength
+	float E = 0.02f;	// Toe Numerator
+	float F = 0.30f;	// Toe Denominator
+	return ((x * (A * x + C * B) + D * E) / (x * (A * x + B) + D * F)) - E / F;
+}
+float3 ToneMapUncharted2(float3 col) {
+	float exposureBias = 2.0f;
+	float3 curr = ToneMapUncharted2Partial(col * exposureBias);
+
+	float W = 11.2f;	// Linear White Point Value
+	float3 whiteScale = 1.0f / ToneMapUncharted2Partial(W);
+	return curr * whiteScale;
+}
+```
+
+  - ### ACES (Academy Color Encoding System)
+    - `영화 예술 과학 아카데미(Academy of Motion Picture Arts and Sciences)`의 후원 하에 개발된 무료 개방형 장치 독립형 색상 관리 및 이미지 교환 시스템
+    - 색 공간을 표준화하기 위해 만들어졌으며 넓은 색 공간을 사용하기 때문에 사실적이다.
+    - 언리얼 엔진4에서 사용하는 TMO이다.
+
+```cpp
+// sRGB => XYZ => D65_2_D60 => AP1 => RRT_SAT
+static const float3x3 ACESInputMat = {
+	{ 0.59719f, 0.35458f, 0.04823f },
+	{ 0.07600f, 0.90834f, 0.01566f },
+	{ 0.02840f, 0.13383f, 0.83777f }
+};
+
+// ODT_SAT => XYZ => D60_2_D65 => sRGB
+static const float3x3 ACESOutputMat = {
+	{ 1.60475f, -0.53108f, -0.07367f },
+	{ -0.10208f, 1.10813f, -0.00605f },
+	{ -0.00327f, -0.07276f, 1.07602f }
+};
+float3 RRTAndODTFit(float3 v) {
+	float3 a = v * (v + 0.0245786f) - 0.000090537f;
+	float3 b = v * (0.983729f * v + 0.4329510f) + 0.238081f;
+	return a / b;
+}
+float3 ToneMapACESFitted(float3 color) {
+	color = mul(ACESInputMat, color);
+
+    // Apply RRT and ODT
+	color = RRTAndODTFit(color);
+
+	color = mul(ACESOutputMat, color);
+
+    // Clamp to [0, 1]
+	return saturate(color);
+}
+```
+
+  - ### [ACES Approximate](https://knarkowicz.wordpress.com/2016/01/06/aces-filmic-tone-mapping-curve/)
+    - `ACES` 연산 부하를 줄인 간단한 버전. 밝은 색상을 좀 더 강조(과포화)한다.
+
+```cpp
+float3 ToneMapACES(float3 x) {
+	x *= 0.6f;
+    // Narkowicz 2015, "ACES Filmic Tone Mapping Curve"
+	const float a = 2.51f;
+	const float b = 0.03f;
+	const float c = 2.43f;
+	const float d = 0.59f;
+	const float e = 0.14f;
+	
+	return saturate((x * (a * x + b)) / (x * (c * x + d) + e));
+}
+```
+
+![](img/ACES_approximate.png)
 
   - 참고
     - https://64.github.io/tonemapping/

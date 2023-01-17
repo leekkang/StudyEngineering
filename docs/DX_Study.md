@@ -104,3 +104,10 @@ dwrite로 폰트를 사용하려면 iDWriteFactory를 만들어야 한다.
     - `3dsMax` 좌표계는 $x$ 가 오른쪽, $y$ 가 앞쪽, $z$ 가 위쪽이다. (오른손 좌표계) 
     - DX좌표계는 $x$ 가 오른쪽, $y$ 가 위쪽, $z$ 가 앞쪽이다. (왼손 좌표계)
     - 
+
+
+---
+# Texture Mipmap
+
+  - TODO
+  - https://ryumin13.tistory.com/entry/DirectX-texture-mipmap%EC%97%90-%EB%8C%80%ED%95%B4-%EC%95%8C%EC%95%84%EB%B3%B4%EC%9E%90
