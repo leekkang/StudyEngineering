@@ -2,6 +2,7 @@
 - [좌표계 변환](#좌표계-변환)
 - [선분의 방정식](#선분의-방정식)
 - [곡면 방정식](#곡면-방정식)
+- [입체각 (Solid Angle)](#입체각-solid-angle)
 - [충돌](#충돌)
   - [두 선분의 교차점 구하기](#두-선분의-교차점-구하기)
   - [Cohen-Sutherland 선분 알고리즘](#cohen-sutherland-선분-알고리즘)
@@ -19,7 +20,7 @@
     - https://easings.net/ko
     - https://github.com/nicolausYes/easing-functions/blob/master/src/easing.cpp
 
-![](img/easing.png)
+![](img/Math/easing.png)
 
 
 
@@ -133,6 +134,36 @@ $$
  - TODO
 
 
+
+---
+# 입체각 (Solid Angle)
+
+  - ### 구의 반지름의 제곱과 구 표면상의 폐곡면의 넓이가 같아지는 중심각의 크기
+ 
+  - 단위는 **스테라디안(steradian, $sr$)** 을 사용한다.
+  - 반지름이 1인 구와 $r$인 구의 넓이 비를 이용해 중심각 $\omega$를 구할 수 있다.
+    - 반지름이 $r$인 구의 표면적 넓이는 $4\pi r^2$ 이다.
+    - 반지름이 1인 구의 입체각은 표면적 넓이와 같다 -> $4\pi  1^2 = 4\pi$ 
+    - $\therefore$ 반지름이 $r$이고 폐곡면의 넓이가 $A$인 입체각 $\omega$ 스테라디안은 다음의 비례식으로 정리할 수 있다.
+      - $1^2 : \omega = r^2 : A$
+  - 2차원의 각을 3차원으로 확장한 개념
+    - 2차원의 각 `라디안`의 정의는 **원의 반지름과 호의 길이가 같아지는 중심각의 크기 (호도, $rad$)** 이다.
+  - 입체각이 매우 작아지면 입체각이 만들어내는 원뿔의 밑면 넓이로 수렴한다.
+    - 카메라로 들어오는 빛의 입체각은 렌즈의 넓이를 대신 사용하여 근사한 입체각을 계산할 수 있다.
+
+$$
+  \begin{aligned}
+\alpha &= \frac{s}{r} \quad s=arc\ length \\
+\omega &= \frac{A}{r^2} \quad A=spherical\ cap\ area
+  \end{aligned}
+$$
+
+![](img/Math/steradian.png)
+
+  - 참고
+    - https://mkpark.tistory.com/10
+    - 구의 겉넓이 구하는 법 : https://color-change.tistory.com/57
+
 ---
 # 충돌
 
@@ -179,7 +210,7 @@ $$
     - 이차원 내에서 외적의 방향성은 `부호`로 나타난다.
     - 선분의 한 점에서 시작하는 벡터를 기준으로 두 점까지의 `벡터 외적값의 부호`가 다르면 교차한다고 볼 수 있다.
 
-      ![](img/cross.png)
+      ![](img/Math/cross.png)
    
     - 위의 그림처럼 $\vec{ab}$ 를 기준으로 `c`와 `d`의 외적값을 비교하고, $\vec{cd}$ 를 기준으로 `a`와 `b`의 외적값을 비교하면 된다.
   
@@ -233,7 +264,7 @@ $$
   - 선분과 사각형의 포함관계를 확인하는 알고리즘이다.
   - `top, bottom, right, left` 순으로 0 또는 1의 값을 줘서 비트 연산 시 나오는 값을 통해 해당 선분이 존재하는 영역을 찾아낸다.
   - 0000 영역이 비교하는 사각형의 영역이다.
-  ![](img/cohen_sutherland.jpg)
+  ![](img/Math/cohen_sutherland.jpg)
 
      1. or 연산 시 0이 나오면 두 점이 가운데 있는 것이다.
   	
@@ -350,7 +381,7 @@ $$
     - $\overrightarrow{AB}$의 길이가 $\overline{AD}$의 길이와 같거나 크다.
     - $\overline{CD}$의 길이가 반지름보다 작다.
   
-    ![](img/line_circle.jpg)
+    ![](img/Math/line_circle.jpg)
 
   - 먼저, 선분을 구성하는 **두 점 A, B가 원의 내부에 있는지 확인한다.** 무조건 교차하기 때문
   - 두 점 A, B가 모두 원의 외부에 있는 경우 아래의 순서대로 확인한다.
@@ -441,7 +472,7 @@ $$
   - 아래 해법은 결론이 나지 않아서 폐기
   - 근의 공식을 이용한다.
 
-![](img/line_circle2.jpg)
+![](img/Math/line_circle2.jpg)
 
 $$
 ax^2 + bx + c = 0 \\
