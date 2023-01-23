@@ -31,32 +31,43 @@
 
 | 단위 이름 | 단위 기호 | 물리량 이름 | 물리량 기호 | 차원 기호 | 
 |:---:|:---:|:---:|:---:|:---:|
-| 초 | ${\rm s}$ | 시간 | $l$ | $\textsf{T}$ | 
-| 미터 | ${\rm m}$ | 길이 | $m$ | $\textsf{L}$ | 
-| 킬로그램 | ${\rm kg}$ | 질량 | $t$ | $\textsf{M}$ | 
-| 암페어 | ${\rm A}$ | 전류 | $I$ | $\textsf{I}$ | 
+| 초 | ${\rm s}$ | 시간 | $l$ | ${\sf T}$ | 
+| 미터 | ${\rm m}$ | 길이 | $m$ | ${\sf L}$ | 
+| 킬로그램 | ${\rm kg}$ | 질량 | $t$ | ${\sf M}$ | 
+| 암페어 | ${\rm A}$ | 전류 | $I$ | ${\sf I}$ | 
 | 켈빈 | ${\rm K}$ | 온도 | $T$ | $\Theta$ | 
-| 몰 | ${\rm mol}$ | 물질량 | $n$ | $\textsf{N}$ | 
-| 칸델라 | ${\rm cd}$ | 광도 | $I_v$ | $\textsf{J}$ | 
+| 몰 | ${\rm mol}$ | 물질량 | $n$ | ${\sf N}$ | 
+| 칸델라 | ${\rm cd}$ | 광도 | $I_v$ | ${\sf J}$ | 
 
   - 유도 단위 (필요한 것만 작성, 나머지는 위키 참조)
   
-| 단위 이름 | 단위 기호 | 물리량 이름 | SI 기본 단위 | 차원 |
-|:---:|:---:|:---:|:---:|:---:|
-| 라디안 | ${\rm rad}$  | 평면각 | ${\rm m \cdot m^{-1}}$ | $\textsf{1}$ |
+| 단위 이름 | 단위 기호 | 물리량 이름 | SI 기본 단위 | 다른 SI 단위 | 차원 |
+|:---:|:---:|:---:|:---:|:---:|:---:|
+| 라디안 | ${\rm rad}$ | 평면각 (plane angle) | ${\rm m \cdot m^{-1}}$ | 1 | ${\sf 1}$(무차원) |
+| 스테라디안 | ${\rm sr}$ | 입체각 (solid angle) | ${\rm m^2 \cdot m^{-2}}$ | 1 | ${\sf 1}$(무차원) |
+| 헤르츠 | ${\rm Hz}$  | 주파수 (frequency) | ${\rm s^{-1}}$ |  | ${\sf T^{-1}}$ |
+| 뉴턴 | ${\rm N}$  | 힘 (force, weight) | ${\rm kg \cdot m \cdot s^{-2}}$ |  | ${\sf MLT^{-2}}$ |
+| 파스칼 | ${\rm Pa}$  | 압력 (pressure, stress) | ${\rm kg \cdot m^{-1} \cdot s^{-2}}$ | ${\rm N \cdot m^{-2} = J \cdot m^{-3}}$ | ${\sf ML^{-1}T^{-2}}$ |
+| 줄 | ${\rm J}$  | 에너지, 일, 열량 (energy, work, heat) | ${\rm kg \cdot m^2 \cdot s^{-2}}$ | ${\rm N \cdot m = Pa \cdot m^{3}}$ | ${\sf ML^{2}T^{-2}}$ |
+| 와트 | ${\rm W}$  | 일률, 전력 (power, radiant flux) | ${\rm kg \cdot m^2 \cdot s^{-3}}$ | ${\rm J \cdot s^{-1}}$ | ${\sf ML^{2}T^{-3}}$ |
+| 루멘 | ${\rm lm}$  | 광선속 (luminous flux) | ${\rm cd \cdot sr}$ |  | ${\sf J}$ |
+| 럭스 | ${\rm lx}$  | 조도 (illuminance) | ${\rm cd \cdot sr \cdot m^{-2}}$ | ${\rm lm \cdot m^{-2}}$ | ${\sf JL^{-2}}$ |
 
 ---
 # [Radiometry](https://en.wikipedia.org/wiki/Radiometry)
 
   - 전자기파의 복사(Electromagnetic Radiation)를 측정하는 일련의 기술
+  - 전자기파(electromagnetic) 특성을 반영한다는 것을 알리기 위해 기호에 첨자 $e$ 를 붙인다.
   - ### 복사(Radiation)
-    - 0($K$)이상 온도의 모든 물체는, 전자기 복사선
+    - 0($K$)이상 온도의 모든 물체는, 전자기 복사선에 의해 에너지를 방출할 수 있다.
+    - `전자기파로 방출되어 전달되는 에너지` 또는 `공간, 물질을 통해 에너지를 전달하는 능력을 갖는 것`을 총칭하여 복사, 방사라고 말한다.
 
 
 
 
   - 참고
     - [복사와 방사의 차이](https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=kore2758_&logNo=221415392684)
+    - [정보통신기술용어해설](http://www.ktword.co.kr/test/view/view.php?m_temp1=4520)
 
 
 ---
