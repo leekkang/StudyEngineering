@@ -1,7 +1,8 @@
 ﻿- [Document Link](#document-link)
 - [SI 기본 단위](#si-기본-단위)
+- [용어 정리](#용어-정리)
 - [Radiometry](#radiometry)
-- [Photometric Units](#photometric-units)
+- [Photometry (Optics)](#photometry-optics)
   - [Luminance vs Luma](#luminance-vs-luma)
 - [Tone Mapping](#tone-mapping)
 - [Gamma Correction](#gamma-correction)
@@ -53,17 +54,121 @@
 | 루멘 | ${\rm lm}$  | 광선속 (luminous flux) | ${\rm cd \cdot sr}$ |  | ${\sf J}$ |
 | 럭스 | ${\rm lx}$  | 조도 (illuminance) | ${\rm cd \cdot sr \cdot m^{-2}}$ | ${\rm lm \cdot m^{-2}}$ | ${\sf JL^{-2}}$ |
 
+
+
+---
+# 용어 정리
+
+  - ### [Flux](https://ko.wikipedia.org/wiki/%EC%84%A0%EC%86%8D)
+    - 선속(線束->묶을 속), 선다발, 유속(流束), 플럭스
+    - 단위면적에 대한 어떤 성질의 흐름의 비율 -> 차원은 $물리량 \cdot 시간^{-1}\cdot 길이^{-2}$ 이 된다.
+      - 매초마다 강의 횡단면을 통과하는 물의 양을 해당 단면의 면적으로 나눈 값
+      - 매초 일정 면적의 땅에 내리쬐는 햇빛의 양을 땅의 면적으로 나눈 값
+    - `벡터 필드의 표면 적분` 으로 나타내진다. 선속 자체는 스칼라 값으로 표현된다.
+      - $\large \Phi_{F} = \iint_{A} {\rm F \cdot d\bold A}$
+    - 모든 `벡터 필드`가 가지고 있는 성질이다.
+    - 플럭스를 근본적인 `양(quantity)`으로 가정한다면 `벡터 필드`는 **선속 밀도 (flux density)** 가 된다.
+      - 벡터 필드가 곡선으로 그려질 때, 벡터 필드의 크기는 선의 밀도이며, 면을 통과하는 선속의 크기는 선의 개수 이다.
+    - 복사선속(Radiant Flux, $\rm W$), 광속(Luminous Flux, $\rm lm$), 전속($\rm Coulomb$), 자속($\rm Wb$), 전류($\rm A$), 유체 질량(Fluid Mass, $\rm kg$), 방사 에너지량($\rm J$) 등이 있다.
+
+  - ### [Field](http://www.ktword.co.kr/test/view/view.php?m_temp1=3928&id=1172)
+    - 장(場), 계(界), 필드
+    - 공간에서 위치, 시간 등에 따라 그 성질이 달라지는 물리량
+    - 스칼라 필드 : 각 점이 크기를 나타내며 분포되어 있는 공간
+      - 대기의 각 점에서 온도, 밀도, 압력
+      - 전하가 있는 공간에서 전위의 분포
+      - 유체흐름의 속도 포텐셜
+      - 음파의 세기 또는 압력(음압)
+    - 벡터 필드 : 각 점이 크기, 방향을 갖는 벡터를 나타내며 분포되어 있는 공간
+      - 속도장 : 각 점에 `속도 벡터`를 대응시킨 것
+        - 해류 속도장, 풍속 속도장
+      - 역장 : 각 점에 `힘 벡터`를 대응시킨 것
+        - 중력장, 전기장, 자기장
+
+  - 참고
+    - http://www.ktword.co.kr/test/view/view.php?m_temp1=4259&id=75
+
 ---
 # [Radiometry](https://en.wikipedia.org/wiki/Radiometry)
 
-  - 전자기파의 복사(Electromagnetic Radiation)를 측정하는 일련의 기술
-  - 전자기파(electromagnetic) 특성을 반영한다는 것을 알리기 위해 기호에 첨자 $e$ 를 붙인다.
-  - ### 복사(Radiation)
+  - 전자기파의 복사(Electromagnetic Radiation)를 측정하는 과학(복사도학)
+  - 전자기파(electromagnetic) 특성을 반영한다는 것을 알리기 위해 기호에 첨자 $\rm e$ 를 붙인다.
+
+  - ### 복사 (Radiation)
     - 0($K$)이상 온도의 모든 물체는, 전자기 복사선에 의해 에너지를 방출할 수 있다.
     - `전자기파로 방출되어 전달되는 에너지` 또는 `공간, 물질을 통해 에너지를 전달하는 능력을 갖는 것`을 총칭하여 복사, 방사라고 말한다.
+    -  파장 범위가, 대략 0.1 ~ 100 $\rm\mu m$ 정도에서의 복사를 주로 `열 복사`라 한다.
+ 
+  - ### [복사선속 (Radiant Flux, Radiant Power)](https://en.wikipedia.org/wiki/Radiant_flux)
+    - `단위 시간`당 `복사 에너지(Radiant Energy)의 량` 또는 `에너지 플럭스` 
+    - 단위 : $\rm J / s = Watt$. 즉, 전력 단위
+    - $\LARGE \Phi_e = \frac{dQ_e}{dt}$
+      - $Q_e$ : 닫힌 표면에서 나오는 방향의 복사 에너지 플럭스
+ 
+  - ### [복사 세기 (Radiant Intensity)](https://en.wikipedia.org/wiki/Radiant_intensity)
+    - `단위 입체각` 당 방출, 반사, 투과 또는 수신되는 `복사선속`
+    - 점원(點原)으로부터 `퍼져나가는 방사 형태`의 방출 세기, 강도
+    - 단위 : $\rm W / sr$
+    - $\LARGE I_{e, \Omega} = \frac{\partial\Phi_e}{\partial \Omega}$
+      - $\partial$ : 편미분 기호
+      - $\Phi_e$ : 방출, 반사, 투과 또는 수신된 복사선속
+      - $\Omega$ : 입체각
 
+  - ### [복사조도 (Irradiance)](https://en.wikipedia.org/wiki/Irradiance)
+    - `단위 면적`당 수신된 `복사선속`
+    - 단위 : $\rm W \cdot m^{-2}$
+    - $\LARGE E_e = \frac{\partial\Phi_e}{\partial \rm A}$
+      - $\partial$ : 편미분 기호
+      - $\Phi_e$ : 수신된 복사선속
+      - $\rm A$ : 면적
+    - 지구의 수평면에 대한 `전체 방사 조도(global irradiance)`는 직접(direct) 방사 조도, 확산(diffuse) 방사 조도, 반사(reflected) 방사 조도의 합으로 나타난다.
+      - $\large E_e = E_{e,dir} + E_{e,diff\cdotp} + E_{e,refl\cdotp}$
+      - 평균 지면 반사율은 대략 전체 조도의 20%이다.
+      - 일정 시간 동안의 태양 복사 조도의 적분을 `solar exposure` 또는 `일사량(insolation)`이라 한다.
 
+  - ### [복사 방출, 복사 발산도 (Radiant Exitance)](https://en.wikipedia.org/wiki/Radiant_exitance)
+    - `단위 면적` 당 방출되는 `복사선속`. = **복사선속 밀도(Radiant Flux Density)**
+    - 복사원(輻射源)의 `면적 형태`의 복사 방출 세기, 강도 (복사선속 면적 밀도)
+    - 다른 분야에서 종종 `강도(Intensity)`로 표현되지만, `복사 세기`와는 다른 개념이다.
+    - 단위 : $\rm W \cdot m^{-2}$
+    - $\LARGE M_{e} = \frac{\partial\Phi_e}{\partial \rm A}$
+      - $\partial$ : 편미분 기호
+      - $\Phi_e$ : 방출된 복사선속
+      - $\rm A$ : 면적
+    - [흑체](https://en.wikipedia.org/wiki/Black_body) 표면(Black Surface)에서의 복사 방출은 `스테판-볼츠만 법칙(Stefan-Boltzmann Law)`에 의해 다음과 같이 표현된다.
+      - $\large M_{e}^{\circ} = \sigma T^4$
+      - 실제 표면에서의 복사 방출은 아래와 같다.
+      - $\large M_{e} = \epsilon M_{e}^{\circ} = \epsilon\sigma T^4$
+        - $\epsilon$ = [방사율(Emissivity)](https://en.wikipedia.org/wiki/Emissivity)
 
+  - ### [라디오시티 (Radiosity)](https://en.wikipedia.org/wiki/Radiosity_(radiometry))
+    - `단위 면적` 당 표면을 떠나는(방출, 반사, 투과) `복사선속`
+    - 단위 : $\rm W \cdot m^{-2}$
+    - $\LARGE J_{e} = \frac{\partial\Phi_e}{\partial \rm A} = J_{e,em} + J_{e,r} + J_{e,tr}$
+      - $\partial$ : 편미분 기호
+      - $\Phi_e$ : 방출된 복사선속
+      - $\rm A$ : 면적
+      - $J_{e,em} = M_e$ : 라디오시티의 방출(emitted) 요소. 복사 방출과 같다
+      - $J_{e,r}$ : 라디오시티의 반사(reflected) 요소
+      - $J_{e,tr}$ : 라디오시티의 투과(transmitted) 요소
+    - `불투명 표면`에서는, 투과 요소가 사라지고 나머지 2개의 요소로 라디오시티를 표현한다.
+      - $\large J_{e} = M_e + J_{e,r} = \epsilon\sigma T^4 + (1-\sigma)E_e$
+        - $\epsilon$ = 방사율(Emissivity)
+        - $\sigma$ = 스테판-볼츠만 상수(Stefan-Boltzmann constant)
+        - $T$ = 표면의 온도
+        - $E_e$ = 복사 조도
+
+  - ### [복사 휘도, 복사도 (Radiance)](https://en.wikipedia.org/wiki/Radiance)
+    - `단위 면적`, `단위 입체각` 당 방출, 반사, 투과 또는 수신되는 `복사선속`
+    - 단위 : $\rm W \cdot sr^{-1} \cdot m^{-2}$
+    - $\LARGE L_{e, \Omega} = \frac{\partial^2\Phi_e}{\partial \Omega\partial A cos\theta}$
+      - $\partial$ : 편미분 기호
+      - $\Phi_e$ : 방출, 반사, 투과 또는 수신된 복사선속
+      - $\Omega$ : 입체각
+      - $\rm Acos\theta$ : 투영된 면적
+
+![](img/Light/flux,%20irradiant,%20radiant.png)
+  - ## (a) : Flux, (b) : Irradiance, (c) : Radiance
 
   - 참고
     - [복사와 방사의 차이](https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=kore2758_&logNo=221415392684)
@@ -71,12 +176,23 @@
 
 
 ---
-# Photometric Units
- 
-  - ### BRDF (Bidirectional Reflection Distribution Function, 양방향 반사 분포 함수)
-    - 표면이 반사하는 빛의 양을 평가하는 데 쓰이는 함수 (수학 공식)
-    - 일반적으로 빛의 속성과 표면의 재질 속성, 시점 또는 카메라의 위치를 포함한 여러 개의 입력 매개변수들을 사용한다.
-    - `블린-퐁(Blinn-Phong)` 모델의 BRDF를 기본값으로 자주 사용한다.
+# Photometry (Optics)
+
+  - 인간의 눈에 대한 밝기(Brightness) 측면에서 빛을 측정하는 과학(광도학, 측광학)
+    - `밝기(brightness)`는 `복사도학(radiometry)`의 전력(power)과 대응된다.
+  - 시각(visual) 특성을 반영한다는 것을 알리기 위해 기호에 첨자 $\rm v$ 를 붙인다.
+
+
+
+
+
+
+
+
+- ### BRDF (Bidirectional Reflection Distribution Function, 양방향 반사 분포 함수)
+  - 표면이 반사하는 빛의 양을 평가하는 데 쓰이는 함수 (수학 공식)
+  - 일반적으로 빛의 속성과 표면의 재질 속성, 시점 또는 카메라의 위치를 포함한 여러 개의 입력 매개변수들을 사용한다.
+  - `블린-퐁(Blinn-Phong)` 모델의 BRDF를 기본값으로 자주 사용한다.
 
 ## Luminance vs Luma
 

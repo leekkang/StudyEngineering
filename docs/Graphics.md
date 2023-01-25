@@ -31,6 +31,7 @@
 # Document Link
 
   - ## [CPP Study](CPP_Study.md)
+  - ## [Light](Light.md)
 
 
 ---
@@ -80,7 +81,7 @@
   - 기존 렌더링(Forward Rendering)은 물체를 그릴 대 조명 처리를 한다. (물체 수 * 조명 수)
   - 포워드 렌더링의 연산 수를 줄이기 위해 물체를 그린 후 조명 처리를 한다. (물체 수 + 조명 수)
   - 베이스 물체를 출력하는 렌더링 타겟을 `알베도 타겟` 이라고 한다.
-  - 렌더 타겟은 최대 8개 만들어 낼 수 있다. (DX9 는 4개) -> 멀티 렌더 타겟(MRT)
+  - 렌더 타겟은 한 패스당 최대 8개 만들어 낼 수 있다. (DX9 는 4개) -> 멀티 렌더 타겟(MRT)
   - `알베도 타겟`, `노말 타겟`, `뎁스 타겟`들을 `G버퍼` 라고 한다. (기하 정보 버퍼)
   - 알파값을 가지는 물체는 조명 처리가 끝난 후 따로 그려준다.
 
@@ -101,11 +102,11 @@
   - `Luminance(휘도)`
     - 어떤 방향으로 이동하는 빛의 단위 면적당 광도
     - 빛의 강도에 대한 물리적 측정이며, 단위는 평방미터 당 칸델라이다. $(cd/m^2)$
-      - 광도(칸델라, $cd$) : 광원에서 특정 방향으로 나오는 가시광의 강도
-      - 광속(루멘, $lm$) : 광원으로부터 나오는 가시광의 총량
-      - 조도(룩스, $lux$) : 물체의 단위 면적에 들어오는 빛의 양
-      - 휘도(니트, $nit$) : 광원으로부터 복사되는 빛의 밝기, [위키](https://ko.wikipedia.org/wiki/%ED%9C%98%EB%8F%84)
-      - 광효율(루멘 퍼 와트, $lm/W$) : 단위전력당 방출되는 광량
+      - 광도(Luminous Intensity) : 광원에서 특정 방향으로 나오는 가시광의 강도 (칸델라, $cd, \frac{lm}{sr}$)
+      - 광속(Luminous Power) : 광원으로부터 나오는 가시광의 총량 (루멘, $lm$)
+      - 조도(Illuminance) : 물체의 단위 면적에 들어오는 빛의 양 (룩스, $lx, \frac{lm}{m^2}$)
+      - 휘도(Luminance) : 광원으로부터 복사되는 빛의 밝기 (니트, $nt, \frac{cd}{m^2}$) [위키](https://ko.wikipedia.org/wiki/%ED%9C%98%EB%8F%84)
+      - 광효율(Luminous Efficacy) : 단위전력당 방출되는 광량 (루멘 퍼 와트, $\frac{lm}{W}$)
 
   - `Relative Luminance(상대 휘도)`
     - 사람이 무언가를 얼마나 밝게 보는지를 측정하는 단일 스칼라 값
@@ -122,17 +123,8 @@
     - 실제 광원을 가지고 이미지 센서를 가리키면, 센서는 $R'G'B'$ 값을 출력한다. 프라임 == 감마 컴프레션
     - $Y'=0.2126R'+0.7152G'+0.0722B'$
 
-  ![](img/luminance_unit.png)
-
   - 참고
     - https://cs.stackexchange.com/questions/92569/what-is-the-difference-between-luma-and-luminance
-    - [아트세미텍 ppt - LED 광 측정 단위](https://slidesplayer.org/slide/12638978/)
-
-  ![](img/luminance_unit1.png)
-
-  ![](img/luminance_unit2.png)
-
-  ![](img/luminance_unit_conversion.png)
 
 ## Tone Mapping
 
@@ -146,34 +138,33 @@
     - 가장 밝은 지역을 없애기 위해 상한값을 지정하는 수정 버전도 있다.
     - 라인하르트 연산자는 휘도를 사용하는 연산자이기 때문에 정확한 연산을 하려면 RGB값을 휘도로 변경할 필요가 있다.
 
+
   $$
 \begin {aligned} 
-L_d(x,y) &= \frac{L(x,y)}{1 + L(x,y)} \\
-L_{d-ext}(x,y) &= \frac{L(x,y) (1 + \frac{L(x,y)}{L^2_{white}})}{1 + L(x,y)} \quad L_{white} = cutoff\ parameter
+TMO(C) &= \frac{C}{1 + C(x,y)} \\
+TMO_{ext}(C) &= \frac{C * (1 + \frac{C}{C^2_{white}})}{1 + C} \quad C_{white} = cutoff\ parameter
 \end {aligned} 
   $$
 
   - ### Reinhard's Operator (Luminance Tone Map)
     - 기존 수정된 라인하르트 연산자에 rgb값 대신 휘도를 넣어서 계산하는 방식
 $$
-  C_{out} = C_{int} \frac{L_{out}}{L_{in}} \quad C = RGB, L = luminance
+\begin {aligned} 
+  TMO_{extlum}(C) &= C\ \frac{L_d(x,y)}{L(x,y)} \quad C = RGB \\
+L_d(x,y) &= \frac{L(x,y) (1 + \frac{L(x,y)}{L^2_{white}})}{1 + L(x,y)} \quad L_{white} = cutoff\ parameter
+\end {aligned} 
 $$
 
 ```cpp
-float luminance(float3 v) {
-  return dot(v, float3(0.2126f, 0.7152f, 0.0722f));
+float GetLuminance(float3 rgb) {
+	return dot(rgb, float3(0.2126f, 0.7152f, 0.0722f));
 }
 
-float3 change_luminance(float3 c_in, float l_out) {
-  float l_in = luminance(c_in);
-  return c_in * (l_out / l_in);
-}
-
-float3 reinhard_extended_luminance(float3 v, float max_white_l) {
-    float l_old = luminance(v);
-    float numerator = l_old * (1.0f + (l_old / (max_white_l * max_white_l)));
-    float l_new = numerator / (1.0f + l_old);
-    return change_luminance(v, l_new);
+float3 ReinhardLuminance(float3 hdr, float averageLum, float middleGray, float cutoffWhite) {
+	float lum = GetLuminance(hdr);
+	lum *= middleGray / averageLum;	// middleGray ~~ camera exposure configuration
+	float lumOut = (lum * (1.0f + (lum / (cutoffWhite * cutoffWhite)))) / (1.0f + lum);
+	return hdr * (lumOut / lum);
 }
 ```
 
