@@ -2,7 +2,22 @@
 - [SI 기본 단위](#si-기본-단위)
 - [용어 정리](#용어-정리)
 - [Radiometry](#radiometry)
+  - [복사선속 (Radiant Flux, Radiant Power)](#복사선속-radiant-flux-radiant-power)
+  - [복사 세기, 복사 강도 (Radiant Intensity)](#복사-세기-복사-강도-radiant-intensity)
+  - [복사조도 (Irradiance, 照度)](#복사조도-irradiance-照度)
+  - [복사 방출, 복사 발산도 (Radiant Exitance)](#복사-방출-복사-발산도-radiant-exitance)
+  - [라디오시티 (Radiosity)](#라디오시티-radiosity)
+  - [복사 휘도, 복사도 (Radiance, 輝度)](#복사-휘도-복사도-radiance-輝度)
+  - [참고](#참고)
 - [Photometry (Optics)](#photometry-optics)
+  - [광속, 광선속, 광전력, 광속량 (Luminous Flux, Luminous Power)](#광속-광선속-광전력-광속량-luminous-flux-luminous-power)
+  - [광도, 발광 세기 (Luminous Intensity)](#광도-발광-세기-luminous-intensity)
+  - [조도 (Illuminance, 照度)](#조도-illuminance-照度)
+  - [휘도 (Luminance, 輝度)](#휘도-luminance-輝度)
+  - [비시감도(比視感度), 상대 시감도 (Luminous Efficiency Function, Luminosity Function)](#비시감도比視感度-상대-시감도-luminous-efficiency-function-luminosity-function)
+  - [광원 효율, 발광 효율(Luminousity Efficacy)](#광원-효율-발광-효율luminousity-efficacy)
+  - [예시](#예시)
+  - [참고](#참고-1)
   - [Luminance vs Luma](#luminance-vs-luma)
 - [Tone Mapping](#tone-mapping)
 - [Gamma Correction](#gamma-correction)
@@ -85,6 +100,36 @@
       - 역장 : 각 점에 `힘 벡터`를 대응시킨 것
         - 중력장, 전기장, 자기장
 
+  - ### [Black Body(흑체)](https://en.wikipedia.org/wiki/Black_body)
+    - 모든 파장의 전자기파를 반사하지 않고 완전히 흡수하는 가상의(이상적인) 물체
+    - 때문에 `온도`에 의해서만 복사(열 복사)가 발생한다. 
+    - `열평형(Thermal Equilibrium)` 상태에 있는 (온도가 일정한) 흑체는 `흑체 복사`라는 전자기 복사를 방출한다.
+    - 열평형 상태의 흑체는 방사율(Emissivity)이 $\epsilon = 1.0$ 이다.
+
+  - ### [Black Body Radiation(흑체 복사)](https://ko.wikipedia.org/wiki/%ED%9D%91%EC%B2%B4)
+    - `흑체`에서 온도에 따라 빛이 나오는 현상 (열 복사)
+    - 방출 에너지량은 `절대온도`의 네제곱에 비례하며, `평균 진동수`는 `절대온도`에 정비례한다.
+    - 흑체 온도가 약 400도 이하면, 가시광선 없이 적외선만 방출한다.
+    - [키르히호프의 복사 법칙(Kirchhoff's law of thermal radiation)](https://en.wikipedia.org/wiki/Kirchhoff%27s_law_of_thermal_radiation)
+      - 복사파의 분포가 물체의 종류에 따라 다르지 않고, 오직 온도에만 의존한다.
+      - 뜨거운 물체는 같은 온도에서 같은 파장(색깔)을 가진다.
+    - [빈의 변위 법칙(Wien's displacement law)](https://en.wikipedia.org/wiki/Wien%27s_displacement_law)
+      - 흑체 복사의 파장 가운데 에너지 밀도가 가장 큰 파장과 흑체의 온도가 반비례한다.
+      - 온도가 높아질 수록 흑체의 색깔이 빨강->파랑색 으로 변한다.
+      - $\large \rm \lambda_{peak} \cdot T = 2.898 \times 10^{-3}m\cdot K$
+    - [스테판-볼츠만 법칙(Stefan–Boltzmann law)](https://en.wikipedia.org/wiki/Stefan%E2%80%93Boltzmann_law)
+      - 흑체의 단위 면적당 복사 에너지(방출)가 절대 온도의 4제곱에 비례한다.
+      - $\large M_{e}^{\circ} = \sigma T^4$
+        - $\sigma$ = 스테판-볼츠만 상수(Stefan-Boltzmann constant)
+        - $\sigma = 5.670\ 374\ 419 \dots \times 10^{-8}\ {\rm Wm^{-2}K^{-4}}$
+      - 실제 표면에서의 복사 방출은 아래와 같다.
+      - $\large M_{e} = \epsilon M_{e}^{\circ} = \epsilon\sigma T^4$
+        - $\epsilon$ = [방사율(Emissivity)](https://en.wikipedia.org/wiki/Emissivity)
+    - [플랑크 법칙(Planck's law)](https://en.wikipedia.org/wiki/Planck%27s_law)
+      - 온도 $T$에서 `열 평형 상태의 흑체`가 방출하는 전자기 복사의 스펙트럼 밀도를 설명한다.
+      - 저주파(긴 파장)에서 [레일리-진스 법칙(Rayleigh-Jeans law)](https://en.wikipedia.org/wiki/Rayleigh%E2%80%93Jeans_law)과 유사해지고, 고주파(짧은파장)에서 [빈 근사치(Wein approximation)](https://en.wikipedia.org/wiki/Wien_approximation)와 유사해진다.
+      - $B_{\lambda}(\lambda, T) = {\Large \frac{2hc^2}{\lambda^5}}  {\Large \frac{1}{ {\rm exp}{\Large( \frac{hc}{\lambda k_B T})} - 1}}$
+
   - 참고
     - http://www.ktword.co.kr/test/view/view.php?m_temp1=4259&id=75
 
@@ -96,83 +141,85 @@
 
   - ### 복사 (Radiation)
     - 0 $(K)$ 이상 온도의 모든 물체는, 전자기 복사선에 의해 에너지를 방출할 수 있다.
-    - `전자기파로 방출되어 전달되는 에너지` 또는 `공간, 물질을 통해 에너지를 전달하는 능력을 갖는 것`을 총칭하여 복사, 방사라고 말한다.
-    -  파장 범위가, 대략 0.1 ~ 100 $\rm\mu m$ 정도에서의 복사를 주로 `열 복사`라 한다.
+    - `공간, 물질을 통해 에너지가 사방으로 방출되는 현상` 또는 `전자기파로 방출되어 전달되는 에너지 자체(파동)`를 총칭하여 복사, 방사라고 말한다.
+    - 파장 범위가, 대략 0.1 ~ 100 $\rm\mu m$ 정도에서의 복사를 주로 `열 복사`라 한다.
+      - 전자기파에 의해 열이 매질을 통하지 않고 고온에서 저온으로 전달되는 현상
  
-  - ### [복사선속 (Radiant Flux, Radiant Power)](https://en.wikipedia.org/wiki/Radiant_flux)
-    - `단위 시간`당 `복사 에너지(Radiant Energy)의 량` 또는 `에너지 플럭스` 
-    - 단위 : $\rm J / s = Watt$. 즉, 전력 단위
-    - $\LARGE \Phi_e = \frac{dQ_e}{dt}$
-      - $Q_e$ : 닫힌 표면에서 나오는 방향의 복사 에너지 플럭스
- 
-  - ### [복사 세기 (Radiant Intensity)](https://en.wikipedia.org/wiki/Radiant_intensity)
-    - `단위 입체각` 당 방출, 반사, 투과 또는 수신되는 `복사선속`
-    - 점원(點原)으로부터 `퍼져나가는 방사 형태`의 방출 세기, 강도
-    - 단위 : $\rm W / sr$
-    - $\LARGE I_{e, \Omega} = \frac{\partial\Phi_e}{\partial \Omega}$
-      - $\partial$ : 편미분 기호
-      - $\Phi_e$ : 방출, 반사, 투과 또는 수신된 복사선속
-      - $\Omega$ : 입체각
+## [복사선속 (Radiant Flux, Radiant Power)](https://en.wikipedia.org/wiki/Radiant_flux)
+  - `단위 시간`당 `복사 에너지(Radiant Energy)의 량` 또는 `에너지 플럭스` 
+  - 단위 : $\rm J / s = Watt$. 즉, 전력 단위
+  - $\LARGE \Phi_e = \frac{dQ_e}{dt}$
+    - $Q_e$ : 닫힌 표면에서 나오는 방향의 복사 에너지 플럭스
 
-  - ### [복사조도 (Irradiance)](https://en.wikipedia.org/wiki/Irradiance)
-    - `단위 면적`당 수신된 `복사선속`
-    - 단위 : $\rm W \cdot m^{-2}$
-    - $\LARGE E_e = \frac{\partial\Phi_e}{\partial \rm A}$
-      - $\partial$ : 편미분 기호
-      - $\Phi_e$ : 수신된 복사선속
-      - $\rm A$ : 면적
-    - 지구의 수평면에 대한 `전체 방사 조도(global irradiance)`는 직접(direct) 방사 조도, 확산(diffuse) 방사 조도, 반사(reflected) 방사 조도의 합으로 나타난다.
-      - $\large E_e = E_{e,dir} + E_{e,diff\cdotp} + E_{e,refl\cdotp}$
-      - 평균 지면 반사율은 대략 전체 조도의 20%이다.
-      - 일정 시간 동안의 태양 복사 조도의 적분을 `solar exposure` 또는 `일사량(insolation)`이라 한다.
+## [복사 세기, 복사 강도 (Radiant Intensity)](https://en.wikipedia.org/wiki/Radiant_intensity)
+  - `단위 입체각` 당 방출, 반사, 투과 또는 수신되는 `복사선속`
+  - 점원(點原)으로부터 `퍼져나가는 방사 형태`의 방출 세기, 강도
+  - 단위 : $\rm W / sr$
+  - $\LARGE I_{e, \Omega} = \frac{\partial\Phi_e}{\partial \Omega}$
+    - $\partial$ : 편미분 기호
+    - $\Phi_e$ : 방출, 반사, 투과 또는 수신된 복사선속
+    - $\Omega$ : 입체각
 
-  - ### [복사 방출, 복사 발산도 (Radiant Exitance)](https://en.wikipedia.org/wiki/Radiant_exitance)
-    - `단위 면적` 당 방출되는 `복사선속`. = **복사선속 밀도(Radiant Flux Density)**
-    - 복사원(輻射源)의 `면적 형태`의 복사 방출 세기, 강도 (복사선속 면적 밀도)
-    - 다른 분야에서 종종 `강도(Intensity)`로 표현되지만, `복사 세기`와는 다른 개념이다.
-    - 단위 : $\rm W \cdot m^{-2}$
-    - $\LARGE M_{e} = \frac{\partial\Phi_e}{\partial \rm A}$
-      - $\partial$ : 편미분 기호
-      - $\Phi_e$ : 방출된 복사선속
-      - $\rm A$ : 면적
-    - [흑체](https://en.wikipedia.org/wiki/Black_body) 표면(Black Surface)에서의 복사 방출은 `스테판-볼츠만 법칙(Stefan-Boltzmann Law)`에 의해 다음과 같이 표현된다.
-      - $\large M_{e}^{\circ} = \sigma T^4$
-      - 실제 표면에서의 복사 방출은 아래와 같다.
-      - $\large M_{e} = \epsilon M_{e}^{\circ} = \epsilon\sigma T^4$
-        - $\epsilon$ = [방사율(Emissivity)](https://en.wikipedia.org/wiki/Emissivity)
+## [복사조도 (Irradiance, 照度)](https://en.wikipedia.org/wiki/Irradiance)
+  - `단위 면적`당 수신된 `복사선속` (照 : 비출 조)
+  - 단위 : $\rm W \cdot m^{-2}$
+  - $\LARGE E_e = \frac{\partial\Phi_e}{\partial \rm A}$
+    - $\partial$ : 편미분 기호
+    - $\Phi_e$ : 수신된 복사선속
+    - $\rm A$ : 면적
+  - 지구의 수평면에 대한 `전체 방사 조도(global irradiance)`는 직접(direct) 방사 조도, 확산(diffuse) 방사 조도, 반사(reflected) 방사 조도의 합으로 나타난다.
+    - $\large E_e = E_{e,dir} + E_{e,diff\cdotp} + E_{e,refl\cdotp}$
+    - 평균 지면 반사율은 대략 전체 조도의 20%이다.
+    - 일정 시간 동안의 태양 복사 조도의 적분을 `solar exposure` 또는 `일사량(insolation)`이라 한다.
 
-  - ### [라디오시티 (Radiosity)](https://en.wikipedia.org/wiki/Radiosity_(radiometry))
-    - `단위 면적` 당 표면을 떠나는(방출, 반사, 투과) `복사선속`
-    - 단위 : $\rm W \cdot m^{-2}$
-    - $\LARGE J_{e} = \frac{\partial\Phi_e}{\partial \rm A} = J_{e,em} + J_{e,r} + J_{e,tr}$
-      - $\partial$ : 편미분 기호
-      - $\Phi_e$ : 방출된 복사선속
-      - $\rm A$ : 면적
-      - $J_{e,em} = M_e$ : 라디오시티의 방출(emitted) 요소. 복사 방출과 같다
-      - $J_{e,r}$ : 라디오시티의 반사(reflected) 요소
-      - $J_{e,tr}$ : 라디오시티의 투과(transmitted) 요소
-    - `불투명 표면`에서는, 투과 요소가 사라지고 나머지 2개의 요소로 라디오시티를 표현한다.
-      - $\large J_{e} = M_e + J_{e,r} = \epsilon\sigma T^4 + (1-\sigma)E_e$
-        - $\epsilon$ = 방사율(Emissivity)
-        - $\sigma$ = 스테판-볼츠만 상수(Stefan-Boltzmann constant)
-        - $T$ = 표면의 온도
-        - $E_e$ = 복사 조도
+## [복사 방출, 복사 발산도 (Radiant Exitance)](https://en.wikipedia.org/wiki/Radiant_exitance)
+  - `단위 면적` 당 방출되는 `복사선속`. = **복사선속 밀도(Radiant Flux Density)**
+  - 복사원(輻射源)의 `면적 형태`의 복사 방출 세기, 강도 (복사선속 면적 밀도)
+  - 다른 분야에서 종종 `강도(Intensity)`로 표현되지만, `복사 세기`와는 다른 개념이다.
+  - 단위 : $\rm W \cdot m^{-2}$
+  - $\LARGE M_{e} = \frac{\partial\Phi_e}{\partial \rm A}$
+    - $\partial$ : 편미분 기호
+    - $\Phi_e$ : 방출된 복사선속
+    - $\rm A$ : 면적
+  - [흑체](https://en.wikipedia.org/wiki/Black_body) 표면(Black Surface)에서의 복사 방출은 `스테판-볼츠만 법칙(Stefan-Boltzmann Law)`에 의해 다음과 같이 표현된다.
+    - $\large M_{e}^{\circ} = \sigma T^4$
+    - 실제 표면에서의 복사 방출은 아래와 같다.
+    - $\large M_{e} = \epsilon M_{e}^{\circ} = \epsilon\sigma T^4$
+      - $\sigma$ = 스테판-볼츠만 상수(Stefan-Boltzmann constant)
+      - $\epsilon$ = [방사율(Emissivity)](https://en.wikipedia.org/wiki/Emissivity)
 
-  - ### [복사 휘도, 복사도 (Radiance)](https://en.wikipedia.org/wiki/Radiance)
-    - `단위 면적`, `단위 입체각` 당 방출, 반사, 투과 또는 수신되는 `복사선속`
-    - 단위 : $\rm W \cdot sr^{-1} \cdot m^{-2}$
-    - $\LARGE L_{e, \Omega} = \frac{\partial^2\Phi_e}{\partial \Omega\partial A cos\theta}$
-      - $\partial$ : 편미분 기호
-      - $\Phi_e$ : 방출, 반사, 투과 또는 수신된 복사선속
-      - $\Omega$ : 입체각
-      - $\rm Acos\theta$ : 투영된 면적
+## [라디오시티 (Radiosity)](https://en.wikipedia.org/wiki/Radiosity_(radiometry))
+  - `단위 면적` 당 표면을 떠나는(방출, 반사, 투과) `복사선속`
+  - 단위 : $\rm W \cdot m^{-2}$
+  - $\LARGE J_{e} = \frac{\partial\Phi_e}{\partial \rm A} = J_{e,em} + J_{e,r} + J_{e,tr}$
+    - $\partial$ : 편미분 기호
+    - $\Phi_e$ : 방출된 복사선속
+    - $\rm A$ : 면적
+    - $J_{e,em} = M_e$ : 라디오시티의 방출(emitted) 요소. 복사 방출과 같다
+    - $J_{e,r}$ : 라디오시티의 반사(reflected) 요소
+    - $J_{e,tr}$ : 라디오시티의 투과(transmitted) 요소
+  - `불투명 표면`에서는, 투과 요소가 사라지고 나머지 2개의 요소로 라디오시티를 표현한다.
+    - $\large J_{e} = M_e + J_{e,r} = \epsilon\sigma T^4 + (1-\sigma)E_e$
+      - $\epsilon$ = 방사율(Emissivity)
+      - $\sigma$ = 스테판-볼츠만 상수(Stefan-Boltzmann constant)
+      - $T$ = 표면의 온도
+      - $E_e$ = 복사 조도
+
+## [복사 휘도, 복사도 (Radiance, 輝度)](https://en.wikipedia.org/wiki/Radiance)
+  - `단위 면적`, `단위 입체각` 당 방출, 반사, 투과 또는 수신되는 `복사선속` (輝 : 빛날 휘)
+  - 단위 : $\rm W \cdot sr^{-1} \cdot m^{-2}$
+  - $\LARGE L_{e, \Omega} = \frac{\partial^2\Phi_e}{\partial \Omega\partial A cos\theta}$
+    - $\partial$ : 편미분 기호
+    - $\Phi_e$ : 방출, 반사, 투과 또는 수신된 복사선속
+    - $\Omega$ : 입체각
+    - $\rm Acos\theta$ : 투영된 면적
 
 ![](img/Light/flux,%20irradiant,%20radiant.png)
   - ## (a) : Flux, (b) : Irradiance, (c) : Radiance
 
-  - 참고
-    - [복사와 방사의 차이](https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=kore2758_&logNo=221415392684)
-    - [정보통신기술용어해설](http://www.ktword.co.kr/test/view/view.php?m_temp1=4520)
+## 참고
+  - [복사와 방사의 차이](https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=kore2758_&logNo=221415392684)
+  - [정보통신기술용어해설](http://www.ktword.co.kr/test/view/view.php?m_temp1=4520)
 
 
 ---
@@ -180,12 +227,121 @@
 
   - 인간의 눈에 대한 밝기(Brightness) 측면에서 빛을 측정하는 과학(광도학, 측광학)
     - `밝기(brightness)`는 `복사도학(radiometry)`의 전력(power)과 대응된다.
+    - 전자기파 주파수 스펙트럼 전체가 아닌 `가시광선` 영역만 측정
   - 시각(visual) 특성을 반영한다는 것을 알리기 위해 기호에 첨자 $\rm v$ 를 붙인다.
 
+![Radiometry vs Photometry](img/Light/compare.png)
 
 
+## [광속, 광선속, 광전력, 광속량 (Luminous Flux, Luminous Power)](https://en.wikipedia.org/wiki/Luminous_flux)
+  - 인지할 수 있는 빛의 전력 척도
+  - 인간의 눈으로 느껴지는 빛의 선속량
+  - 각 파장 별로 눈의 반응 정도가 달라지는데, 이 때 가시광선 대역의 모든 파장에서 가중치의 합(적분)이 광속이다. 자세한건 [비시감도](#비시감도比視感度-상대-시감도-luminous-efficiency-function-luminosity-function) 참고
+  - 단위 : ${\rm 1\ lm = 1\ cd \times 1\ sr}$
+  - 기호 : ${\large \Phi_{\rm v}}$
+
+## [광도, 발광 세기 (Luminous Intensity)](https://en.wikipedia.org/wiki/Luminous_intensity)
+  - `단위 입체각` 당 특정 방향으로 광원에서 방출되는 `광선속(Luminous Flux)`
+  - `시감도`에 기초하여, 광원의 밝기를 나타내는 값
+  - 단위 : $\rm cd\ (= lm / sr)$
+  - 기호 : ${\large I_{\rm v}}$
+  - 진동수 $540 × 10^{12}$ 헤르츠에서 `단위 입체각` 당 ${\rm 1 W}$의 전자기 에너지를 발산하는 광원의 광도는 ${\rm 683\ cd}$ 가 된다.
+    - 해당 광원은 파장이 ${\rm 555\ nm}$ 인 녹색 단색광이다.
+  - [램버트 코사인 법칙(Lambert's cosine Law)](https://en.wikipedia.org/wiki/Lambert%27s_cosine_law)
+    - 이상적인 난반사 표면 또는 디퓨즈 라디에이터에서 발생하는 `복사 강도 또는 광도`는 **입사광의 방향과 표면 법선 사이의 각도 $\theta$의 코사인에 정비례**한다.
+    - $I = I_0\ cos\theta$
+    - 표면의 광채는 광원과 법선의 각도에 영향을 받지만, 관측자와 법선의 각도에는 영향을 받지 않는다. -> 계산 시 한번만 고려하면 된다.
+
+## [조도 (Illuminance, 照度)](https://en.wikipedia.org/wiki/Illuminance)
+  - `단위 면적`당 표면에 입사하는 총 `광선속` (照 : 비출 조)
+  - 단위 : $\rm lx\ (= lm / m^2)$
+  - 기호 : ${\large E_{\rm v}}$
+  - 등방성(Isotropic) 광원의 광선속과 광원까지의 거리를 알 때 조도를 구하는 방법
+    - 광원이 비추는 면적의 넓이는 입체각의 정의에 따라 스테라디안 * $r^2$ 이 된다.
+    - 광선속의 입체각의 크기는 $4\pi$ 이다. (등방성이기 때문에)
+    - **$\therefore$ 조도는 광선속 / $4\pi \cdot r^2$ 이다.**
+    - 광도는 단위 입체각 당 광선속이다. -> 광선속 / $4\pi$
+    - **$\therefore$ 조도는 광도 / $r^2$ 이다.**
 
 
+## [휘도 (Luminance, 輝度)](https://en.wikipedia.org/wiki/Luminance)
+  - 주어진 방향으로 이동하는 `단위 면적` 당 `광도(Luminous Intensity)` (輝 : 빛날 휘)
+  - 디스플레이 같은 표면광원(발광면적이 0이 아닌 광원, 점광원의 반대)에서 주로 사용한다.
+  - 단위 : $\rm cd / m^2, nt$
+  - $\LARGE L_{\rm v} ={\rm \frac{d^2\Phi_v}{d\Sigma d\Omega_\Sigma  cos\theta_\Sigma}}$
+    - ${\rm d^2\Phi_v}$ : ${\rm d\Omega_\Sigma}$ 입체각 내 ${\rm d\Sigma}$ 영역을 떠나는 광선속
+    - ${\rm d\Sigma}$ : 특정 포인트를 포함하는 광원의 극소(infinitesimal) 면적
+    - ${\rm d\Omega_\Sigma}$ : 특정 방향을 포함하는 극소 입체각
+    - $\theta_\Sigma$ : 광원 표면의 법선벡터와 방향 사이의 각도
+
+
+## [비시감도(比視感度), 상대 시감도 (Luminous Efficiency Function, Luminosity Function)](https://en.wikipedia.org/wiki/Luminous_efficiency_function)
+  - 시감도(視感度) : 파장(색)별로 밝기 강도를 다르게 느끼는 감응력
+  - 최대 시감도 : 밝은 곳에 순응했을 때 인간의 눈이 최대 감도로 파장에서 느끼는 강도
+    - $\rm 555\ nm$ 파장의 이상적인 단색광(녹색)의 경우 $\rm 683.002\ lm / W$
+  - 비시감도 : 최대 시감도 대비 다른 파장의 시감도를 비율로 나타낸 것
+  - 정리하면, `인간의 눈이 빛의 각 파장별 밝기를 느끼는 강도를 수치로 나타낸 것`
+  
+  - [국제조명위원회(CIE)](https://en.wikipedia.org/wiki/International_Commission_on_Illumination) 와 [국제도량형총회(CGPM)](https://en.wikipedia.org/wiki/General_Conference_on_Weights_and_Measures) 에서 `표준 비시감도`를 규정한다.
+  - 밝은 조명에서 [명소시(Photopic)](https://en.wikipedia.org/wiki/Photopic_vision) 표준 비시감도를, 어두운 조명에서 [암소시(Scotopic)](https://en.wikipedia.org/wiki/Scotopic_vision) 표준 비시감도를 적용한다.
+    - 보통 특정하지 않는 경우, `명소시(Photopic Vision)`를 사용한다.
+  - 표준 비시감도 함수 ${\it \overline{y}(\lambda)\ or\ V(\lambda)}$ 를 사용하여 **복사계(Radiometric) 단위와 광도계(Photometric) 단위간의 변환**을 할 수 있다.
+    - $V(\lambda) = 1.019\ {\rm exp}(-285.4(\lambda - 0.559)^2)$
+  - 다음 식은 광원의 총 광선속을 계산한다. (복사계 -> 광도계) 
+  - -> 적분항은 `광원의 복사선속 * 비시감도`와 동일하고, 상수항은 정규화 인자(normalization factor) 이다.
+  - ${\rm \large \Phi_v = 683.002\ (lm / W)\cdot \int_{0}^{\infty} \overline{y}(\lambda) \Phi_{e, \lambda}(\lambda) d\lambda}$
+    - $\rm \Phi_v$ : 광선속 (루멘 단위)
+    - $\rm \Phi_{e, \lambda}$ : 스펙트럼 복사선속(= 파장별 복사선속) (와트 단위)
+    - $\it \overline{y}(\lambda)\ or\ V(\lambda)$ : 비시감도 함수
+    - $\rm \lambda$ : 파장, 단위 : $\rm nm$
+
+![](img/Light/Relative_luminous_efficiency_curve.png)
+
+  - `Photopic(black)` and `scotopic(green)` luminous efficiency functions
+    - The CIE 1931 standard (실선)
+    - The Judd–Vos 1978 modified data (파선(破線))
+    - The Sharpe, Stockman, Jagla & Jägle 2005 data (점선)
+
+## [광원 효율, 발광 효율(Luminousity Efficacy)](https://en.wikipedia.org/wiki/Luminous_efficacy)
+
+  - 광원이 가시광선을 얼마나 잘 생성하는지를 측정하는 척도
+  - 광출력(전력)에 대한 광선속의 비율로, 와트당 루멘 $\rm (lm / W)$ 이다.
+  - 계산에 사용되는 `Power` 가 무엇이냐에 따라 명칭이 약간 달라진다.
+  - `Luminous Efficacy of Radiation` = 시감도
+    - 복사선속(Radiant Flux)을 `Power`로 사용한다.
+    - $\rm 555\ nm$ 파장의 이상적인 단색광(녹색)의 경우 최대 광원효율은 $\rm 683.002\ lm / W$ 이다.
+    - 광선속 / 복사선속 이다.
+    - $K = {\rm {\LARGE \frac{\Phi_v}{\Phi_e}} = {\Large \frac{\int_{0}^{\infty} {\it K}(\lambda) \Phi_{e, \lambda}(\lambda) d\lambda}{\int_{0}^{\infty} \Phi_{e, \lambda}(\lambda) d\lambda}}}$
+      - $\rm \Phi_v$ : 광선속 (루멘 단위)
+      - $\rm \Phi_e$ : 복사선속 (와트 단위)
+      - $\rm \Phi_{e, \lambda}$ : 스펙트럼 복사선속(= 파장별 복사선속) (와트 단위)
+      - ${K(\lambda) = K_{\rm m}V(\lambda)}$ : 파장 별 시감도
+  - `Luminous Efficacy of a Light Source, Overall Luminous Efficacy`
+    - 소스가 소비하는 총 전력(전력, 화학 에너지, 기타 등)을 `Power`로 사용한다. -> `wall-plug efficacy` 라고도 한다.
+    - 입력 에너지가 열 또는 전자기파가 아닌 다른 것으로도 방출된다.
+    - 백열전구와 같은 필라멘트의 열 방출에 의존하는 광원은 전반적인 효율이 낮다. -> 대부분 열 적외선
+    - 단위는 같지만 시감도와 구분을 위해 기호로 $\eta$ 를 사용한다.
+
+## 예시
+
+  - 60 ${\rm W}$의 백열등 전구의 광선속은 1000 ${\rm lm}$이고, 빛이 전구로부터 모든 방향으로 동일하게 방출된다고 가정하자.
+  1. 전구의 발광효율(Luminousity Efficacy)
+     - 1000 / 60 = 16.7 ${\rm lm / W}$ 
+  2. 전구의 광도(Luminous Intensity)
+     - 1000 / 4$\pi$ = 1000 / 12.57 = 79.6 ${\rm cd}$ 
+  3. 전구 밑 1.5m에 위치한 책상 위의 조도(illuminance)
+     - 면적 = 스테라디안의 크기 * $r^2$
+     - 1000 / (4$\pi \cdot r^2)$  = 1000 / (12.57 * 2.25) = 35.357 ${\rm lux}$ 
+  4. 전구로부터의 거리 r에서 조도와 광도간의 관계식
+     - $E_{\rm v} = I_{\rm v} / r^2$
+  4. 전구로부터의 거리 r에서 조도와 광선속간의 관계식
+     - $E_{\rm v} = \Phi_{\rm v} / 4\pi \cdot r^2$ (3번의 풀이에 사용한 식)
+
+## 참고
+  - [정보통신기술용어해설](http://www.ktword.co.kr/test/view/view.php?m_temp1=4520)
+  - [시감도 함수와 발광효율](https://m.blog.naver.com/namgoocha/220236955232)
+  - [광량 간의 관계](https://blog.signifykorea.com/?p=10821)
+  - [Light-Emitting Diodes](https://ocw.snu.ac.kr/sites/default/files/NOTE/791.pdf)
 
 
 
@@ -226,6 +382,7 @@
   - 참고
     - https://cs.stackexchange.com/questions/92569/what-is-the-difference-between-luma-and-luminance
     - [아트세미텍 ppt - LED 광 측정 단위](https://slidesplayer.org/slide/12638978/)
+    - [시감도 함수와 발광효율](https://m.blog.naver.com/namgoocha/220236955232)
 
   ![](img/Light/luminance_unit1.png)
 
