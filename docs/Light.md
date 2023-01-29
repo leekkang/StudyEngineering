@@ -19,6 +19,12 @@
   - [예시](#예시)
   - [참고](#참고-1)
   - [Luminance vs Luma](#luminance-vs-luma)
+- [BSDF (Bidirectional Scattering Distribution Function)](#bsdf-bidirectional-scattering-distribution-function)
+  - [BRDF (Bidirectional Reflection Distribution Function, 양방향 반사 분포 함수)](#brdf-bidirectional-reflection-distribution-function-양방향-반사-분포-함수)
+  - [Micro-facet Theory](#micro-facet-theory)
+  - [Cook-Torrance Model](#cook-torrance-model)
+  - [프레넬 방정식(Fresnel Equation)](#프레넬-방정식fresnel-equation)
+  - [참고](#참고-2)
 - [Tone Mapping](#tone-mapping)
 - [Gamma Correction](#gamma-correction)
 
@@ -251,6 +257,9 @@
     - 이상적인 난반사 표면 또는 디퓨즈 라디에이터에서 발생하는 `복사 강도 또는 광도`는 **입사광의 방향과 표면 법선 사이의 각도 $\theta$의 코사인에 정비례**한다.
     - $I = I_0\ cos\theta$
     - 표면의 광채는 광원과 법선의 각도에 영향을 받지만, 관측자와 법선의 각도에는 영향을 받지 않는다. -> 계산 시 한번만 고려하면 된다.
+    - 해당 법칙에 의해 `최고점 광도와 총 광선속의 관계`는 다음과 같다
+      - $F_{tot} = \pi sr \cdot I_{max}$
+      - 자세한 내용은 위키의 `Relating peak luminous intensity and luminous flux` 섹션 참고
 
 ## [조도 (Illuminance, 照度)](https://en.wikipedia.org/wiki/Illuminance)
   - `단위 면적`당 표면에 입사하는 총 `광선속` (照 : 비출 조)
@@ -262,7 +271,14 @@
     - **$\therefore$ 조도는 광선속 / $4\pi \cdot r^2$ 이다.**
     - 광도는 단위 입체각 당 광선속이다. -> 광선속 / $4\pi$
     - **$\therefore$ 조도는 광도 / $r^2$ 이다.**
-
+  - 휘도와 조도의 관계식
+    - $\int_{\Omega_\Sigma}\ L_{\rm v}\ d\Omega_\Sigma\  cos\theta_\Sigma\ = M_{\rm v} = E_{\rm v}R$
+      - $M_{\rm v}$ : 표면의 광 방출량(luminous exitance)
+      - $E_{\rm v}$ : 조도
+      - $R$ : 반사율 (= 알베도)
+  - `램버시안 표면(Lambertian Reflector, a perfectly diffuse reflector)`인 경우, 휘도는 램버트 코사인 법칙에 따라 등방성이 된다. 관계식을 다음과 같이 간단히 정리할 수 있다.
+    - $L_{\rm v} = {\Large \frac{E_{\rm v}R}{\pi}}$
+  
 
 ## [휘도 (Luminance, 輝度)](https://en.wikipedia.org/wiki/Luminance)
   - 주어진 방향으로 이동하는 `단위 면적` 당 `광도(Luminous Intensity)` (輝 : 빛날 휘)
@@ -344,12 +360,6 @@
   - [Light-Emitting Diodes](https://ocw.snu.ac.kr/sites/default/files/NOTE/791.pdf)
 
 
-
-- ### BRDF (Bidirectional Reflection Distribution Function, 양방향 반사 분포 함수)
-  - 표면이 반사하는 빛의 양을 평가하는 데 쓰이는 함수 (수학 공식)
-  - 일반적으로 빛의 속성과 표면의 재질 속성, 시점 또는 카메라의 위치를 포함한 여러 개의 입력 매개변수들을 사용한다.
-  - `블린-퐁(Blinn-Phong)` 모델의 BRDF를 기본값으로 자주 사용한다.
-
 ## Luminance vs Luma
 
   - `Luminance(휘도)`
@@ -390,6 +400,96 @@
 
   ![](img/Light/luminance_unit_conversion.png)
 
+
+
+
+
+---
+# [BSDF (Bidirectional Scattering Distribution Function)](https://en.wikipedia.org/wiki/Bidirectional_scattering_distribution_function)
+
+  - 빛이 어떤 물체에 부딪혔을 때 산란되는 방식을 설명하는 함수
+  - 보통 `BRDF(Reflected)`와 `BTDF(Transmitted)`의 집합을 이야기한다.
+    - 공식은 비슷하다. [BTDF 공식](https://www.ies.org/definitions/bidirectional-transmittance-distribution-function-btdf/)
+
+## [BRDF (Bidirectional Reflection Distribution Function, 양방향 반사 분포 함수)](https://en.wikipedia.org/wiki/Bidirectional_reflectance_distribution_function)
+  - 표면이 반사하는 빛의 양을 평가하는 데 쓰이는 함수 (수학 공식)
+    - `BSSRDF(Bidirectional Surface Scattering Reflection Distribution Function)`의 간략화 버전
+    - `BSSRDF`는 8차 함수, `BRDF`는 4차 함수 이다.
+  - 일반적으로 빛의 속성과 표면의 재질 속성, 시점 또는 카메라의 위치를 포함한 여러 개의 입력 매개변수들을 사용한다.
+  - 난반사(diffuse) 모델, 정반사(specular) 모델로 나뉜다. 둘을 한번에 설명할 수 있는 모델이 없다.
+  - 난반사 모델에는 보통 `램버시안(Lambertian)`, `벌리(Burley)` 두 가지 모델이 사용된다.
+    - `벌리(Burley)` 모델은 좀 무겁기 때문에 실시간 그래픽스에서는 많이 쓰이진 않는다.
+  - 정반사 모델에는 거의 대부분 `쿡-토런스(Cook-Torrance)` 모델을 사용한다.
+
+  - 물리 기반 BRDF 모델의 경우 아래의 속성이 존재한다.
+    - Positivity : 분포 함수의 결과값이 0보다 같거나 크다.
+    - Obeying [Helmholtz reciprocity](https://en.wikipedia.org/wiki/Helmholtz_reciprocity) : 입사와 반사의 방향이 바뀌어도 그 결과가 동일하다.
+    - Conserving Energy : 반사광의 에너지는 입사광의 에너지보다 작거나 같다.
+  - 에너지 보존의 경우, 모든 경우를 고려하면 계산이 복잡해지기 때문에 보통 `Diffuse`와 `Specular`에만 적용한다.
+  - Unreal Engine4의 경우 컬러 수식은 아래와 같다.
+    - $\large Color = \sum_{l = 1}^{n}(D_{dl}\cdot (1-metalic) + S_{dl}\cdot metalic + T_{dl}) + E + (D_{il} + S_{il})$
+      - $dl$ : 직접광
+      - $il$ : 간접광
+
+![BRDF Models](img/Light/BRDFModels.png)
+
+## [Micro-facet Theory](https://lifeisforu.tistory.com/352)
+
+  - 물체의 표면이 미세면(Microfacet)들로 이루어져 있다는 이론
+    - 미세면 : 임의의 크기와 각도를 가지는 작고 평평한 거울 집합
+  - 물리 기반 렌더링 모델에서 거칠기(Roughness)로 표현되는 부분이다.
+  - 각각의 미세면(Microsurface) 법선 벡터(m)가 메쉬 표면(Macrosurface)의 법선 벡터(n)와 동일한 방향으로 빛을 반사한다.
+  - 미세면 법선 벡터(m)의 분포도를 표현한 함수를 `미세면 분포 함수(Microfacet Distribution Function, D)` 이라 한다.
+  - 미세면 사이로 빛이 들어와 반사되는 빛이 다른 미세면에 가려지는 정도를 표현한 함수를 `그림자-마스킹 함수(Shadowing-Masking Function, G)` 라 한다.
+    - 마스킹(Masking), 섀도잉(Shadowing), 상호 반사(Interreflection) 세 가지의 중요한 기하학적 효과가 있다.
+    - 때문에 정확한 공식을 만드는 것이 거의 불가능하다.
+
+## Cook-Torrance Model
+
+  - `Robert L.Cook`, `Kenneth E.Torrance`가 발표한 정반사 모델
+  - `등방성(isotropic)` 재질의 미세면 모델의 경우, 쿡-토렌스 모델과 정확하게 일치한다.
+    - `미세면 분산 함수`를 변경하면 `비등방성(Anisotropic)` 재질도 표현이 가능하다.
+
+  - $f_{spec}(l, v) = {\Large \frac{F(l, h)}{4} \frac{D(h)\ G(l, v, h)}{(n \cdot v)(n \cdot l)}}$
+    - $D$ = Microfacet Distribution Function
+    - $F$ = Fresnel Equation
+    - $G$ = Geometry Function
+    - $n$ = Normal Vector
+    - $v$ = View Vector
+    - $l$ = Light Vector
+    - $h$ = Half Vector (View Vector + Light Vector)
+  - 원래 $\pi$를 나누었으나, 2007년 [Bruce Walter의 논문](https://www.cs.cornell.edu/~srm/publications/EGSR07-btdf.pdf)에서 4로 나눈 공식을 제시한다. (공동저자 목록에 Torrance가 있다.)
+  - `미세면 분산 함수(D)`와 `그림자 마스킹 함수(G)`는 러프니스(Roughness)와 관련이 있고, `프레넬 방정식(F)`은 금속성(Metallic)과 관련이 있다.
+    - `Roughness` 는 반사의 선명도 및 확산과 관련이 있으며, `Metallic` 은 반사의 세기 및 각도와 관련이 있다.
+  - `Unreal Engine4` 에서는 $D$, $G$, $F$ 함수로 아래의 식들을 사용한다. (다른 식도 선택 가능하긴 함)
+    - 전체 함수 목록은 [여기](http://graphicrants.blogspot.com/2013/08/specular-brdf-reference.html) 참고
+    - `GGX` 라는 단어의 어원? : [페이퍼](https://jcgt.org/published/0007/04/01/paper.pdf)
+  - $D$ : GGX(Trowbridge-Reitz)
+    - $D_{GGX}(m) = {\Large \frac{\alpha^2}{\pi ((n \cdot m)^2(\alpha^2 - 1) + 1)^2}}$
+  - $G$ : Schlick-GGX Model
+    - $k = {\Large \frac{(Roughness + 1)^2}{8}}$
+    - $G_1(v) = {\Large \frac{n\cdot v}{(n\cdot v)(1 - k) + k}}$
+    - $\therefore \large G(l, v, h) = G_1(l)G_1(v)$
+  - $F$ : Schlick's Approximation
+    - $F_{Schlick}({\rm v, h}) = F_0 + (1 - F_0)(1 - ({\rm v \cdot h}))^5$
+
+## [프레넬 방정식(Fresnel Equation)](https://en.wikipedia.org/wiki/Fresnel_equations)
+
+  - TODO
+
+
+
+
+## 참고
+
+  - [PBR 이란 무엇인가](https://lifeisforu.tistory.com/386)
+  - [Specular BRDF Reference](http://graphicrants.blogspot.com/2013/08/specular-brdf-reference.html)
+  - [Autodesk Standard Surface](https://autodesk.github.io/standard-surface/)
+  - [Physically Based Shading at Disney](https://media.disneyanimation.com/uploads/production/publication_asset/48/asset/s2012_pbs_disney_brdf_notes_v3.pdf)
+  - [GGX와 Schlick Fresnel, 쿡-토런스 함수](https://m.blog.naver.com/canny708/221551990444)
+  - [Microfacet Models](https://www.pbr-book.org/3ed-2018/Reflection_Models/Microfacet_Models)
+  - [Microfacet BRDF](https://m.blog.naver.com/PostView.nhn?isHttpsRedirect=true&blogId=hsg556&logNo=110129600105)
+  - [BRDF 구현하기](https://prooveyourself.tistory.com/6)
 
 ---
 # Tone Mapping
