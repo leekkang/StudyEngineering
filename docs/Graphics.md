@@ -4,6 +4,7 @@
 - [Class Default Object](#class-default-object)
 - [Deferred Rendering](#deferred-rendering)
 - [FXAA (Fast approXimate Anti-Aliasing)](#fxaa-fast-approximate-anti-aliasing)
+- [그람 슈미트 과정 (Gram-Schmidt Process)](#그람-슈미트-과정-gram-schmidt-process)
 - [Light](#light)
   - [Luminance vs Luma](#luminance-vs-luma)
   - [Tone Mapping](#tone-mapping)
@@ -91,6 +92,16 @@
 # FXAA (Fast approXimate Anti-Aliasing)
   
   - http://blog.simonrodriguez.fr/articles/2016/07/implementing_fxaa.html
+
+---
+# [그람 슈미트 과정 (Gram-Schmidt Process)](https://en.wikipedia.org/wiki/Gram%E2%80%93Schmidt_process)
+  
+  - 유한개의 벡터 집합을 직교 좌표계의 기저 벡터로 변환하는 방법
+  - 두 벡터 $\rm \bold v$와 $\rm \bold u$ 가 있을 때, $\rm \bold v$에서 $\rm \bold u$ 위로 정사영한 벡터 $\rm proj_u(\rm \bold v)$를 빼면 $\rm \bold v$와 수직인 벡터가 나온다는 것을 이용한다.
+  - 임의의 벡터 $\rm \bold{ v_1, v_2, v_3}$ 이 있을 때, 서로 직교하는 벡터 $\rm \bold{ u_1, u_2, u_3}$는 다음과 같이 구한다.
+    - $\rm \bold{u_1 = v_1}$
+    - $\rm \bold{u_2 = v_2} - proj_{\bold u_1}(\bold v_2)$
+    - $\rm \bold{u_3 = v_3} - proj_{\bold u_1}(\bold v_3) - proj_{\bold u_2}(\bold v_3)$
 
 
 ---
