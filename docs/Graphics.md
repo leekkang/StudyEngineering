@@ -3,6 +3,7 @@
 - [World, View, Projection Transformation](#world-view-projection-transformation)
 - [Class Default Object](#class-default-object)
 - [Deferred Rendering](#deferred-rendering)
+- [FXAA (Fast approXimate Anti-Aliasing)](#fxaa-fast-approximate-anti-aliasing)
 - [Light](#light)
   - [Luminance vs Luma](#luminance-vs-luma)
   - [Tone Mapping](#tone-mapping)
@@ -84,6 +85,12 @@
   - 렌더 타겟은 한 패스당 최대 8개 만들어 낼 수 있다. (DX9 는 4개) -> 멀티 렌더 타겟(MRT)
   - `알베도 타겟`, `노말 타겟`, `뎁스 타겟`들을 `G버퍼` 라고 한다. (기하 정보 버퍼)
   - 알파값을 가지는 물체는 조명 처리가 끝난 후 따로 그려준다.
+
+
+---
+# FXAA (Fast approXimate Anti-Aliasing)
+  
+  - http://blog.simonrodriguez.fr/articles/2016/07/implementing_fxaa.html
 
 
 ---
