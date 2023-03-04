@@ -8,6 +8,7 @@
   - [Cohen-Sutherland 선분 알고리즘](#cohen-sutherland-선분-알고리즘)
   - [선분과 원의 교차 확인](#선분과-원의-교차-확인)
   - [OBB 충돌 (Oriented-Bounding Box) 충돌](#obb-충돌-oriented-bounding-box-충돌)
+  - [반직선(Ray)과 OBB의 충돌 확인](#반직선ray과-obb의-충돌-확인)
 
  
 ## GameMath 
@@ -613,3 +614,39 @@ $$
     - https://wizardmania.tistory.com/28?category=610631
     - http://judis.me/wordpress/separating-axis-theorem/
     - https://www.geometrictools.com/Documentation/DynamicCollisionDetection.pdf
+
+
+---
+## 반직선(Ray)과 OBB의 충돌 확인
+
+  - 반직선을 OBB의 공간으로 변환해서 AABB 충돌 확인 알고리즘을 사용한다.
+  - AABB 충돌 확인은 `Slabs` 라는 개념을 사용한다.
+    - Slab : 평행한 두 평면 사이의 무한한 공간
+    - 박스의 각 축에 평행한 평면으로 만들어지는 모든 슬랩에 반직선이 포함된다면 충돌한다.
+    - 각 슬랩마다 최솟값, 최댓값을 구해 그 중 가장 큰 값, 가장 작은 값을 가지고 비교한다.
+    - 가장 큰 값이 가장 작은 값보다 작으면 반직선이 모든 슬랩을 통과한다는 것이고, 크면 임의의 슬랩을 통과하지 않는다는 것이다.
+
+![](img/Math/slabs.png)
+
+  - 반직선과 박스의 면이 평행할 때는 반직선 박스 내부에 있는지 판단하는 것으로 충돌을 확인할 수 있다.
+    - 박스 외부에 있는 경우, 평행한 평면의 슬랩은 절대 교차할 수 없기 때문이다.
+  - 반직선과 박스 면의 교점 거리는 다음의 공식으로 구할 수 있다. 각 축에 따라 전부 구해야 한다.
+    - 작은 값이 가까운 쪽 평면의 거리, 큰 값이 먼 쪽 평면의 거리가 된다.
+    - 음수인 경우 반직선 반대쪽 방향이 교차한다는 뜻이다. 예외 처리
+    - $\rm Axis_{i}\ \cdot\ rayDir == 0$ 인 경우 반직선과 면이 평행하다는 뜻이다.
+      - 이 때, 분자의 최솟값이 0보다 크거나, 분자의 최댓값이 0보다 작으면 반직선은 해당 슬랩에 포함되지 않는다 -> 즉, 교차하지 않는다.
+      - 교점 거리는 $\rm (center - rayPos) \plusmn box.len_{i}$ 이 된다.
+
+$$
+\begin{aligned}
+  {\rm \large S = \frac{Axis_{i}\ \cdot\ (center - rayPos) - box.len_{i}\ *\ 0.5}{Axis_{i}\ \cdot\ rayDir}} \\
+  {\rm \large S = \frac{Axis_{i}\ \cdot\ (center - rayPos) + box.len_{i}\ *\ 0.5}{Axis_{i}\ \cdot\ rayDir}} 
+\end{aligned}
+$$
+
+
+  - 참고
+    - [Fast and Robust Ray/OBB Intersection Using the Lorentz Transformation](https://www.researchgate.net/publication/354065095_Fast_and_Robust_RayOBB_Intersection_Using_the_Lorentz_Transformation)
+    - [광선 vs OBB 교차검출](https://wizardmania.tistory.com/24)
+
+
