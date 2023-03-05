@@ -8,6 +8,7 @@
   - [Cohen-Sutherland 선분 알고리즘](#cohen-sutherland-선분-알고리즘)
   - [선분과 원의 교차 확인](#선분과-원의-교차-확인)
   - [OBB 충돌 (Oriented-Bounding Box) 충돌](#obb-충돌-oriented-bounding-box-충돌)
+  - [반직선(Ray)과 구의 충돌 확인](#반직선ray과-구의-충돌-확인)
   - [반직선(Ray)과 OBB의 충돌 확인](#반직선ray과-obb의-충돌-확인)
 
  
@@ -616,6 +617,62 @@ $$
     - https://www.geometrictools.com/Documentation/DynamicCollisionDetection.pdf
 
 
+
+---
+## 반직선(Ray)과 구의 충돌 확인
+
+
+  - `반직선의 파라미터 방정식`을 `구 방정식`에 대입해서 근의 공식을 통해 충돌 확인을 한다.
+  
+
+```cpp
+bool CCollisionManager::CollisionRayToSphere(PickingResult& result,
+											 const Ray& ray,
+											 const Vector3& center,
+											 float radius) {
+	// 광선 방정식 : ray.Pos + (ray.Dir) * t
+	// 구 방정식 : ||(x,y,z) - center|| - radius = 0
+
+	// t에 대해 정리 : 
+	//	-> ||ray.Pos + (ray.Dir) * t - center|| - radius = 0
+	//		D = ray.Dir
+	//		M = ray.Pos - center
+	//	-> ||M + D * t|| - radius = 0
+	//	-> (M + D * t)^2 -  radius^2 = 0
+	//	-> D^2 * t^2 + 2MD * t + M^2 -  radius^2 = 0
+
+	// 근의 공식 : (-b +- sqrt(b^2 - 4ac)) / 2a
+	// 반직선이기 때문에 t값이 0보다 작으면 반대 방향의 직선이 구에 닿는다는 것이다.
+	Vector3	M = ray.Pos - center;
+
+	float b = 2.f * M.Dot(ray.Dir);
+	float c = M.Dot(M) - radius * radius;
+
+	float Det = b * b - 4.f * c;
+
+	// b^2 - 4ac < 0 이면 직선이 구에 닿지 않는다는 것이다.
+	if (Det < 0.f)
+		return false;
+
+	Det = sqrtf(Det);
+	float t1 = (-b + Det) / 2.f;
+	float t2 = (-b - Det) / 2.f;
+
+	// 둘 다 음수인 경우는 반대방향의 반직선과 닿는 것이다
+	if (t1 < 0.f && t2 < 0.f)
+		return false;
+
+	result.Distance = min(t1, t2);
+
+	// 두 근 중 작은 근의 값이 0보다 작으면 시작점이 구 안에 있다는 뜻이다.
+	if (result.Distance < 0.f)
+		result.Distance = max(t1, t2);
+	result.HitPoint = ray.Pos + ray.Dir * result.Distance;
+
+	return true;
+}
+```
+
 ---
 ## 반직선(Ray)과 OBB의 충돌 확인
 
@@ -624,18 +681,14 @@ $$
     - Slab : 평행한 두 평면 사이의 무한한 공간
     - 박스의 각 축에 평행한 평면으로 만들어지는 모든 슬랩에 반직선이 포함된다면 충돌한다.
     - 각 슬랩마다 최솟값, 최댓값을 구해 그 중 가장 큰 값, 가장 작은 값을 가지고 비교한다.
-    - 가장 큰 값이 가장 작은 값보다 작으면 반직선이 모든 슬랩을 통과한다는 것이고, 크면 임의의 슬랩을 통과하지 않는다는 것이다.
+      - 가장 큰 값이 가장 작은 값보다 크면 반직선이 모든 슬랩을 통과한다는 것이다.
+      - 가장 큰 값이 가장 작은 값보다 작으면 임의의 슬랩을 통과하지 않는다는 것이다.
 
 ![](img/Math/slabs.png)
 
-  - 반직선과 박스의 면이 평행할 때는 반직선 박스 내부에 있는지 판단하는 것으로 충돌을 확인할 수 있다.
+  - 반직선과 박스의 면이 평행할 때는 평행축의 반직선 시작점 값이 박스 내부에 있는지 판단하는 것으로 충돌을 확인할 수 있다.
     - 박스 외부에 있는 경우, 평행한 평면의 슬랩은 절대 교차할 수 없기 때문이다.
-  - 반직선과 박스 면의 교점 거리는 다음의 공식으로 구할 수 있다. 각 축에 따라 전부 구해야 한다.
-    - 작은 값이 가까운 쪽 평면의 거리, 큰 값이 먼 쪽 평면의 거리가 된다.
-    - 음수인 경우 반직선 반대쪽 방향이 교차한다는 뜻이다. 예외 처리
-    - $\rm Axis_{i}\ \cdot\ rayDir == 0$ 인 경우 반직선과 면이 평행하다는 뜻이다.
-      - 이 때, 분자의 최솟값이 0보다 크거나, 분자의 최댓값이 0보다 작으면 반직선은 해당 슬랩에 포함되지 않는다 -> 즉, 교차하지 않는다.
-      - 교점 거리는 $\rm (center - rayPos) \plusmn box.len_{i}$ 이 된다.
+  - 반직선과 박스 면의 교점 거리 $\rm S$ 는 아래의 공식으로 구할 수 있다. 각 축에 따라 전부 구해야 한다.
 
 $$
 \begin{aligned}
@@ -644,6 +697,91 @@ $$
 \end{aligned}
 $$
 
+  - 작은 값이 가까운 쪽 평면의 거리, 큰 값이 먼 쪽 평면의 거리가 된다.
+  - 음수인 경우 반직선 반대쪽 방향이 교차한다는 뜻이다. 예외 처리
+  - $\rm Axis_{i}\ \cdot\ rayDir == 0$ 인 경우 반직선과 면이 평행하다는 뜻이다.
+    - 이 때, 분자의 최솟값이 0보다 크거나, 분자의 최댓값이 0보다 작으면 반직선은 해당 슬랩에 포함되지 않는다 -> 즉, 교차하지 않는다.
+
+
+```cpp
+bool CCollisionManager::CollisionRayToOBB(PickingResult& result,
+										  const Ray& ray,
+										  const Vector3& center,
+										  const Vector3& halfLen,
+										  const Vector3 axis[AXIS_MAX]) {
+	// 반직선을 OBB 공간으로 변환한다. 카메라의 뷰 행렬을 구하는 방식과 동일함. (좌표계 변환)
+	Matrix matOBB;
+	matOBB.Identity();
+	for (int i = 0; i < AXIS_MAX; ++i) {
+		Vector3	sepAxis = axis[(AXIS)i];
+		memcpy(&matOBB[i][0], &sepAxis, sizeof(Vector3));
+	}
+	matOBB.Transpose();
+	for (int i = 0; i < AXIS_MAX; ++i) {
+		matOBB[3][i] = -center.Dot(axis[(AXIS)i]);
+	}
+
+	//Vector3 rayDir = ray.Dir.TransformNormal(matOBB);
+	//Vector3 rayPos = ray.Pos.TransformCoord(matOBB);
+	//Vector3 obbLen { obb.Length[AXIS_X], obb.Length[AXIS_Y] ,obb.Length[AXIS_Z] };
+	float distance = IntersectRayAABB(ray.Pos.TransformCoord(matOBB),
+									  ray.Dir.TransformNormal(matOBB),
+									  { -halfLen[AXIS_X], -halfLen[AXIS_Y], -halfLen[AXIS_Z] },
+									  halfLen);
+	bool collision = distance > 0.f;
+	if (collision) {
+		result.Distance = distance;
+		result.HitPoint = ray.Pos + ray.Dir * result.Distance;
+	}
+	return collision;
+}
+
+float CCollisionManager::IntersectRayAABB(const Vector3& rayPos, const Vector3& rayDir,
+										  const Vector3& boxMin, const Vector3& boxMax) {
+	// 각 축을 기준으로 하는 평면들의 최소 거리, 최대 거리를 구한다.
+	// 원래 수식은 다음과 같다 -> obb.Axis[i].Dot(+-obb.Length[i] - rayPos) / obb.Axis[i].Dot(rayDir)
+	// 하지만 OBB의 축을 기준으로 하는 좌표계를 사용하기 때문에 obb.Axis[i]는 (1, 0, 0), (0, 1, 0), (0, 0, 1) 이 된다.
+	//  -> ex) x축 : s = (1, 0, 0).Dot(+-obb.Length[x] - rayPos) / (1, 0, 0).Dot(rayDir)
+	//                 = (+-obb.Length[x] - rayPos.x) / rayDir.x
+	// 결과적으로 각 축을 개별적으로 검사할 수 있다는 것이다.
+
+	float tMin = 0.f;		// 전체 계산 후 반직선과 평면의 최소 거리가 된다.
+	float tMax = FLT_MAX;	// 전체 계산 후 반직선과 평면의 최대 거리가 된다.
+	for (int i = 0; i < AXIS_MAX; ++i) {
+		// 예외처리 : 반직선이 평면과 평행한 경우, 범위에 없을 경우 절대 교차하지 않는다. 
+		//			 (== 시작점이 현재 슬랩 바깥에 있다)
+		if (abs(rayDir[i]) < EPSILON) {
+			if (rayPos[i] < boxMin[i] || rayPos[i] > boxMax[i])
+				return -1.f;
+		} else {
+			// 축 기준 최소 거리 최대 거리를 구한다.
+			float distMin = (boxMin[i] - rayPos[i]) / rayDir[i];
+			float distMax = (boxMax[i] - rayPos[i]) / rayDir[i];
+			if (distMin > distMax) {
+				float tmp = distMin;
+				distMin = distMax;
+				distMax = tmp;
+			}
+
+			// t값이 0보다 작은 경우 반대 방향의 직선이 슬랩과 교차한다.
+			if (distMax < 0.f)
+				return -1.f;
+
+			// 슬랩 교차점의 최소 거리의 최댓값, 최대 거리의 최솟값을 저장해준다.
+			if (tMin < distMin)	// 최소 거리 중 가장 큰 값
+				tMin = distMin;
+			if (tMax > distMax)	// 최대 거리 중 가장 작은 값
+				tMax = distMax;
+		}
+	}
+	// 슬랩들 중 최소 거리가 최대 거리보다 큰 경우 반직선이 임의의 슬랩을 경유하지 않는다.
+	if (tMax < tMin)
+		return -1.f;
+
+	// 평면까지의 거리는 최소 거리 중 가장 큰 값이다.
+	return tMin;
+}
+```
 
   - 참고
     - [Fast and Robust Ray/OBB Intersection Using the Lorentz Transformation](https://www.researchgate.net/publication/354065095_Fast_and_Robust_RayOBB_Intersection_Using_the_Lorentz_Transformation)
