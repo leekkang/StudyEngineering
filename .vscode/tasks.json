@@ -8,15 +8,16 @@
 			"type": "cppbuild", // "shell"
 			"command": "%BUILD%", //"cl.exe",
 			"args": [
-				" /std:c++17",
+				"/std:c++17",
 				"/Zi",
 				"/EHsc",
 				"/Fe:",
-				"${fileDirname}\\${relativeFileDirname}.exe",
+				"${fileDirname}\\${fileBasenameNoExtension}.exe",
+				//"${workspaceFolder}\\${relativeFileDirname}\\${fileBasenameNoExtension}.exe",
 				"${fileDirname}\\**.cpp", 	// 포커싱 된 파일이 있는 폴더를 한꺼번에 컴파일 하고 싶을 때 사용
 			],
 			"options": {
-				"cwd": "${fileDirname}",
+				"cwd": "${fileDirname}",	// TODO: 동작안함. 확인해볼 것
 				//"cwd": "${workspaceFolder}",
 				"env": {
 					"PATH": "${env:PATH};C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\Common7\\Tools",
@@ -62,6 +63,31 @@
 				"isDefault": false
 			},
 			"detail": "compiler: cl.exe"
-		},			
+		},	
+		{
+			"label": "Programmers build",
+			"type": "cppbuild", // "shell"
+			"command": "%BUILD%", //"cl.exe",
+			"args": [
+				"/std:c++17", "/Zi", "/EHsc", "/Fe:",
+				"${workspaceFolder}\\Programmers\\out.exe",
+				"${file}",
+			],
+			"options": {
+				"cwd": "${fileDirname}",
+				"env": {
+					"PATH": "${env:PATH};C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\Common7\\Tools",
+					"BUILD": "VsDevCmd.bat -arch=x64 && cl.exe"
+				}
+			},
+			"problemMatcher": [
+				"$msCompile"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": false
+			},
+			"detail": "compiler: cl.exe"
+		},
 	]
 }

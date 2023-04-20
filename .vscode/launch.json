@@ -6,7 +6,8 @@
             "name": "cl.exe 디버그",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "./${relativeFileDirname}.exe",
+            "program": "./${fileBasenameNoExtension}.exe",
+            //"program": "./${relativeFileDirname}.exe",
             //"program": "${fileDirname}\\${fileBasenameNoExtension}.exe",
             "args": [],
             "stopAtEntry": false,
@@ -17,6 +18,19 @@
             // "externalConsole": true, //! deprecated
             "preLaunchTask": "${defaultBuildTask}" // 코드 수정없이 디버깅을 여러번 해야 할 경우 주석 처리
             //"preLaunchTask": "C/C++: cl.exe build"
+        },
+        {
+            "name": "프로그래머스 디버그",
+            "type": "cppvsdbg",
+            "request": "launch",
+            //"program": "./Programmers.exe",
+            "program": "${workspaceFolder}/Programmers/out.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${fileDirname}",
+            "environment": [],
+            "console": "externalTerminal",
+            "preLaunchTask": "Programmers build"
         }
     ]
 }
