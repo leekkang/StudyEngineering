@@ -1,64 +1,100 @@
 @startuml API Framework
-title Framework Class Diagram
+'title Framework Class Diagram
+
+' <style>
+' classDiagram {
+'   BackgroundColor Snow
+'   FontColor DarkMagenta
+'   FontName arial
+'   FontSize 20
+'   LineColor DarkViolet
+  
+'   class {
+'     BackgroundColor LightCyan
+'   }
+' }
+' </style>
+' skinparam roundCorner 15
+' skinparam Shadowing false
+' skinparam ClassBorderThickness 1
+' skinparam CircledCharacterFontColor DarkViolet
+
+' package Component <<Rectangle>> {
+'   class SceneComponent <<(C, Aqua)>>
+'   class SpriteComponent <<(C, Aqua)>>
+'   class ObjectComponent <<(C, Aqua)>>
+'   class NavigationAgent <<(C, Aqua)>>
+'   class InputComponent <<(C, Aqua)>>
+' }
+
+' package Objects <<Rectangle>> {
+'   class GameObject <<(C, Aqua)>>
+'   class Player <<(C, Aqua)>>
+'   class FieldObject <<(C, Aqua)>>
+'   class BattleActor <<(C, Aqua)>>
+' }
+
+' GameObject *-> Component : list >
+
+' GameObject <|-- Player
+' GameObject <|-- FieldObject
+' GameObject <|-- BattleActor
+
+' SceneComponent <|-- SpriteComponent
+' ObjectComponent <|-- NavigationAgent
+' ObjectComponent <|-- InputComponent
+
+@startuml API Framework
+title Lifecycle Flowchart
 
 <style>
-classDiagram {
+activityDiagram {
   BackgroundColor Snow
   FontColor DarkMagenta
+  'BorderColor #FFFFFF'
   FontName arial
   FontSize 20
-  LineColor DarkViolet
-  
-  class {
+  'Padding 10'
+
+  activity {
     BackgroundColor LightCyan
+    LineColor Black
+  }
+  arrow {
+    LineColor DarkViolet
+  }
+  partition {
+    FontColor MidnightBlue
+    LineColor DeepSkyBlue
+    Padding 50
   }
 }
 </style>
-skinparam roundCorner 15
 skinparam Shadowing false
-skinparam ClassBorderThickness 1
-skinparam CircledCharacterFontColor DarkViolet
-'skinparam CircledCharacterFontSize 15'
-'skinparam CircledCharacterRadius 10'
+skinparam ConditionEndStyle hline
+
+start
+repeat
+  #TECHNOLOGY:Phase Ready;
+  repeat
+    #TECHNOLOGY:Phase Wait;
+  repeat while (Select All Character Action) is (no)
+
+  repeat
+    #TECHNOLOGY:Phase Action;
+    #TECHNOLOGY:Phase Calculate;
+    #TECHNOLOGY:Phase Result;
+
+    if (Exterminate Others) then (yes)
+      #TECHNOLOGY:Phase End;
+      stop
+    else (no)
+    endif
+
+  repeat while (Act All Character) is (no) not (yes)
+
+repeat while
 
 
-class SceneManager <<(C, Aqua)>>
-class Scene <<(C, Aqua)>>
-class MainScene <<(C, Aqua)>>
-class StageTutorial <<(C, Aqua)>>
-class StageHunt <<(C, Aqua)>>
-class StageHole <<(C, Aqua)>>
-class StageFrame <<(C, Aqua)>>
-class StageCloud <<(C, Aqua)>>
-class StageStatic <<(C, Aqua)>>
-class StageBoss <<(C, Aqua)>>
 
-class hided
-SceneManager *-right--> Scene
-Scene -up-- hided
-Scene <|- MainScene
-hided -left- MainScene
-Scene <|- StageTutorial
-hided -left- StageTutorial
-MainScene -[hidden]- StageTutorial
-Scene <|- StageHunt
-hided -left- StageHunt
-StageTutorial -[hidden]- StageHunt
-Scene <|- StageHole
-hided -left- StageHole
-StageHunt -[hidden]- StageHole
-Scene <|- StageFrame
-hided -left- StageFrame
-StageHole -[hidden]- StageFrame
-Scene <|- StageCloud
-hided -left- StageCloud
-StageFrame -[hidden]- StageCloud
-Scene <|- StageStatic
-hided -left- StageStatic
-StageCloud -[hidden]- StageStatic
-Scene <|- StageBoss
-'hided -left- StageBoss'
-StageStatic -[hidden]- StageBoss
-
-'stop'
 @enduml
