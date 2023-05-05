@@ -112,6 +112,7 @@ package Scene <<Rectangle>> {
 
 
 class CRef <<(C, Aqua)>>
+package RefClass <<Rectangle>> {
 class CShader <<(C, Aqua)>>
 class CConstantBuffer <<(C, Aqua)>>
 class CTexture <<(C, Aqua)>>
@@ -122,20 +123,21 @@ class CAniamtion <<(C, Aqua)>>
 class CAniamtionSequence <<(C, Aqua)>>
 class CComponent <<(C, Aqua)>>
 class CGameObject <<(C, Aqua)>>
+}
+
+CRef <|--  RefClass
 
 
-
-
-CRef <|-up-  CShader
-CRef <|-up-  CConstantBuffer
-CRef <|-up-  CTexture
-CRef <|-up-  CMaterial
-CRef <|-up-  CMesh
-CRef <|--  CRenderState
-CRef <|--  CAniamtion
-CRef <|--  CAniamtionSequence
-CRef <|--  CComponent
-CRef <|--  CGameObject
+' CRef <|-up-  CShader
+' CRef <|-up-  CConstantBuffer
+' CRef <|-up-  CTexture
+' CRef <|-up-  CMaterial
+' CRef <|-up-  CMesh
+' CRef <|--  CRenderState
+' CRef <|--  CAniamtion
+' CRef <|--  CAniamtionSequence
+' CRef <|--  CComponent
+' CRef <|--  CGameObject
 
 
 'Engine -- Device
