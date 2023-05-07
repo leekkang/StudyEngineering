@@ -1,100 +1,61 @@
 @startuml API Framework
-'title Framework Class Diagram
-
-' <style>
-' classDiagram {
-'   BackgroundColor Snow
-'   FontColor DarkMagenta
-'   FontName arial
-'   FontSize 20
-'   LineColor DarkViolet
-  
-'   class {
-'     BackgroundColor LightCyan
-'   }
-' }
-' </style>
-' skinparam roundCorner 15
-' skinparam Shadowing false
-' skinparam ClassBorderThickness 1
-' skinparam CircledCharacterFontColor DarkViolet
-
-' package Component <<Rectangle>> {
-'   class SceneComponent <<(C, Aqua)>>
-'   class SpriteComponent <<(C, Aqua)>>
-'   class ObjectComponent <<(C, Aqua)>>
-'   class NavigationAgent <<(C, Aqua)>>
-'   class InputComponent <<(C, Aqua)>>
-' }
-
-' package Objects <<Rectangle>> {
-'   class GameObject <<(C, Aqua)>>
-'   class Player <<(C, Aqua)>>
-'   class FieldObject <<(C, Aqua)>>
-'   class BattleActor <<(C, Aqua)>>
-' }
-
-' GameObject *-> Component : list >
-
-' GameObject <|-- Player
-' GameObject <|-- FieldObject
-' GameObject <|-- BattleActor
-
-' SceneComponent <|-- SpriteComponent
-' ObjectComponent <|-- NavigationAgent
-' ObjectComponent <|-- InputComponent
-
-@startuml API Framework
-title Lifecycle Flowchart
+title Framework Class Diagram
 
 <style>
-activityDiagram {
+classDiagram {
   BackgroundColor Snow
   FontColor DarkMagenta
-  'BorderColor #FFFFFF'
   FontName arial
   FontSize 20
-  'Padding 10'
-
-  activity {
+  LineColor DarkViolet
+  
+  class {
     BackgroundColor LightCyan
-    LineColor Black
-  }
-  arrow {
-    LineColor DarkViolet
-  }
-  partition {
-    FontColor MidnightBlue
-    LineColor DeepSkyBlue
-    Padding 50
   }
 }
 </style>
+skinparam roundCorner 15
 skinparam Shadowing false
-skinparam ConditionEndStyle hline
-
-start
-repeat
-  #TECHNOLOGY:Phase Ready;
-  repeat
-    #TECHNOLOGY:Phase Wait;
-  repeat while (Select All Character Action) is (no)
-
-  repeat
-    #TECHNOLOGY:Phase Action;
-    #TECHNOLOGY:Phase Calculate;
-    #TECHNOLOGY:Phase Result;
-
-    if (Exterminate Others) then (yes)
-      #TECHNOLOGY:Phase End;
-      stop
-    else (no)
-    endif
-
-  repeat while (Act All Character) is (no) not (yes)
-
-repeat while
+skinparam ClassBorderThickness 1
+skinparam CircledCharacterFontColor DarkViolet
+'skinparam CircledCharacterFontSize 15'
+'skinparam CircledCharacterRadius 10'
 
 
+package Component <<Rectangle>> {
+  class SceneComp <<(C, Aqua)>>
+  class Primitive <<(C, Aqua)>>
+  class StaticMesh <<(C, Aqua)>>
+  class AnimationMesh <<(C, Aqua)>>
+  class Collider <<(C, Aqua)>>
+  class Camera <<(C, Aqua)>>
+  class ObjectComp <<(C, Aqua)>>
+  class Input <<(C, Aqua)>>
+  class RigidBody <<(C, Aqua)>>
+}
 
+package Objects <<Rectangle>> {
+  class GameObject <<(C, Aqua)>>
+  class Player <<(C, Aqua)>>
+  class Enemy <<(C, Aqua)>>
+  class Weapon <<(C, Aqua)>>
+  class BossModule <<(C, Aqua)>>
+}
+
+GameObject *-> Component : list >
+
+GameObject <|-- Player
+GameObject <|-- Enemy
+GameObject <|-- Weapon
+GameObject <|-- BossModule
+
+SceneComp <|-- Primitive
+Primitive <|-- StaticMesh
+Primitive <|-- AnimationMesh
+SceneComp <|-- Collider
+SceneComp <|-- Camera
+ObjectComp <|-- RigidBody
+ObjectComp <|-- Input
+
+'stop'
 @enduml
