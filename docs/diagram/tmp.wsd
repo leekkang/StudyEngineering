@@ -21,7 +21,7 @@ skinparam CircledCharacterFontColor DarkViolet
 'skinparam CircledCharacterFontSize 15'
 'skinparam CircledCharacterRadius 10'
 
-
+ 
 package Component <<Rectangle>> {
   class SceneComp <<(C, Aqua)>>
   class Primitive <<(C, Aqua)>>
