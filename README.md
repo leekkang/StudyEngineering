@@ -25,8 +25,8 @@
 ---
 # 노션 링크
 
-  - public : https://apple-mouse-751.notion.site/3f6df0d26dba420e8f992e368798a5d9
-  - private : https://www.notion.so/Braid-Portfolio-940a0254dfaf42d2893868cc681342c4
+  - public : https://leekkang.notion.site/3bf90ccd169648fcab6017649de78a4b
+  - private : https://www.notion.so/leekkang/88e549597c844a69bdf65ea9e77543db
 
 ---
 # VSCode Setting
