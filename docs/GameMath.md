@@ -1,6 +1,13 @@
 ﻿- [행벡터와 열벡터](#행벡터와-열벡터)
 - [좌표계 변환](#좌표계-변환)
 - [선분의 방정식](#선분의-방정식)
+- [곡선 방정식](#곡선-방정식)
+  - [베지에 곡선 (Bezier Curve)](#베지에-곡선-bezier-curve)
+  - [에르밋 곡선 (Hermite Curve)](#에르밋-곡선-hermite-curve)
+  - [퍼거슨 곡선 (Ferguson Curve)](#퍼거슨-곡선-ferguson-curve)
+  - [스플라인 (Spline)](#스플라인-spline)
+    - [B-Spline 곡선 (Basic Spline Curve)](#b-spline-곡선-basic-spline-curve)
+    - [스플라인 보간법 (Spline Interpolation)](#스플라인-보간법-spline-interpolation)
 - [곡면 방정식](#곡면-방정식)
 - [입체각 (Solid Angle)](#입체각-solid-angle)
 - [충돌](#충돌)
@@ -128,6 +135,46 @@ $$
   C &= -x_0(y_1 - y_0) + y_0(x_1-x_0) = -(x_0y_1 - x_1y_0) = -외적값\\
   \end{aligned}
 $$
+
+---
+# 곡선 방정식
+
+  - 참고
+    - [곡선 & 스플라인](https://tsyang.tistory.com/57)
+    - [비 스플라인](https://www.banditong.com/cae-dict/b_spline)
+    - [What exactly are knots (b-spline)](https://stackoverflow.com/questions/32855446/what-exactly-are-knots-b-spline)
+
+## 베지에 곡선 (Bezier Curve)
+
+  - 
+
+
+## 에르밋 곡선 (Hermite Curve)
+
+  - `베지에 곡선`과 상호변환이 가능
+    - `베지에 곡선`의 또다른 표현방식
+
+
+## 퍼거슨 곡선 (Ferguson Curve)
+
+  -
+
+
+## 스플라인 (Spline)
+
+  - 일차원 혹은 다차원 Data를 보간(interpolation) 혹은 곡선 맞춤(curve fitting)을 위해 사용되는 광범위한 종류의 함수
+  - 구간별로 정의된 미분 가능한 다항함수(polynomial)들로 연결된 하나의 특별한 함수
+
+
+### B-Spline 곡선 (Basic Spline Curve)
+
+  - `Internal Knot`이 없는 B-Spline은 `베지에 곡선`과 동일하다.
+
+
+### 스플라인 보간법 (Spline Interpolation)
+
+  - 전체 선 구간을 각각의 소구간으로 나누어 낮은 차수의 다항식으로 매끄러운 곡선 함수를 표현하는 방법
+  - `구간별 다항식 보간법(Piecewise Polynomial Interpolation)` 이라고도 한다.
 
 
 ---
